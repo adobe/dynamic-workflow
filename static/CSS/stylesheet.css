@@ -1,0 +1,149 @@
+/********** configuration **********/
+:root{
+    /** background color **/
+    --application-background-color: #f5f5f5;
+    /** Top form color **/
+    --workflow-form-top-color: #2175c8;
+    /** Select button color **/
+    --workflow-from-select-button-color: #f5f5f5;
+    /** Form body color **/
+    --workflow-form-body-color: white;
+    /** Submit button color **/
+    --workflow-form-submit-color: #2175c8;
+}
+
+
+body{
+    background: var(--application-background-color);
+    font-family: "adobe-clean-n4", "adobe-clean", Helvetica, Arial, sans-serif;
+}
+
+body,html{
+    height:100%;
+}
+
+button, input, optgroup, select, textarea {
+    font-size: 14px;
+    padding: 10px;
+    color: #2d2d2d;
+}
+
+.predefined_input{
+    color: #2175c8;
+}
+
+input::-webkit-input-placeholder {
+    font-size: 14px;
+    color: #4b4b4b;
+}
+
+h3{
+    font-size: 16px;
+    font-weight: bold;
+    color: #2d2d2d;
+}
+
+h4{
+    font-size: 14px;
+}
+
+/********** workflow_form **********/
+#workflow_form{
+    width: 40vw;
+    background: var(--workflow-form-body-color);
+    font-size: 20px;
+    box-shadow: 0 10px 20px 5px grey;
+    border-radius: 5px;
+}
+
+#workflow_form_top{
+   background-color: var(--workflow-form-top-color);
+}
+
+#workflow_form_top_wrapper{
+    padding: 20px 10px 20px 10px;
+    margin: 0 15px 0 15px;
+}
+
+#workflow_form_bot_wrapper{
+    padding: 20px 10px 20px 10px;
+    margin: 0 15px 0 15px;
+}
+
+/********** workflow_selector **********/
+#workflow_selector{
+    text-align: center;
+}
+
+#option_submit_button{
+    font-size: 15px;
+    padding: 0 14px;
+    line-height: 32px;
+    font-weight: 400;
+    min-width: 80px;
+    width: 100%;
+    background-color: var(--workflow-from-select-button-color);
+    color: black;
+}
+
+#workflow_dropdown_label{
+    font-size: 24px;
+    color: white;
+}
+
+#workflow_dropdown{
+    font-size: 14px;
+}
+
+/********** dynamic_form **********/
+.form_hidden{
+    display: none;
+}
+
+#agreement_section{
+    margin-top: 10px;
+}
+
+.recipient_label{
+    margin-top: 10px;
+}
+
+.recipient_form_input{
+    width: 100%;
+    background-color: white;
+    margin-bottom: 5px;
+    border: solid 1px #c2c2c2;
+}
+
+#recipient_submit_button{
+    margin-top: 10px;
+    font-size: 15px;
+    padding: 0 14px;
+    line-height: 32px;
+    font-weight: 400;
+    min-width: 80px;
+    width: 100%;
+    background-color: var(--workflow-form-submit-color);
+}
+
+.recipient_hidden{
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+.add_section{
+    margin-bottom: 40px;
+}
+
+#add_button{
+    width: 50%;
+    float: left;
+    padding: 5px;
+}
+
+#remove_button{
+    width: 50%;
+    float: right;
+    padding: 5px;
+}

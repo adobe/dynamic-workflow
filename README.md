@@ -1,2 +1,2 @@
-# Dynamic_Workflow
-Dynamic Workflow using Express and Sign API
+# Dynamic_WF
+Express with Vanilla JS for Dynamic WF
