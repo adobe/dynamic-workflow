@@ -11,12 +11,7 @@ const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 // HTTPS & Path
-const https = require('https');
 const path = require('path');
-const httpsOptions = {
-    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
-    key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
-}
 
 // js-yaml
 const yaml = require('js-yaml');
@@ -30,6 +25,7 @@ var integration = config['enterprise']['integration'];
 var host = config['server']['host'];
 var endpoint = config['server']['endpoint'];
 var url = host + endpoint;
+var port = process.env.PORT || config.port || 80;
 
 app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.urlencoded({
@@ -60,7 +56,7 @@ app.get('/api/getWorkflows', async function (req, res, next) {
         };
 
         return fetch(url + endpoint, {
-            method: 'GET', 
+            method: 'GET',
             headers: headers});
     }
 
@@ -83,7 +79,7 @@ app.get('/api/getWorkflowById/:id', async function(req, res, next){
         };
 
         return fetch(url + endpoint, {
-            method: 'GET', 
+            method: 'GET',
             headers: headers})
     }
 
@@ -129,11 +125,11 @@ app.post('/api/postAgreement/:id', async function(req, res, next){
         };
 
         return fetch(url + endpoint, {
-            method:'POST', 
-            headers: headers, 
+            method:'POST',
+            headers: headers,
             body: JSON.stringify(req.body)})
     }
-    
+
     const api_response = await postAgreement();
     const data = await api_response.json();
 
@@ -176,11 +172,4 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
     res.json(data)
   })
 
-const port = 80;
-
 app.listen(port, () => console.log(`Server started on port ${port}`));
-
-// https.createServer(httpsOptions, app)
-//     .listen(port, function () {
-//         console.log(`Server started on port ${port}`)
-//     })

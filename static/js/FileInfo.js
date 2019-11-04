@@ -21,10 +21,21 @@ class FileInfo {
 
         // Assign the attributes
         file_info_div.id = "file_info_" + this.file_name;
-        this.parent_div.children['upload_section'].append(file_info_div);
+        file_info_div.className = 'file_info_div row';
+
+        // Create grid
+        var upload_field_col_4 = document.createElement('div');
+        upload_field_col_4.className = "col-lg-4";
+        var upload_field_col_8 = document.createElement('div');
+        upload_field_col_8.className = "col-lg-8";
+
+        var parent_div = document.getElementById('upload_body')
+        parent_div.append(file_info_div);
 
         // Append element to parent
         this.target_div = file_info_div;
+        this.target_div.append(upload_field_col_4);
+        this.target_div.append(upload_field_col_8);
     }
 
     createDocumentTitleLabel() {
@@ -39,7 +50,7 @@ class FileInfo {
         doc_label.innerText = this.label;
 
         // Appened element to parent
-        this.target_div.append(doc_label);
+        this.target_div.children[0].append(doc_label);
     }
 
     createFileLabelName(required) {
@@ -51,7 +62,7 @@ class FileInfo {
         if (this.workflow_lib_doc_id !== null) {
             var file_label_name = document.createElement('h4');
             file_label_name.innerText = this.workflow_lib_doc_id[0]['label'];
-            this.target_div.append(file_label_name);
+            this.target_div.children[1].append(file_label_name);
         }
         // Else create upload field
         else {
@@ -73,7 +84,7 @@ class FileInfo {
         upload_div.id = 'upload_' + this.file_name;
 
         // Append to parent
-        this.target_div.append(upload_div);
+        this.target_div.children[1].append(upload_div);
 
         return upload_div
     }

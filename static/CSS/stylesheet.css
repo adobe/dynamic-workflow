@@ -73,6 +73,8 @@ h4{
 /********** workflow_selector **********/
 #workflow_selector{
     text-align: center;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 #option_submit_button{
@@ -93,6 +95,7 @@ h4{
 
 #workflow_dropdown{
     font-size: 14px;
+    border-radius: 1px;
 }
 
 /********** dynamic_form **********/
@@ -102,6 +105,7 @@ h4{
 
 #agreement_section{
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .recipient_label{
@@ -109,10 +113,12 @@ h4{
 }
 
 .recipient_form_input{
+    max-width: 100%;
     width: 100%;
     background-color: white;
     margin-bottom: 5px;
     border: solid 1px #c2c2c2;
+    border-radius: 5px;
 }
 
 #recipient_submit_button{
@@ -146,4 +152,118 @@ h4{
     width: 50%;
     float: right;
     padding: 5px;
+}
+
+.checkbox_input{
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+#message_section{
+    margin-bottom: 10px;
+}
+
+.error_msg{
+    color: red;
+}
+
+.file_info_div h3{
+    margin-top: 10px;
+}
+
+.file_info_div h4{
+    margin: auto;
+    width: 95%;
+    padding: 10px;
+}
+
+.merge_input{
+    width: 100%;
+}
+
+.merge_div h3{
+    margin-top: 10px;
+}
+
+#merge_body{
+    border: 1px solid #c2c2c2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.merge_div{
+    padding: 10px;
+}
+
+#button_section{
+    width: 100%;
+}
+
+.upload_section h3{
+    margin-top: 10px;
+}
+
+#upload_body{
+    border: 1px solid #c2c2c2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.option_wrapper{
+    margin-top: 37px;
+    border: 1px solid #c2c2c2;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+#deadline_input{
+    width: 100%;
+}
+
+#reminder_dropdown{
+    width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+    #workflow_form{
+        width: 100vw;
+    }
+
+    .option_wrapper{
+        margin: 10px 0 10px 0;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    #workflow_form{
+        width: 100vw;
+    }
+
+    .option_wrapper{
+        margin: 10px 0 10px 0;
+    }
+    
+}
+
+@media only screen and (min-width: 798) {
+    #workflow_form{
+        width: 60vw;
+    }
+
+    .option_wrapper{
+        margin-top: 37px;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    #workflow_form{
+        width: 60vw;
+    }
+
+    .option_wrapper{
+        margin-top: 37px;
+    }
 }

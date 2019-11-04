@@ -5,7 +5,8 @@ class RecipientGroup{
         this.group_id = group_id;
         this.recipient_group_data = recipient_group_data;
         this.number_of_members = 0;
-        this.target_div = ""
+        this.target_div = "";
+        this.email = "";
     }
 
     createRecipientDiv() {
@@ -19,10 +20,12 @@ class RecipientGroup{
         // Add attributes
         recipient_div.id = "recipient_group_" + this.group_id;
         recipient_div.className = "add_border_bottom";
-        this.parent_div.children['recipient_section'].append(recipient_div);
+        
+        var parent_div = document.getElementById('recipient_section')
+        parent_div.append(recipient_div);
 
         // Append to parent
-        this.target_div = recipient_div
+        this.target_div = recipient_div;
     }
 
     createRecipientLabelField() {
@@ -59,20 +62,31 @@ class RecipientGroup{
         input.className = 'recipient_form_input';
         input.placeholder = "Enter Recipient's Email";
 
+        input.onchange = function(){
+            this.email = input.value
+        }.bind(this);
+
         // If data is not blank, fill it in with predefine information
         if (this.recipient_group_data['defaultValue'] !== "") {
             input.value = this.recipient_group_data['defaultValue'];
             input.className = input.className + " predefined_input"
+            this.email = this.recipient_group_data['defaultValue']
+
+            // Disable unedited fields
+            if(!(this.recipient_group_data['editable'])){
+                input.disabled = true;
+            }
 
             // Hide all settings turned on
             if(hide_all_trigger && !(hide_predefined_trigger)){
                 var recipient_div = document.getElementById("recipient_group_" + this.group_id);
-                recipient_div.className = 'recipient_hidden'
+                recipient_div.className = 'recipient_hidden';
             }
+
             // Hide only defined workflows in config file
             else if(!(hide_all_trigger) && hide_predefined_trigger){
                 var recipient_div = document.getElementById("recipient_group_" + this.group_id);
-                recipient_div.className = 'recipient_hidden'
+                recipient_div.className = 'recipient_hidden';
             }
         }
 
