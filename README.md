@@ -18,7 +18,7 @@ This application is currently on version 1.1. There is a known issue that has be
 | CSS Theme | Easily change the theme by adjusting CSS variables |
 | Sender Input Fields | Allow workflow sender input fields to be replicated over into the form. |
 | Upload Documents | Allow the sender to upload additional documents if enabled in workflow. |
-| Recipient Groups | Allows you to have the ability to dynamically route to recipient groups.\*As of version 1.1, this feature is blocked please see disclaimer. |
+| Recipient Groups | Allows you to have the ability to dynamically route to recipient groups.  *As of version 1.1, this feature is blocked please see disclaimer.* |
 
 ## Deployment Instructions
 This is a server-side version of the Dynamic Workflow application. You must host and deploy this application for it to work. There are many methods of deploying an application. In this example, I will be deploying it to Digital Ocean. Feel free to choose whichever platform/services and use this documentation as a guideline.
@@ -56,7 +56,7 @@ There are two options to import your source file.  Git or FTP.
 
 You will need to install all dependencies associated with this application
 ```sh
-cd Dynamic\_Workflow
+cd Dynamic/Workflow
 npm install
 ```
 
@@ -65,21 +65,21 @@ Use nodemon as a dev node on production. *We will use pm2 as our process manager
 
 ```sh
 npm install -g nodemon
-npm start dev \*Use only for development
+npm start dev # Use only for development
 ```
 
 ### Default port 80
 To run application on default port 80 install lib2cap-bin
 ```sh
 sudo apt-get install lib2cap-bin
-sudo setcap cap\_net\_bind\_service=+ep `readlink -f \`which node\``
+sudo setcap cap/net/bind/service=+ep `readlink -f \`which node\``
 ```
 
 ### Install pm2
 Install pm2 to and run application in the background
 ```sh
 npm install pm2 -g
-pm2 start ~/Dynamic\_Workflow/server.js
+pm2 start ~/Dynamic/Workflow/server.js
 ```
 
 ## Configuration
