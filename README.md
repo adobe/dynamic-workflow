@@ -105,3 +105,9 @@ There are three main components within the configuration file.
 You will be required to create an integration key with limited scopes for this application and add the integration key inside the config.yaml file. [Click Me](https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html)
 
 ![integration key](docs/integration_key.png "Integration Key")
+
+### Contributing
+Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
+
+### Licensing
+This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
