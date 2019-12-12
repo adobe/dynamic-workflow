@@ -57,7 +57,7 @@ class DynamicForm {
         let hide_all_trigger = this.setHideAllTrigger(hide_predefined_setting, hidden_list);
         let hide_predefined_trigger = this.setHidePredefinedTrigger(
             hide_all_trigger, hide_predefined_setting, this.data['displayName'], hidden_list);
-        
+
         // Set up cc triggers for features in configs
         let hide_cc_settings = this.getHidePredefinedSetting('hide_cc');
         let hide_cc_list = this.getHiddenWorkflowList('hide_cc_workflow_list');
@@ -161,12 +161,12 @@ class DynamicForm {
         this.reminders.createSubDiv();
 
         this.createRecipientFormButton(this.agreement_data, this.workflow_data);
-    
+
         document.getElementById('dynamic_form').hidden = false;
     }
 
     removeDivs(){
-        
+
     }
 
     async getHidePredefinedSetting(name) {
@@ -401,8 +401,10 @@ class DynamicForm {
                 async_wf_obj.createOpenPass(this.pass_option.getPass(), this.pass_option.getProtection());
             }
 
-            if (this.deadline.checked) {
-                async_wf_obj.updateDeadline(this.deadline.today_date);
+            if ('expirationInfo' in this.data) {
+                if (this.deadline.checked) {
+                    async_wf_obj.updateDeadline(this.deadline.today_date);
+                }
             }
 
             if ('ccsListInfo' in wf_data) {

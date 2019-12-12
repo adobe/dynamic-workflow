@@ -58,13 +58,13 @@ class Workflow {
                     let addition_recipient = recipient_groups[i]['target_div'].querySelectorAll('input');
 
                     for (let recipient_counter = 0; recipient_counter < addition_recipient.length; recipient_counter++) {
-                        this.addToRecipientGroup(addition_recipient[recipient_counter].email);
+                        this.addToRecipientGroup(addition_recipient[recipient_counter].value);
                     }
                 } else {
                     let recipient_id = document.getElementById("recipient_" + i);
-                    this.addToRecipientGroup(recipient_id.email);
+                    this.addToRecipientGroup(recipient_id.value);
                 }
-            } 
+            }
             else {
                 if(recipient_group_data[i]['editable']){
                     this.addToRecipientGroup(recipient_groups[i].email)
@@ -126,7 +126,7 @@ class Workflow {
         for (let counter = 0; counter < cc_group.length; counter++) {
             if(!(editable)){
                 if(counter < cc_list.length){
-                    add_to_cc_list.push(cc_list[counter]);  
+                    add_to_cc_list.push(cc_list[counter]);
                 }
             }
             else{
@@ -203,12 +203,12 @@ class Workflow {
          */
 
         const date_input = document.getElementById('deadline_input').value;
-        
+
         const today_date = new Date(today);
         const selected_date = new Date(date_input);
 
         const diffTime = Math.abs(selected_date - today_date);
-        this.deadline = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        this.deadline = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     }
 
@@ -223,7 +223,7 @@ class Workflow {
             "openPassword": pass,
             "protectOpen": protection
         }
-        
+
         this.pass_option = data;
     }
 
