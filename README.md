@@ -56,7 +56,7 @@ There are two options to import your source file.  Git or FTP.
 
 You will need to install all dependencies associated with this application
 ```sh
-cd Dynamic/Workflow
+cd dynamic-workflow
 npm install
 ```
 
@@ -79,7 +79,7 @@ sudo setcap cap/net/bind/service=+ep `readlink -f \`which node\``
 Install pm2 to and run application in the background
 ```sh
 npm install pm2 -g
-pm2 start ~/Dynamic/Workflow/server.js
+pm2 start ~/dynamic-workflow/server.js
 ```
 
 ## Configuration
