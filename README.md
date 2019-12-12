@@ -60,7 +60,7 @@ cd dynamic-workflow
 npm install
 ```
 
-### Installing nodemon
+### Dev Server w/ nodemon
 Use nodemon as a dev node on production. *We will use pm2 as our process manager*
 
 ```sh
@@ -75,11 +75,16 @@ sudo apt-get install lib2cap-bin
 sudo setcap cap/net/bind/service=+ep `readlink -f \`which node\``
 ```
 
-### Install pm2
-Install pm2 to and run application in the background
+### Prod Node w/ pm2
+`pm2` is a tool for running production node servers.  Install pm2 to and run application in the background
 ```sh
-npm install pm2 -g
+sudo npm install pm2@latest -g
+
+# Run production server
 pm2 start ~/dynamic-workflow/server.js
+
+# Run server on system reboot
+pm2 startup systemd
 ```
 
 ## Configuration
