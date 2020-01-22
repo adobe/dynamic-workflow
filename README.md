@@ -1,4 +1,4 @@
-# Dynamic Workflow v1.1
+# Dynamic Workflow
 Dynamic Workflow built on top of express using Adobe Sign API.
 
 ![sign image](docs/sign_image.png "Sign Image")
@@ -7,7 +7,7 @@ Dynamic Workflow built on top of express using Adobe Sign API.
 Dynamic workflows allow users to specify the next participants within an agreement.
 
 ## Disclaimer
-This application is currently on version 1.1. There is a known issue that has been submitted to JIRA for participant groups. The feature is currently there, but the functionality has a bug. Once this issue is resolved, a patch will be issued out.
+There is a known issue that has been submitted to JIRA for participant groups. The feature is currently there, but the functionality has a bug. Once this issue is resolved, a patch will be issued out.
 
 ## Features
 | Features | Description |
@@ -56,11 +56,11 @@ There are two options to import your source file.  Git or FTP.
 
 You will need to install all dependencies associated with this application
 ```sh
-cd dynamic-workflow
+cd Dynamic/Workflow
 npm install
 ```
 
-### Dev Server w/ nodemon
+### Installing nodemon
 Use nodemon as a dev node on production. *We will use pm2 as our process manager*
 
 ```sh
@@ -75,20 +75,15 @@ sudo apt-get install lib2cap-bin
 sudo setcap cap/net/bind/service=+ep `readlink -f \`which node\``
 ```
 
-### Prod Node w/ pm2
-`pm2` is a tool for running production node servers.  Install pm2 to and run application in the background
+### Install pm2
+Install pm2 to and run application in the background
 ```sh
-sudo npm install pm2@latest -g
-
-# Run production server
-pm2 start ~/dynamic-workflow/server.js
-
-# Run server on system reboot
-pm2 startup systemd
+npm install pm2 -g
+pm2 start ~/Dynamic/Workflow/server/server.js
 ```
 
 ## Configuration
-There is a sample configuration file, `config/config.sample.yaml`, that needs to be copied to `config/config.yaml` and modified for your environment.
+There is a sample env file, `.env.dist`, that needs to be copied to `.env` and modified for your environment.
 
 There are three main components within the configuration file.
 
@@ -101,10 +96,10 @@ There are three main components within the configuration file.
 
 ## Features
 
-- `hide_predefined`: This turns on the feature to hide predefined recipients in your workflow.
-  - `yes`: Turn on
-  - `no`: Turn off
-- `hide_workflow_list`: A list to target specific workflows to hide predefined recipients.
+- `REACT_APP_HIDE_PREDEFINED_RECIPIENT`: This turns on the feature to hide predefined recipients in your workflow.
+  - `true`: Turn on
+  - `false`: Turn off
+- `REACT_APP_HIDE_PREDEFINED_RECIPIENT_WORKFLOW_LIST`: A list to target specific workflows to hide predefined recipients.
 
 ## Integration Key
 You will be required to create an integration key with limited scopes for this application and add the integration key inside the config.yaml file. [Click Me](https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html)

@@ -1,0 +1,4 @@
+.DS_Store
+config/config.yaml
+node_modules/
+~$*
