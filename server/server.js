@@ -15,33 +15,36 @@ const express = require('express');
 const async = require('express-async-await');
 const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
+const dotEnvOptions = {
+    path: __dirname + '../../.env'
+}
+
+require('dotenv').config(dotEnvOptions);
 
 // Form Data, Multer, & Uploads
 const FormData = require('form-data');
 const fs = require('fs');
-const multer  = require('multer');
+const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
-// HTTPS & Path
-const path = require('path');
-
-// js-yaml
-const yaml = require('js-yaml');
-const config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'config', 'config.yaml'), 'utf-8'));
 
 // Main App
 const app = express();
 
 // Configuration
-var integration = config['enterprise']['integration'];
-var host = config['server']['host'];
-var endpoint = config['server']['endpoint'];
-var url = host + endpoint;
-var port = process.env.PORT || config.port || 80;
+const features = require('../key.js');
 
+var integration = features.integration;
+var host = features.host;
+var endpoint = features.endpoint;
+var url = host + endpoint;
+var port = features.port || 3200;
+
+app.use(cors());
 app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.urlencoded({
-  extended: true
+    extended: true
 }));
 app.use(bodyParser.json());
 
@@ -50,9 +53,9 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/static/test.html');
 });
 
-// Get features from config files
-app.get('/features', function (req, res){
-    res.json(config['features'])
+// Get features from key file - try to not make it async funciton
+app.get('/features', async function (req, res) {
+    res.json(features);
 })
 
 // GET /workflows
@@ -69,7 +72,8 @@ app.get('/api/getWorkflows', async function (req, res, next) {
 
         return fetch(url + endpoint, {
             method: 'GET',
-            headers: headers});
+            headers: headers
+        });
     }
 
     const workflow_list = await getWorkflows();
@@ -79,7 +83,7 @@ app.get('/api/getWorkflows', async function (req, res, next) {
 });
 
 // GET /workflows/{workflowId}
-app.get('/api/getWorkflowById/:id', async function(req, res, next){
+app.get('/api/getWorkflowById/:id', async function (req, res, next) {
 
     function getWorkflowById() {
         /***
@@ -92,7 +96,8 @@ app.get('/api/getWorkflowById/:id', async function(req, res, next){
 
         return fetch(url + endpoint, {
             method: 'GET',
-            headers: headers})
+            headers: headers
+        })
     }
 
     const workflow_by_id = await getWorkflowById();
@@ -101,29 +106,8 @@ app.get('/api/getWorkflowById/:id', async function(req, res, next){
     res.json(data);
 });
 
-// GET /libraryDocuments/{libraryDocumentId}/documents
-app.get('/api/getLibraryDocuments/:id', async function(req, res, next) {
-
-    function getLibraryDocuments() {
-        /***
-         * This function gets library documents by ID
-         */
-        const endpoint = "/libraryDocuments/" + req.params.id + "/documents";
-        const headers = {
-            'Access-Token': integration
-        };
-
-        return fetch(url + endpoint, {method: 'GET', headers: headers})
-    }
-
-    const library_document = await getLibraryDocuments();
-    const data = await library_document.json();
-
-    es.json(data);
-});
-
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/:id', async function(req, res, next){
+app.post('/api/postAgreement/:id', async function (req, res, next) {
 
     function postAgreement() {
         /***
@@ -137,9 +121,10 @@ app.post('/api/postAgreement/:id', async function(req, res, next){
         };
 
         return fetch(url + endpoint, {
-            method:'POST',
+            method: 'POST',
             headers: headers,
-            body: JSON.stringify(req.body)})
+            body: JSON.stringify(req.body)
+        })
     }
 
     const api_response = await postAgreement();
@@ -182,6 +167,6 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
     });
 
     res.json(data)
-  })
+})
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
