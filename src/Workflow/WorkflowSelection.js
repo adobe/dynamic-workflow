@@ -25,8 +25,8 @@ class WorkflowSelection extends Component {
             workflowName = props.match.params.name;
         }
 
-        const returnValues = queryString.parse(this.props.location.search);
-        const values = returnValues ? returnValues : null;
+        const locationSearch = queryString.parse(this.props.location.search);
+        const queryData = locationSearch ? locationSearch : null;
 
         this.state = {
             hideSelector: props.hideSelector,
@@ -35,12 +35,12 @@ class WorkflowSelection extends Component {
             workflowId: null,
             signService: new SignService(),
             workflowService: new WorkflowService(),
-            values : {
-                recipient: values.recipient,
-                cc: values.cc,
-                fields: values.fields,
-                deadline: values.deadline,
-                reminder: values.reminder
+            queryData : {
+                recipientEmails: queryData.recipient,
+                ccEmails: queryData.cc,
+                fields: queryData.fields,
+                deadline: queryData.deadline,
+                reminder: queryData.reminder
             }
         };
     }
@@ -110,7 +110,7 @@ class WorkflowSelection extends Component {
                         <div id="workflow_form_bottom">
                             <div id="workflow_form_bot_wrapper">
                                 {/* <AgreementForm workflowId={this.state.workflowId}></AgreementForm> */}
-                                <AgreementForm workflowId={this.state.workflowId} values={this.state.values}></AgreementForm>
+                                <AgreementForm workflowId={this.state.workflowId} queryData={this.state.queryData}></AgreementForm>
                             </div>
                         </div>
                     </div>

@@ -17,25 +17,49 @@ class CarbonCopy extends Component {
     constructor(props) {
         super(props);
 
-        const items = CarbonCopy.createCCGroup(props.ccsListInfo);
+        let ccList = props.ccsListInfo ? props.ccsListInfo : [];
+        let ccEmails = props.ccEmails ? props.ccEmails : [];
+        ccList = this.fillDefaultValue(ccList, ccEmails);
+        const items = CarbonCopy.createCCGroup(ccList);
+        // const items = CarbonCopy.createCCGroup(props.ccsListInfo);
+
         this.state = {
             setParentState: props.setParentState,
             getParentState: props.getParentState,
             workflowId: props.workflowId,
-            ccsListInfo: props.ccsListInfo,
+            // ccsListInfo: props.ccsListInfo,
+            ccsListInfo: ccList,
             carbonCopyGroup: items,
             hideCC: props.features.hideCC,
             hideCCWorkflowList: props.features.hideCCWorkflowList,
-            workflowName: props.workflowName,
-            cc: props.cc
+            workflowName: props.workflowName
         };
-        console.log(this.state.cc);
+        console.log(this.state.carbonCopyGroup);
 
         props.setParentState(state => {
             return {
                 carbonCopyGroup: this.createCcList(items)
             }
         });
+    }
+
+    fillDefaultValue(ccList, ccEmails) {
+        if(Array.isArray(ccEmails)) {
+            ccEmails.map(email => {
+                const cc = ccList.find(c => !c.defaultValue);
+                if (cc) {
+                    cc.defaultValue = email;
+                }
+                return email;
+            });
+        }
+        else {
+            const cc = ccList.find(c => !c.defaultValue);
+            if (cc) {
+                cc.defaultValue = ccEmails;
+            }
+        }
+        return ccList;
     }
 
     // Refresh after selecting another workflow

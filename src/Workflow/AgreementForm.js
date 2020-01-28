@@ -38,7 +38,7 @@ class AgreementForm extends Component {
             isPasswordValid: true,
             features: null,
 
-            values: props.values,
+            queryData: props.queryData,
 
             // Agreement data
             workflowId: props.workflowId,
@@ -159,10 +159,11 @@ class AgreementForm extends Component {
                                 </div>
                                 <RecipientsList setParentState={this.setParentState} getParentState={this.getParentState}
                                     workflowId={this.state.workflow.name} features={this.state.features} workflowName={this.state.workflow.displayName}
-                                    recipientsListInfo={this.state.workflow.recipientsListInfo} workflow={this.state.workflow} recipient={this.state.values.recipient} />
+                                    recipientsListInfo={this.state.workflow.recipientsListInfo} workflow={this.state.workflow} 
+                                    recipientEmails={this.state.queryData.recipientEmails} />
                                 <CarbonCopy setParentState={this.setParentState} getParentState={this.getParentState}
                                     workflowId={this.state.workflow.name} features={this.state.features} workflowName={this.state.workflow.displayName}
-                                    ccsListInfo={this.state.workflow.ccsListInfo} cc={this.state.values.cc} />
+                                    ccsListInfo={this.state.workflow.ccsListInfo} ccEmails={this.state.queryData.ccEmails} />
                             </div>
                             <div className="col-lg-12" id="bottom_form_bottom">
                                 <div className="row">
@@ -187,7 +188,7 @@ class AgreementForm extends Component {
                                         <FileList setParentState={this.setParentState} getParentState={this.getParentState}
                                             workflowId={this.state.workflow.name} fileInfos={this.state.workflow.fileInfos} />
                                         <MergeField setParentState={this.setParentState} getParentState={this.getParentState}
-                                            workflowId={this.state.workflow.name} fields={this.state.values.fields} />
+                                            workflowId={this.state.workflow.name} fields={this.state.queryData.fields} />
                                     </div>
                                     <div className="col-lg-5">
                                         <div className="option_wrapper">
@@ -196,10 +197,10 @@ class AgreementForm extends Component {
                                                     workflowId={this.state.workflow.name}
                                                     passwordVisible={this.state.workflow.passwordInfo.visible} />
                                                 <Deadline setParentState={this.setParentState} getParentState={this.getParentState} 
-                                                    workflowId={this.state.workflow.name} deadline={this.state.values.deadline}
+                                                    workflowId={this.state.workflow.name} deadline={this.state.queryData.deadline}
                                                     deadlineVisible={this.state.workflow.expirationInfo ? this.state.workflow.expirationInfo.visible : ''} />
                                                 <Reminder setParentState={this.setParentState} getParentState={this.getParentState} 
-                                                    workflowId={this.state.workflow.name} reminder={this.state.values.reminder} />
+                                                    workflowId={this.state.workflow.name} reminder={this.state.queryData.reminder} />
                                             </div>
                                         </div>
                                     </div>

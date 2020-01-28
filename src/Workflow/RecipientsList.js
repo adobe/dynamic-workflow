@@ -17,17 +17,39 @@ class RecipientsList extends Component {
     constructor(props) {
         super(props);
 
+        let recipientList = props.recipientsListInfo ? props.recipientsListInfo : [];
+        let recipientEmails = props.recipientEmails ? props.recipientEmails : [];
+        recipientList = this.fillDefaultValue(recipientList, recipientEmails);
+
         this.state = {
             setParentState: props.setParentState,
             getParentState: props.getParentState,
-            recipientsList: props.recipientsListInfo ? props.recipientsListInfo : [],
+            recipientsList: recipientList,
             workflowId: props.workflowId,
             hideRecipient: props.features.hideRecipient,
             hideWorkflowList: props.features.hideWorkflowList,
-            workflowName: props.workflowName,
-            recipient: props.recipient
+            workflowName: props.workflowName
         };
-        console.log(this.state.recipient);
+        console.log(this.state.recipientsList);
+    }
+
+    fillDefaultValue(recipientList, recipientEmails) {
+        if(Array.isArray(recipientEmails)) {
+            recipientEmails.map(email => {
+                const recipient = recipientList.find(r => !r.defaultValue);
+                if (recipient) {
+                    recipient.defaultValue = email;
+                }
+                return email;
+            });
+        }
+        else {
+            const recipient = recipientList.find(r => !r.defaultValue);
+            if (recipient) {
+                recipient.defaultValue = recipientEmails;
+            }
+        }
+        return recipientList;
     }
 
     // Refresh after selecting another workflow
@@ -35,7 +57,7 @@ class RecipientsList extends Component {
         if (props.workflowId !== state.workflowId) {
             return {
                 workflowId: props.workflowId,
-                recipientsList: props.recipientsListInfo,
+                recipientsList: props.recipientsListInfo ? props.recipientsListInfo : [],
                 hidePredefined: props.features.hidePredefined,
                 hideWorkflowList: props.features.hideWorkflowList,
                 workflowName: props.workflowName
