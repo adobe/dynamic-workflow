@@ -30,7 +30,6 @@ class RecipientsList extends Component {
             hideWorkflowList: props.features.hideWorkflowList,
             workflowName: props.workflowName
         };
-        console.log(this.state.recipientsList);
     }
 
     fillDefaultValue(recipientList, recipientEmails) {

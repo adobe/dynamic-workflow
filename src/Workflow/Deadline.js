@@ -27,7 +27,7 @@ class Deadline extends Component {
             date: date,
             deadline: props.deadline
         };
-        console.log(this.state.deadline);
+        // console.log(this.state.deadline);
 
         this.state.setParentState({ deadline: this.getDaysTillDeadline(date) });
     }

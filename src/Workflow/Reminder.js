@@ -24,7 +24,7 @@ class Reminder extends Component {
             workflowId: props.workflowId,
             reminder: props.reminder
         };
-        console.log(this.state.reminder);
+        // console.log(this.state.reminder);
     }
 
     // Refresh after selecting another workflow

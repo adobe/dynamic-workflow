@@ -23,7 +23,7 @@ class MergeField extends Component {
             workflowId: props.workflowId,
             fields: props.fields
         };
-        console.log(this.state.fields);
+        // console.log(this.state.fields);
     }
 
     // Refresh after selecting another workflow

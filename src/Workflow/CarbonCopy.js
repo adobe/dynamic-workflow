@@ -18,22 +18,18 @@ class CarbonCopy extends Component {
         super(props);
 
         let items = CarbonCopy.createCCGroup(props.ccsListInfo);
-        // let ccList = props.ccsListInfo ? props.ccsListInfo : [];
         let ccEmails = props.ccEmails ? props.ccEmails : [];
-        // ccList = this.fillDefaultValue(ccList, ccEmails);
         items = this.fillDefaultValue(items, ccEmails);
 
         this.state = {
             setParentState: props.setParentState,
             getParentState: props.getParentState,
             workflowId: props.workflowId,
-            ccsListInfo: props.ccsListInfo,
             carbonCopyGroup: items,
             hideCC: props.features.hideCC,
             hideCCWorkflowList: props.features.hideCCWorkflowList,
             workflowName: props.workflowName
         };
-        console.log(this.state.carbonCopyGroup);
 
         props.setParentState(state => {
             return {
@@ -66,7 +62,6 @@ class CarbonCopy extends Component {
         if (props.workflowId !== state.workflowId) {
             return {
                 workflowId: props.workflowId,
-                ccsListInfo: props.ccsListInfo,
                 carbonCopyGroup: CarbonCopy.createCCGroup(props.ccsListInfo),
                 hideCC: props.features.hideCC,
                 hideCCWorkflowList: props.features.hideCCWorkflowList,
