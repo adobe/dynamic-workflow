@@ -24,8 +24,10 @@ class RecipientsList extends Component {
             workflowId: props.workflowId,
             hideRecipient: props.features.hideRecipient,
             hideWorkflowList: props.features.hideWorkflowList,
-            workflowName: props.workflowName
+            workflowName: props.workflowName,
+            recipient: props.recipient
         };
+        console.log(this.state.recipient);
     }
 
     // Refresh after selecting another workflow
@@ -58,6 +60,7 @@ class RecipientsList extends Component {
                     return item;
                 }
                 else {
+                    // item.defaultValue = this.state.recipient;
                     return item;
                 }
             });
@@ -105,7 +108,9 @@ class RecipientsList extends Component {
                             <h3 className="recipient_label">{recipient.label}</h3>
                             <input type="text" id={`recipient_${index}`} name={`recipient_${index}`}
                                 className={!recipient.modified ? "recipient_form_input predefined_input" : "recipient_form_input"}
-                                placeholder="Enter Recipient's Email" value={recipient.defaultValue}
+                                placeholder="Enter Recipient's Email" 
+                                value={recipient.defaultValue}
+                                // value={this.state.recipient ? this.state.recipient : recipient.defaultValue}
                                 readOnly={recipient.editable ? false : true}
                                 onChange={(event) => this.onEmailChanged(event, index)}>
                             </input>

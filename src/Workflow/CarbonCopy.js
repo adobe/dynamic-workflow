@@ -26,8 +26,10 @@ class CarbonCopy extends Component {
             carbonCopyGroup: items,
             hideCC: props.features.hideCC,
             hideCCWorkflowList: props.features.hideCCWorkflowList,
-            workflowName: props.workflowName
+            workflowName: props.workflowName,
+            cc: props.cc
         };
+        console.log(this.state.cc);
 
         props.setParentState(state => {
             return {

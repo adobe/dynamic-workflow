@@ -24,8 +24,10 @@ class Deadline extends Component {
             workflowId: props.workflowId,
             hasDeadlineChecked: true,
             visible: props.deadlineVisible,
-            date: date
+            date: date,
+            deadline: props.deadline
         };
+        console.log(this.state.deadline);
 
         this.state.setParentState({ deadline: this.getDaysTillDeadline(date) });
     }
