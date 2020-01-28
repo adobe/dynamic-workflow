@@ -17,18 +17,17 @@ class CarbonCopy extends Component {
     constructor(props) {
         super(props);
 
-        let ccList = props.ccsListInfo ? props.ccsListInfo : [];
+        let items = CarbonCopy.createCCGroup(props.ccsListInfo);
+        // let ccList = props.ccsListInfo ? props.ccsListInfo : [];
         let ccEmails = props.ccEmails ? props.ccEmails : [];
-        ccList = this.fillDefaultValue(ccList, ccEmails);
-        const items = CarbonCopy.createCCGroup(ccList);
-        // const items = CarbonCopy.createCCGroup(props.ccsListInfo);
+        // ccList = this.fillDefaultValue(ccList, ccEmails);
+        items = this.fillDefaultValue(items, ccEmails);
 
         this.state = {
             setParentState: props.setParentState,
             getParentState: props.getParentState,
             workflowId: props.workflowId,
-            // ccsListInfo: props.ccsListInfo,
-            ccsListInfo: ccList,
+            ccsListInfo: props.ccsListInfo,
             carbonCopyGroup: items,
             hideCC: props.features.hideCC,
             hideCCWorkflowList: props.features.hideCCWorkflowList,

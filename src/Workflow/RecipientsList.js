@@ -17,14 +17,14 @@ class RecipientsList extends Component {
     constructor(props) {
         super(props);
 
-        let recipientList = props.recipientsListInfo ? props.recipientsListInfo : [];
+        let recipientsList = props.recipientsListInfo ? props.recipientsListInfo : [];
         let recipientEmails = props.recipientEmails ? props.recipientEmails : [];
-        recipientList = this.fillDefaultValue(recipientList, recipientEmails);
+        recipientsList = this.fillDefaultValue(recipientsList, recipientEmails);
 
         this.state = {
             setParentState: props.setParentState,
             getParentState: props.getParentState,
-            recipientsList: recipientList,
+            recipientsList: recipientsList,
             workflowId: props.workflowId,
             hideRecipient: props.features.hideRecipient,
             hideWorkflowList: props.features.hideWorkflowList,
