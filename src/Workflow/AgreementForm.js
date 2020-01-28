@@ -78,8 +78,10 @@ class AgreementForm extends Component {
     // Sets workflow data
     setWorkflow(workflow) {
         if (workflow) {
-            const agreementName = workflow.agreementNameInfo ? workflow.agreementNameInfo.defaultValue : '';
-            const message = workflow.messageInfo ? workflow.messageInfo.defaultValue : '';
+            const agreementName = this.state.queryData.agreementName ? this.state.queryData.agreementName : 
+                workflow.agreementNameInfo ? workflow.agreementNameInfo.defaultValue : '';
+            const message = this.state.queryData.message ? this.state.queryData.message : 
+                workflow.messageInfo ? workflow.messageInfo.defaultValue : '';
             this.setState({
                 workflow: workflow,
                 agreementName: agreementName,
@@ -130,16 +132,16 @@ class AgreementForm extends Component {
         console.log('Agreement data to be submitted: ');
         console.log(agreementData);
 
-        // // Submit agreement to API server
-        // const response = await this.state.signService.postWorkflowAgreement(
-        //     this.state.workflowId, agreementData);
+        // Submit agreement to API server
+        const response = await this.state.signService.postWorkflowAgreement(
+            this.state.workflowId, agreementData);
 
-        // if ('url' in response) {
-        //     alert('Agreement sent');
-        // }
-        // else {
-        //     alert(response.message);
-        // }
+        if ('url' in response) {
+            alert('Agreement sent');
+        }
+        else {
+            alert(response.message);
+        }
     }
 
     render() {
@@ -189,7 +191,7 @@ class AgreementForm extends Component {
                                             workflowId={this.state.workflow.name} fileInfos={this.state.workflow.fileInfos} />
                                         <MergeField setParentState={this.setParentState} getParentState={this.getParentState}
                                             workflowId={this.state.workflow.name} mergeFieldsInfo={this.state.workflow.mergeFieldsInfo}
-                                            fields={this.state.queryData.fields} />
+                                            fieldFill={this.state.queryData.fieldFill} />
                                     </div>
                                     <div className="col-lg-5">
                                         <div className="option_wrapper">
@@ -198,10 +200,11 @@ class AgreementForm extends Component {
                                                     workflowId={this.state.workflow.name}
                                                     passwordVisible={this.state.workflow.passwordInfo.visible} />
                                                 <Deadline setParentState={this.setParentState} getParentState={this.getParentState} 
-                                                    workflowId={this.state.workflow.name} deadline={this.state.queryData.deadline}
+                                                    workflowId={this.state.workflow.name} deadlineFill={this.state.queryData.deadlineFill}
                                                     deadlineVisible={this.state.workflow.expirationInfo ? this.state.workflow.expirationInfo.visible : ''} />
                                                 <Reminder setParentState={this.setParentState} getParentState={this.getParentState} 
-                                                    workflowId={this.state.workflow.name} reminders={this.state.reminders} reminderFill={this.state.queryData.reminder} />
+                                                    workflowId={this.state.workflow.name} reminders={this.state.reminders} 
+                                                    reminderFill={this.state.queryData.reminderFill} />
                                             </div>
                                         </div>
                                     </div>

@@ -130,7 +130,6 @@ class RecipientsList extends Component {
                                 className={!recipient.modified ? "recipient_form_input predefined_input" : "recipient_form_input"}
                                 placeholder="Enter Recipient's Email" 
                                 value={recipient.defaultValue}
-                                // value={this.state.recipient ? this.state.recipient : recipient.defaultValue}
                                 readOnly={recipient.editable ? false : true}
                                 onChange={(event) => this.onEmailChanged(event, index)}>
                             </input>

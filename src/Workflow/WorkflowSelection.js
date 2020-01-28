@@ -36,11 +36,13 @@ class WorkflowSelection extends Component {
             signService: new SignService(),
             workflowService: new WorkflowService(),
             queryData : {
+                agreementName: queryData.agreementName,
+                message: queryData.message,
                 recipientEmails: queryData.recipient,
                 ccEmails: queryData.cc,
-                fields: queryData.fields,
-                deadline: queryData.deadline,
-                reminder: queryData.reminder
+                fieldFill: queryData.field,
+                deadlineFill: queryData.deadline,
+                reminderFill: queryData.reminder
             }
         };
     }

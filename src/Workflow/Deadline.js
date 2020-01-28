@@ -22,12 +22,12 @@ class Deadline extends Component {
             setParentState: props.setParentState,
             getParentState: props.getParentState,
             workflowId: props.workflowId,
-            hasDeadlineChecked: props.deadline ? true : true,
+            hasDeadlineChecked: true,
             visible: props.deadlineVisible,
-            date: props.deadline ? props.deadline : date
+            date: props.deadlineFill ? props.deadlineFill : date
         };
         this.state.setParentState({ 
-            deadline: this.getDaysTillDeadline(props.deadline ? props.deadline : date) 
+            deadline: this.getDaysTillDeadline(props.deadlineFill ? props.deadlineFill : date) 
         });
     }
 
@@ -37,9 +37,9 @@ class Deadline extends Component {
             return {
                 workflowId: props.workflowId,
                 workflow: props.workflow,
-                hasDeadlineChecked: props.deadline ? true : true,
+                hasDeadlineChecked: true,
                 visible: props.deadlineVisible,
-                date: props.deadline ? props.deadline : Deadline.getNextDay()
+                date: props.deadlineFill ? props.deadlineFill : Deadline.getNextDay()
             };
         }
         return null;
@@ -88,7 +88,6 @@ class Deadline extends Component {
     }
 
     render() {
-        const optionState = this.state.deadline;
         return (
             this.state.visible ?
             <div className="add_border_bottom" id="deadline_div">

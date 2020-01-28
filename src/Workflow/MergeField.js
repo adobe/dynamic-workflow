@@ -18,8 +18,8 @@ class MergeField extends Component {
         super(props);
 
         let mergeFieldList = props.mergeFieldsInfo ? props.mergeFieldsInfo : [];
-        let fields = props.fields ? props.fields : [];
-        mergeFieldList = this.fillDefaultValue(mergeFieldList, fields);
+        let fieldFill = props.fieldFill ? props.fieldFill : [];
+        mergeFieldList = this.fillDefaultValue(mergeFieldList, fieldFill);
 
         this.state = {
             setParentState: props.setParentState,
@@ -29,10 +29,10 @@ class MergeField extends Component {
         };
     }
 
-    fillDefaultValue(fieldList, fields) {
-        if(Array.isArray(fields)) {
-            fields.map(item => {
-                const field = fieldList.find(f => !f.defaultValue);
+    fillDefaultValue(mergeFieldList, fieldFill) {
+        if(Array.isArray(fieldFill)) {
+            fieldFill.map(item => {
+                const field = mergeFieldList.find(f => !f.defaultValue);
                 if (field) {
                     field.defaultValue = item;
                 }
@@ -40,12 +40,12 @@ class MergeField extends Component {
             });
         }
         else {
-            const field = fieldList.find(r => !r.defaultValue);
+            const field = mergeFieldList.find(f => !f.defaultValue);
             if (field) {
-                field.defaultValue = fields;
+                field.defaultValue = fieldFill;
             }
         }
-        return fieldList;
+        return mergeFieldList;
     }
 
     // Refresh after selecting another workflow
