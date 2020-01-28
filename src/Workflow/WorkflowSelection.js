@@ -109,7 +109,6 @@ class WorkflowSelection extends Component {
                         }
                         <div id="workflow_form_bottom">
                             <div id="workflow_form_bot_wrapper">
-                                {/* <AgreementForm workflowId={this.state.workflowId}></AgreementForm> */}
                                 <AgreementForm workflowId={this.state.workflowId} queryData={this.state.queryData}></AgreementForm>
                             </div>
                         </div>

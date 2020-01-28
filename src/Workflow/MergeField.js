@@ -17,13 +17,35 @@ class MergeField extends Component {
     constructor(props) {
         super(props);
 
+        let mergeFieldList = props.mergeFieldsInfo ? props.mergeFieldsInfo : [];
+        let fields = props.fields ? props.fields : [];
+        mergeFieldList = this.fillDefaultValue(mergeFieldList, fields);
+
         this.state = {
             setParentState: props.setParentState,
             getParentState: props.getParentState,
             workflowId: props.workflowId,
-            fields: props.fields
+            mergeFieldList: mergeFieldList
         };
-        // console.log(this.state.fields);
+    }
+
+    fillDefaultValue(fieldList, fields) {
+        if(Array.isArray(fields)) {
+            fields.map(item => {
+                const field = fieldList.find(f => !f.defaultValue);
+                if (field) {
+                    field.defaultValue = item;
+                }
+                return item;
+            });
+        }
+        else {
+            const field = fieldList.find(r => !r.defaultValue);
+            if (field) {
+                field.defaultValue = fields;
+            }
+        }
+        return fieldList;
     }
 
     // Refresh after selecting another workflow

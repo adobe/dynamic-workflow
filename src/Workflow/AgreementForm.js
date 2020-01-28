@@ -127,19 +127,19 @@ class AgreementForm extends Component {
     // onClick event handler for submitting data
     onSubmit = async () => {
         const agreementData = this.state.workflowService.createAgreementData(this.state);
-        // console.log('Agreement data to be submitted: ');
-        // console.log(agreementData);
+        console.log('Agreement data to be submitted: ');
+        console.log(agreementData);
 
-        // Submit agreement to API server
-        const response = await this.state.signService.postWorkflowAgreement(
-            this.state.workflowId, agreementData);
+        // // Submit agreement to API server
+        // const response = await this.state.signService.postWorkflowAgreement(
+        //     this.state.workflowId, agreementData);
 
-        if ('url' in response) {
-            alert('Agreement sent');
-        }
-        else {
-            alert(response.message);
-        }
+        // if ('url' in response) {
+        //     alert('Agreement sent');
+        // }
+        // else {
+        //     alert(response.message);
+        // }
     }
 
     render() {
@@ -188,7 +188,8 @@ class AgreementForm extends Component {
                                         <FileList setParentState={this.setParentState} getParentState={this.getParentState}
                                             workflowId={this.state.workflow.name} fileInfos={this.state.workflow.fileInfos} />
                                         <MergeField setParentState={this.setParentState} getParentState={this.getParentState}
-                                            workflowId={this.state.workflow.name} fields={this.state.queryData.fields} />
+                                            workflowId={this.state.workflow.name} mergeFieldsInfo={this.state.workflow.mergeFieldsInfo}
+                                            fields={this.state.queryData.fields} />
                                     </div>
                                     <div className="col-lg-5">
                                         <div className="option_wrapper">
@@ -200,7 +201,7 @@ class AgreementForm extends Component {
                                                     workflowId={this.state.workflow.name} deadline={this.state.queryData.deadline}
                                                     deadlineVisible={this.state.workflow.expirationInfo ? this.state.workflow.expirationInfo.visible : ''} />
                                                 <Reminder setParentState={this.setParentState} getParentState={this.getParentState} 
-                                                    workflowId={this.state.workflow.name} reminder={this.state.queryData.reminder} />
+                                                    workflowId={this.state.workflow.name} reminders={this.state.reminders} reminderFill={this.state.queryData.reminder} />
                                             </div>
                                         </div>
                                     </div>

@@ -81,7 +81,6 @@ class RecipientsList extends Component {
                     return item;
                 }
                 else {
-                    // item.defaultValue = this.state.recipient;
                     return item;
                 }
             });
