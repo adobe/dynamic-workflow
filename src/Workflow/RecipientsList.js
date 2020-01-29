@@ -32,6 +32,7 @@ class RecipientsList extends Component {
         };
     }
 
+    // Fill input with query string
     fillDefaultValue(recipientList, recipientEmails) {
         if(Array.isArray(recipientEmails)) {
             recipientEmails.map(email => {

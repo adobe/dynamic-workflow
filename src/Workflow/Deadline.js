@@ -26,6 +26,7 @@ class Deadline extends Component {
             visible: props.deadlineVisible,
             date: props.deadlineFill ? props.deadlineFill : date
         };
+        
         this.state.setParentState({ 
             deadline: this.getDaysTillDeadline(props.deadlineFill ? props.deadlineFill : date) 
         });

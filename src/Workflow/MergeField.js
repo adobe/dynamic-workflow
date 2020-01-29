@@ -29,6 +29,7 @@ class MergeField extends Component {
         };
     }
 
+    // Fill input with query string
     fillDefaultValue(mergeFieldList, fieldFill) {
         if(Array.isArray(fieldFill)) {
             fieldFill.map(item => {

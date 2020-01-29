@@ -38,6 +38,7 @@ class CarbonCopy extends Component {
         });
     }
 
+    // Fill input with query string
     fillDefaultValue(ccList, ccEmails) {
         if(Array.isArray(ccEmails)) {
             ccEmails.map(email => {
