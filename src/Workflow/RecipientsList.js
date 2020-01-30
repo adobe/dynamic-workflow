@@ -30,6 +30,26 @@ class RecipientsList extends Component {
             hideWorkflowList: props.features.hideWorkflowList,
             workflowName: props.workflowName
         };
+
+        // Update recipient for submission
+        this.state.setParentState(state => {
+            const list = this.state.getParentState().recipientsList.map((item) => {
+                const emailData = {
+                    "email": item.defaultValue
+                }
+                
+                const recipient = {
+                    "name": item.name,
+                    "recipients": [emailData]
+                }
+                return recipient;
+            });
+
+            return {
+                recipientsList: list
+            }
+        });
+        
     }
 
     // Fill input with query string
