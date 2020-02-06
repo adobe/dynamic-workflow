@@ -33,7 +33,7 @@ const upload = multer({ dest: 'uploads/' });
 const app = express();
 
 // Configuration
-const features = require('../key.js');
+const features = require('../features.js');
 
 var integration = features.integration;
 var host = features.host;
@@ -53,7 +53,7 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/static/test.html');
 });
 
-// Get features from key file - try to not make it async funciton
+// Get features from key file
 app.get('/features', async function (req, res) {
     res.json(features);
 })

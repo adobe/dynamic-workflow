@@ -56,7 +56,7 @@ class Reminder extends Component {
     }
 
     render() {
-        const optionState = this.state.reminders;
+        let optionState = this.state.reminders;
         return (
             <div className="add_border_bottom" id="reminder_div">
                 <input type="checkbox" name="hasReminderChecked" id="reminder_checkbox"

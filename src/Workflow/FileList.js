@@ -26,16 +26,16 @@ class FileList extends Component {
     }
 
     componentDidMount() {
-        const list = this.state.fileInfos.map((item, i) => {
+        let list = this.state.fileInfos.map((item, i) => {
             if (item.workflowLibraryDocumentSelectorList) {
-                const fileData = {
+                let fileData = {
                     "name": item.name,
                     "workflowLibraryDocumentId": item.workflowLibraryDocumentSelectorList[i].workflowLibDoc
                 }
                 return fileData;
             }
             else {
-                const transientData = {
+                let transientData = {
                     "name": item.name,
                     "transientDocumentId": ""
                 }
@@ -61,13 +61,13 @@ class FileList extends Component {
     }
 
     onFileUpload = async (event, index) => {
-        const file = event.target.files[0];
-        const transientDocument = await this.state.getParentState().signService.postTransient(file);
-        const transientDocumentId = transientDocument.transientDocumentId;
+        let file = event.target.files[0];
+        let transientDocument = await this.state.getParentState().signService.postTransient(file);
+        let transientDocumentId = transientDocument.transientDocumentId;
 
         // Update file item - local state
         this.setState(state => {
-            const list = this.state.fileInfos.map((item, i) => {
+            let list = this.state.fileInfos.map((item, i) => {
                 if (i === index) {
                     item.file = file;
                     return item;
@@ -84,17 +84,17 @@ class FileList extends Component {
 
         // Update upload file info - parent state
         this.state.setParentState(state => {
-            const list = this.state.getParentState().fileInfos.map((item, i) => {
+            let list = this.state.getParentState().fileInfos.map((item, i) => {
                 if (i === index) {
                     if (item.workflowLibraryDocumentSelectorList) {
-                        const fileData = {
+                        let fileData = {
                             "name": item.name,
                             "workflowLibraryDocumentId": item.workflowLibraryDocumentSelectorList[i].workflowLibDoc
                         }
                         return fileData;
                     }
                     else {
-                        const transientData = {
+                        let transientData = {
                             "name": item.name,
                             "transientDocumentId": transientDocumentId
                         }

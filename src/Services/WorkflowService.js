@@ -14,12 +14,12 @@ class WorkflowService {
 
     // Gets workflow Id for a workflow name.
     getWorkflowId(workflows, workflowName) {
-        const workflow = workflows.find(w => w.displayName === workflowName);
+        let workflow = workflows.find(w => w.displayName === workflowName);
         return workflow ? workflow.workflowId : null;
     }
 
     createAgreementData(source) {
-        const agreement =  {
+        let agreement =  {
             "documentCreationInfo": {
                 "fileInfos": source.fileInfos,
                 "name": source.agreementName,

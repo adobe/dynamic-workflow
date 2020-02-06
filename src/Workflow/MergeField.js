@@ -33,7 +33,7 @@ class MergeField extends Component {
     fillDefaultValue(mergeFieldList, fieldFill) {
         if(Array.isArray(fieldFill)) {
             fieldFill.map(item => {
-                const field = mergeFieldList.find(f => !f.defaultValue);
+                let field = mergeFieldList.find(f => !f.defaultValue);
                 if (field) {
                     field.defaultValue = item;
                 }
@@ -41,7 +41,7 @@ class MergeField extends Component {
             });
         }
         else {
-            const field = mergeFieldList.find(f => !f.defaultValue);
+            let field = mergeFieldList.find(f => !f.defaultValue);
             if (field) {
                 field.defaultValue = fieldFill;
             }
@@ -61,12 +61,12 @@ class MergeField extends Component {
 
     // Event handler when an item in the list changed
     onFieldChanged = (event, index) => {
-        const val = event.target.value;
+        let val = event.target.value;
 
         this.state.setParentState(state => {
-            const list = this.state.getParentState().mergeFieldGroup.map((item, i) => {
+            let list = this.state.getParentState().mergeFieldGroup.map((item, i) => {
                 if (i === index) {
-                    const fieldData = {
+                    let fieldData = {
                         "displayName": item.displayName,
                         "defaultValue": val,
                         "fieldName": item.fieldName
@@ -85,8 +85,8 @@ class MergeField extends Component {
     }
 
     render() {
-        const mergeFieldGroup = this.state.getParentState().mergeFieldGroup;
-        const showMergeField = mergeFieldGroup && mergeFieldGroup.length >  0;
+        let mergeFieldGroup = this.state.getParentState().mergeFieldGroup;
+        let showMergeField = mergeFieldGroup && mergeFieldGroup.length >  0;
         return (
             <div>
                 { showMergeField &&

@@ -25,8 +25,8 @@ class WorkflowSelection extends Component {
             workflowName = props.match.params.name;
         }
 
-        const locationSearch = queryString.parse(this.props.location.search);
-        const queryData = locationSearch ? locationSearch : null;
+        let locationSearch = queryString.parse(this.props.location.search);
+        let queryData = locationSearch ? locationSearch : null;
 
         this.state = {
             hideSelector: props.hideSelector,
@@ -48,8 +48,8 @@ class WorkflowSelection extends Component {
     }
 
     async componentDidMount() {
-        const workflows = await this.state.signService.getWorkflows();
-        const workflowId = this.state.workflowService.getWorkflowId(workflows, this.state.workflowName);
+        let workflows = await this.state.signService.getWorkflows();
+        let workflowId = this.state.workflowService.getWorkflowId(workflows, this.state.workflowName);
 
         if (workflows) {
             this.setState({
@@ -62,7 +62,7 @@ class WorkflowSelection extends Component {
 
     // Sets workflowId to show correct workflow data
     onWorkflowChanged = (event) => {
-        const workflowId = event.target.value;
+        let workflowId = event.target.value;
         this.setState({
             selectedWorkflowId: workflowId
         })

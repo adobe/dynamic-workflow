@@ -16,6 +16,7 @@ module.exports = {
     host: process.env.REACT_APP_SIGN_API_HOST,
     endpoint: process.env.REACT_APP_SIGN_API_ENDPOINT,
     port: process.env.REACT_APP_PORT,
+    allMaxSubmits: process.env.REACT_APP_ALL_MAX_SUBMITS,
     maxSubmits: process.env.REACT_APP_MAX_SUBMITS,
     timeoutPeriod: process.env.REACT_APP_TIMEOUT_PERIOD,
     hideSelector: (process.env.REACT_APP_HIDE_SELECTOR === 'true'),

@@ -56,7 +56,7 @@ There are two options to import your source file.  Git or FTP.
 
 You will need to install all dependencies associated with this application
 ```sh
-cd Dynamic/Workflow
+cd dynamic-workflow
 npm install
 ```
 

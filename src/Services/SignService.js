@@ -18,19 +18,15 @@ class SignService {
 
     // Gets a list of workflows
     getWorkflows = async () => {
-        const url = this.baseUrl + "/api/getWorkflows";
-        const resp = await fetch(url);
-        const body = await resp.json();
-        return body;
+        const resp = await fetch(this.baseUrl + "/api/getWorkflows");
+        return await resp.json();
     }
 
     // Gets workflow detail
     getWorkflowById = async (workflowId) => {
         if (workflowId) {
-            const url = this.baseUrl + `/api/getWorkflowById/${workflowId}`;
-            const resp = await fetch(url);
-            const body = await resp.json();
-            return body;
+            const resp = await fetch(this.baseUrl + `/api/getWorkflowById/${workflowId}`);
+            return await resp.json();
         }
         return null;
     }

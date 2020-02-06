@@ -28,9 +28,8 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const features = await this.state.configService.getFeatures();
     this.setState({
-      features: features
+      features: await this.state.configService.getFeatures()
     })
   }
 
@@ -38,7 +37,7 @@ class App extends Component {
     if (!this.state.features)
       return (<div></div>);
 
-    const hideSelector = this.state.features.hideSelector;
+    let hideSelector = this.state.features.hideSelector;
     if (hideSelector) {
 
       // Create routes that show specific workflow via route url

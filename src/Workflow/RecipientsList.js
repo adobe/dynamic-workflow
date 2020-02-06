@@ -33,12 +33,12 @@ class RecipientsList extends Component {
 
         // Update recipient for submission
         this.state.setParentState(state => {
-            const list = this.state.getParentState().recipientsList.map((item) => {
-                const emailData = {
+            let list = this.state.getParentState().recipientsList.map((item) => {
+                let emailData = {
                     "email": item.defaultValue
                 }
                 
-                const recipient = {
+                let recipient = {
                     "name": item.name,
                     "recipients": [emailData]
                 }
@@ -56,7 +56,7 @@ class RecipientsList extends Component {
     fillDefaultValue(recipientList, recipientEmails) {
         if(Array.isArray(recipientEmails)) {
             recipientEmails.map(email => {
-                const recipient = recipientList.find(r => !r.defaultValue);
+                let recipient = recipientList.find(r => !r.defaultValue);
                 if (recipient) {
                     recipient.defaultValue = email;
                 }
@@ -64,7 +64,7 @@ class RecipientsList extends Component {
             });
         }
         else {
-            const recipient = recipientList.find(r => !r.defaultValue);
+            let recipient = recipientList.find(r => !r.defaultValue);
             if (recipient) {
                 recipient.defaultValue = recipientEmails;
             }
@@ -88,14 +88,14 @@ class RecipientsList extends Component {
 
     // Event handler when an item in the list changed
     onEmailChanged = (event, index) => {
-        const val = event.target.value;
-        const emailData = {
+        let val = event.target.value;
+        let emailData = {
             "email": val
         }
 
         // Update email text for recipient
         this.setState(state => {
-            const list = this.state.recipientsList.map((item, i) => {
+            let list = this.state.recipientsList.map((item, i) => {
                 if (i === index) {
                     item.defaultValue = val;
                     item.modified = true;
@@ -113,9 +113,9 @@ class RecipientsList extends Component {
 
         // Update recipient for submission
         this.state.setParentState(state => {
-            const list = this.state.getParentState().recipientsList.map((item, i) => {
+            let list = this.state.getParentState().recipientsList.map((item, i) => {
                 if (i === index) {
-                    const recipient = {
+                    let recipient = {
                         "name": item.name,
                         "recipients": [emailData]
                     }
@@ -134,9 +134,9 @@ class RecipientsList extends Component {
 
 
     render() {
-        const hideRecipient = this.state.hideRecipient;
-        const hideWorkflows = (this.state.hideWorkflowList.indexOf(this.state.workflowName) >= 0 ? true : false);
-        const hideAll = this.state.hideWorkflowList === "" ? true : false;
+        let hideRecipient = this.state.hideRecipient;
+        let hideWorkflows = this.state.hideWorkflowList && (this.state.hideWorkflowList.indexOf(this.state.workflowName) >= 0 ? true : false);
+        let hideAll = this.state.hideWorkflowList === "" ? true : false;
 
         return (
             <div>

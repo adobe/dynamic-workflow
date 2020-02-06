@@ -57,7 +57,7 @@ class PassOption extends Component {
 
     // Event handler when checkbox changed
     onCheckboxChanged = (event) => {
-        const isChecked = event.target.checked;
+        let isChecked = event.target.checked;
         this.setState({ [event.target.name]: isChecked });
         this.state.setParentState({ isPasswordValid: !isChecked });
     }
@@ -66,10 +66,10 @@ class PassOption extends Component {
     // Event handler when password changed
     onPassChanged = (event) => {
         // Update state
-        const name = event.target.name;
-        const val = event.target.value;
+        let name = event.target.name;
+        let val = event.target.value;
 
-        const passObject = {};
+        let passObject = {};
         passObject.passOption = this.state.passOption;
         passObject.confirmPassOption = this.state.confirmPassOption;
         passObject[name] = val;
@@ -77,13 +77,13 @@ class PassOption extends Component {
         this.setState({ [name]: val });
 
         // Update password state
-        const isPassValid = this.isPasswordValid(passObject.passOption, passObject.confirmPassOption);
+        let isPassValid = this.isPasswordValid(passObject.passOption, passObject.confirmPassOption);
         this.state.setParentState({
             isPasswordValid: isPassValid
         });
 
         if (isPassValid) {
-            const passData = {
+            let passData = {
                 "openPassword": val,
                 "protectOpen": isPassValid
             };
@@ -96,7 +96,7 @@ class PassOption extends Component {
 
     render() {
         // Make passwords visible
-        const passwordType = this.state.showPasswordChecked ? "text" : "password";
+        let passwordType = this.state.showPasswordChecked ? "text" : "password";
         return (
             this.state.visible ?
                 <div className="add_border_bottom" id="pass_div">

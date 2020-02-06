@@ -15,7 +15,7 @@ class ConfigService {
     constructor() {
         this.baseUrl = "http://localhost:3200";
     }
-
+    
     hideSelector = false;
 
     getFeatures = () => {
@@ -24,7 +24,6 @@ class ConfigService {
         .then(resp => resp.json())
         return body;
     }
-
 }
 
 export default ConfigService;

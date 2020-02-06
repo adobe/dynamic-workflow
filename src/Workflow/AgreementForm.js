@@ -67,20 +67,19 @@ class AgreementForm extends Component {
     }
 
     async componentDidMount() {
-        const workflow = await this.state.signService.getWorkflowById(this.state.workflowId);
+        let workflow = await this.state.signService.getWorkflowById(this.state.workflowId);
         this.setWorkflow(workflow);
-        const features = await this.state.configService.getFeatures();
         this.setState({
-            features: features
+            features: await this.state.configService.getFeatures()
         })
     }
 
     // Sets workflow data
     setWorkflow(workflow) {
         if (workflow) {
-            const agreementName = this.state.queryData.agreementName ? this.state.queryData.agreementName : 
+            let agreementName = this.state.queryData.agreementName ? this.state.queryData.agreementName : 
                 workflow.agreementNameInfo ? workflow.agreementNameInfo.defaultValue : '';
-            const message = this.state.queryData.message ? this.state.queryData.message : 
+            let message = this.state.queryData.message ? this.state.queryData.message : 
                 workflow.messageInfo ? workflow.messageInfo.defaultValue : '';
             this.setState({
                 workflow: workflow,
@@ -103,7 +102,7 @@ class AgreementForm extends Component {
 
     async componentDidUpdate(prevProps, prevState) {
         if (prevProps.workflowId !== this.state.workflowId) {
-            const workflow = await this.state.signService.getWorkflowById(this.state.workflowId);
+            let workflow = await this.state.signService.getWorkflowById(this.state.workflowId);
             this.setWorkflow(workflow);
         }
     }
@@ -120,20 +119,20 @@ class AgreementForm extends Component {
 
     // Event handler when an input text changed
     onTextChanged = (event) => {
-        const name = event.target.name;
-        const val = event.target.value;
+        let name = event.target.name;
+        let val = event.target.value;
 
         this.setState({ [name]: val });
     }
 
     // onClick event handler for submitting data
     onSubmit = async () => {
-        const agreementData = this.state.workflowService.createAgreementData(this.state);
+        let agreementData = this.state.workflowService.createAgreementData(this.state);
         console.log('Agreement data to be submitted: ');
         console.log(agreementData);
 
         // Submit agreement to API server
-        const response = await this.state.signService.postWorkflowAgreement(
+        let response = await this.state.signService.postWorkflowAgreement(
             this.state.workflowId, agreementData);
 
         if ('url' in response) {
@@ -146,7 +145,7 @@ class AgreementForm extends Component {
 
     render() {
         // Cannot submit if password is invalid
-        const isSubmitEnabled = this.state.isPasswordValid;
+        let isSubmitEnabled = this.state.isPasswordValid;
         if (!this.state.workflow) {
             return (<div></div>);
         }
