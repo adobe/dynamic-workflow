@@ -18,7 +18,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const dotEnvOptions = {
-    path: __dirname + '../../.env'
+    path: __dirname + '/.env'
 }
 
 require('dotenv').config(dotEnvOptions);
@@ -33,7 +33,7 @@ const upload = multer({ dest: 'uploads/' });
 const app = express();
 
 // Configuration
-const features = require('../features.js');
+const features = require('./features.js');
 
 var integration = features.integration;
 var host = features.host;

@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 // This class handles reading config data from a config file.
 class ConfigService {
     constructor() {
-        this.baseUrl = "http://localhost:3200";
+        this.baseUrl = `http://localhost:` + process.env.REACT_APP_PORT;
     }
     
     hideSelector = false;
