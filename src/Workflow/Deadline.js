@@ -16,9 +16,9 @@ import React, { Component } from 'react';
 class Deadline extends Component {
     constructor(props) {
         super(props);
-        
+
         let date = Deadline.getNextDay();
-        
+
         this.state = {
             setParentState: props.setParentState,
             getParentState: props.getParentState,
@@ -27,9 +27,9 @@ class Deadline extends Component {
             visible: props.deadlineVisible,
             date: props.deadlineFill ? props.deadlineFill : date
         };
-        
-        this.state.setParentState({ 
-            deadline: this.getDaysTillDeadline(props.deadlineFill ? props.deadlineFill : date) 
+
+        this.state.setParentState({
+            deadline: this.getDaysTillDeadline(props.deadlineFill ? props.deadlineFill : date)
         });
     }
 
@@ -93,7 +93,7 @@ class Deadline extends Component {
         return (
             this.state.visible ?
             <div className="add_border_bottom" id="deadline_div">
-                <input type="checkbox" name="hasDeadlineChecked" id="deadline_checkbox" 
+                <input type="checkbox" name="hasDeadlineChecked" id="deadline_checkbox"
                     checked={this.state.hasDeadlineChecked} onChange={this.onCheckboxChanged}></input>
                 <label className="checkbox_input" htmlFor="deadline_checkbox">Completion Deadline</label>
                 {

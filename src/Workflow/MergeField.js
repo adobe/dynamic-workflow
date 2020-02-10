@@ -52,7 +52,7 @@ class MergeField extends Component {
     static getDerivedStateFromProps(props, state) {
         if (props.workflowId !== state.workflowId) {
             return {
-                workflowId: props.workflowId    
+                workflowId: props.workflowId
             };
         }
         return null;

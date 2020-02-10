@@ -87,7 +87,7 @@ class WorkflowSelection extends Component {
                                             <div className="form-group">
                                                 <label htmlFor="workflow_dropdown" id="workflow_dropdown_label">Workflow Selector</label>
                                                 <select className="form-control" id="workflow_dropdown"
-                                                    value={this.state.workflowName} 
+                                                    value={this.state.workflowName}
                                                     onChange={this.onWorkflowChanged}
                                                     >
                                                     <option value=""></option>

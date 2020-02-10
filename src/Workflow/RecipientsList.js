@@ -98,9 +98,7 @@ class RecipientsList extends Component {
                     item.modified = true;
                     return item;
                 }
-                else {
-                    return item;
-                }
+                return item;
             });
 
             return {

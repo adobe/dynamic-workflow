@@ -13,7 +13,8 @@ governing permissions and limitations under the License.
 // Service for commmunicating with Sign API and server
 class SignService {
     constructor() {
-        this.baseUrl = `http://localhost:` + process.env.REACT_APP_PORT;
+      const features = require('./features.js');
+      this.baseUrl = features.SERVER_URL;
     }
 
     // Gets a list of workflows

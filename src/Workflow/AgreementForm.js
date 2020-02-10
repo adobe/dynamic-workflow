@@ -79,9 +79,9 @@ class AgreementForm extends Component {
     // Sets workflow data
     setWorkflow(workflow) {
         if (workflow) {
-            let agreementName = this.state.queryData.agreementName ? this.state.queryData.agreementName : 
+            let agreementName = this.state.queryData.agreementName ? this.state.queryData.agreementName :
                 workflow.agreementNameInfo ? workflow.agreementNameInfo.defaultValue : '';
-            let message = this.state.queryData.message ? this.state.queryData.message : 
+            let message = this.state.queryData.message ? this.state.queryData.message :
                 workflow.messageInfo ? workflow.messageInfo.defaultValue : '';
             this.setState({
                 workflow: workflow,
@@ -169,7 +169,7 @@ class AgreementForm extends Component {
                                 </div>
                                 <RecipientsList setParentState={this.setParentState} getParentState={this.getParentState}
                                     workflowId={this.state.workflow.name} features={this.state.features} workflowName={this.state.workflow.displayName}
-                                    recipientsListInfo={this.state.workflow.recipientsListInfo} workflow={this.state.workflow} 
+                                    recipientsListInfo={this.state.workflow.recipientsListInfo} workflow={this.state.workflow}
                                     recipientEmails={this.state.queryData.recipientEmails} />
                                 <CarbonCopy setParentState={this.setParentState} getParentState={this.getParentState}
                                     workflowId={this.state.workflow.name} features={this.state.features} workflowName={this.state.workflow.displayName}
@@ -207,11 +207,11 @@ class AgreementForm extends Component {
                                                 <PassOption setParentState={this.setParentState} getParentState={this.getParentState}
                                                     workflowId={this.state.workflow.name}
                                                     passwordVisible={this.state.workflow.passwordInfo.visible} />
-                                                <Deadline setParentState={this.setParentState} getParentState={this.getParentState} 
+                                                <Deadline setParentState={this.setParentState} getParentState={this.getParentState}
                                                     workflowId={this.state.workflow.name} deadlineFill={this.state.queryData.deadlineFill}
                                                     deadlineVisible={this.state.workflow.expirationInfo ? this.state.workflow.expirationInfo.visible : ''} />
-                                                <Reminder setParentState={this.setParentState} getParentState={this.getParentState} 
-                                                    workflowId={this.state.workflow.name} reminders={this.state.reminders} 
+                                                <Reminder setParentState={this.setParentState} getParentState={this.getParentState}
+                                                    workflowId={this.state.workflow.name} reminders={this.state.reminders}
                                                     reminderFill={this.state.queryData.reminderFill} />
                                             </div>
                                         </div>

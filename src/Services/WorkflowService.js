@@ -27,16 +27,16 @@ class WorkflowService {
                 "ccs": source.carbonCopyGroup,
                 "securityOptions": source.passOption,
                 "mergeFieldInfo": source.mergeFieldGroup,
-                "reminderFrequency": source.reminders, 
+                "reminderFrequency": source.reminders,
                 "message": source.message
             }
         };
-        
+
         if (source.deadline !== "") {
             agreement.documentCreationInfo.expirationInfo = source.deadline;
         }
 
-        return agreement; 
+        return agreement;
     }
 }
 
