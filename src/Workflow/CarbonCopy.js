@@ -40,9 +40,9 @@ class CarbonCopy extends Component {
 
     // Fill input with query string
     fillDefaultValue(ccList, ccEmails) {
+        let cc = ccList.find(c => !c.defaultValue);
         if(Array.isArray(ccEmails)) {
             ccEmails.map(email => {
-                let cc = ccList.find(c => !c.defaultValue);
                 if (cc) {
                     cc.defaultValue = email;
                 }
@@ -50,7 +50,6 @@ class CarbonCopy extends Component {
             });
         }
         else {
-            let cc = ccList.find(c => !c.defaultValue);
             if (cc) {
                 cc.defaultValue = ccEmails;
             }

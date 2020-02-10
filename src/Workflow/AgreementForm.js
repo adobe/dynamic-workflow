@@ -37,6 +37,8 @@ class AgreementForm extends Component {
             workflowName: props.workflowName,
             isPasswordValid: true,
             features: null,
+            allMaxSubmits: 0,
+            maxSubmits: 0,
 
             queryData: props.queryData,
 
@@ -88,7 +90,8 @@ class AgreementForm extends Component {
                 fileInfos: workflow.fileInfos ? workflow.fileInfos : [],
                 recipientsList: workflow.recipientsListInfo ? workflow.recipientsListInfo : [],
                 carbonCopyGroup: [],
-                mergeFieldGroup: workflow.mergeFieldsInfo ? workflow.mergeFieldsInfo : []
+                mergeFieldGroup: workflow.mergeFieldsInfo ? workflow.mergeFieldsInfo : [],
+                maxSubmits: 0
             });
         }
         else {
@@ -130,6 +133,12 @@ class AgreementForm extends Component {
         let agreementData = this.state.workflowService.createAgreementData(this.state);
         console.log('Agreement data to be submitted: ');
         console.log(agreementData);
+
+        // Increments submit counter
+        this.setState({
+            maxSubmits: ++this.state.maxSubmits,
+            allMaxSubmits: ++this.state.allMaxSubmits
+        })
 
         // Submit agreement to API server
         let response = await this.state.signService.postWorkflowAgreement(

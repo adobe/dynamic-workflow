@@ -35,11 +35,11 @@ const app = express();
 // Configuration
 const features = require('./features.js');
 
-var integration = features.integration;
-var host = features.host;
-var endpoint = features.endpoint;
-var url = host + endpoint;
-var port = features.port || 3200;
+const integration = features.integration;
+const host = features.host;
+const endpoint = features.endpoint;
+const url = host + endpoint;
+const port = features.port || 3200;
 
 app.use(cors());
 app.use(express.static(__dirname + '/static'));
@@ -153,7 +153,7 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
     }
 
     // Create FormData
-    var form = new FormData();
+    const form = new FormData();
     form.append('File-Name', req.file.originalname);
     form.append('Mime-Type', req.file.mimetype);
     form.append('File', fs.createReadStream(req.file.path));

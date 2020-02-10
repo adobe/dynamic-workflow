@@ -31,9 +31,9 @@ class MergeField extends Component {
 
     // Fill input with query string
     fillDefaultValue(mergeFieldList, fieldFill) {
+        let field = mergeFieldList.find(f => !f.defaultValue);
         if(Array.isArray(fieldFill)) {
             fieldFill.map(item => {
-                let field = mergeFieldList.find(f => !f.defaultValue);
                 if (field) {
                     field.defaultValue = item;
                 }
@@ -41,7 +41,6 @@ class MergeField extends Component {
             });
         }
         else {
-            let field = mergeFieldList.find(f => !f.defaultValue);
             if (field) {
                 field.defaultValue = fieldFill;
             }

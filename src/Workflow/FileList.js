@@ -28,18 +28,16 @@ class FileList extends Component {
     componentDidMount() {
         let list = this.state.fileInfos.map((item, i) => {
             if (item.workflowLibraryDocumentSelectorList) {
-                let fileData = {
+                return {
                     "name": item.name,
                     "workflowLibraryDocumentId": item.workflowLibraryDocumentSelectorList[i].workflowLibDoc
-                }
-                return fileData;
+                };
             }
             else {
-                let transientData = {
+                return {
                     "name": item.name,
                     "transientDocumentId": ""
-                }
-                return transientData;
+                };
             }
         });
 
@@ -87,18 +85,16 @@ class FileList extends Component {
             let list = this.state.getParentState().fileInfos.map((item, i) => {
                 if (i === index) {
                     if (item.workflowLibraryDocumentSelectorList) {
-                        let fileData = {
+                        return {
                             "name": item.name,
                             "workflowLibraryDocumentId": item.workflowLibraryDocumentSelectorList[i].workflowLibDoc
                         }
-                        return fileData;
                     }
                     else {
-                        let transientData = {
+                        return {
                             "name": item.name,
                             "transientDocumentId": transientDocumentId
                         }
-                        return transientData;
                     }
                 }
                 else {

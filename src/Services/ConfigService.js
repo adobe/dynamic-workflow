@@ -15,12 +15,9 @@ class ConfigService {
     constructor() {
         this.baseUrl = `http://localhost:` + process.env.REACT_APP_PORT;
     }
-    
-    hideSelector = false;
-
+    hideSelector = false;  
     getFeatures = () => {
-        const url = this.baseUrl + "/features";
-        const body = fetch(url)
+        const body = fetch(this.baseUrl + "/features")
         .then(resp => resp.json())
         return body;
     }

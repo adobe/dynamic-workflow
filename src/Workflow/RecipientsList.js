@@ -37,26 +37,25 @@ class RecipientsList extends Component {
                 let emailData = {
                     "email": item.defaultValue
                 }
-                
-                let recipient = {
+
+                return {
                     "name": item.name,
                     "recipients": [emailData]
                 }
-                return recipient;
             });
 
             return {
                 recipientsList: list
             }
         });
-        
+
     }
 
     // Fill input with query string
     fillDefaultValue(recipientList, recipientEmails) {
+        let recipient = recipientList.find(r => !r.defaultValue);
         if(Array.isArray(recipientEmails)) {
             recipientEmails.map(email => {
-                let recipient = recipientList.find(r => !r.defaultValue);
                 if (recipient) {
                     recipient.defaultValue = email;
                 }
@@ -64,7 +63,6 @@ class RecipientsList extends Component {
             });
         }
         else {
-            let recipient = recipientList.find(r => !r.defaultValue);
             if (recipient) {
                 recipient.defaultValue = recipientEmails;
             }
@@ -88,16 +86,15 @@ class RecipientsList extends Component {
 
     // Event handler when an item in the list changed
     onEmailChanged = (event, index) => {
-        let val = event.target.value;
         let emailData = {
-            "email": val
+            "email": event.target.value
         }
 
         // Update email text for recipient
         this.setState(state => {
             let list = this.state.recipientsList.map((item, i) => {
                 if (i === index) {
-                    item.defaultValue = val;
+                    item.defaultValue = event.target.value;
                     item.modified = true;
                     return item;
                 }
@@ -149,7 +146,7 @@ class RecipientsList extends Component {
                             <h3 className="recipient_label">{recipient.label}</h3>
                             <input type="text" id={`recipient_${index}`} name={`recipient_${index}`}
                                 className={!recipient.modified ? "recipient_form_input predefined_input" : "recipient_form_input"}
-                                placeholder="Enter Recipient's Email" 
+                                placeholder="Enter Recipient's Email"
                                 value={recipient.defaultValue}
                                 readOnly={recipient.editable ? false : true}
                                 onChange={(event) => this.onEmailChanged(event, index)}>
