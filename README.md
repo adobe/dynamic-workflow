@@ -94,7 +94,7 @@ There are three main components within the configuration file.
 ### Enterprise
 - `integration`:   This is your integration key for Adobe Sign. Please see the integration key section.
 
-## Features
+### Features
 - `REACT_APP_ALL_MAX_SUBMITS`: This will determine the amount of submissions for ALL workflows combined.
 - `REACT_APP_MAX_SUBMITS`: This will determine the amount of submissions for a workflow. 
 - `REACT_APP_HIDE_SELECTOR`: This turn on the feature to hide the workflow selector and use direct url links only.
@@ -109,7 +109,7 @@ There are three main components within the configuration file.
   - `false`: Turn off
 - `REACT_APP_HIDE_PREDEFINED_CC_WORKFLOW_LIST`: A list to target specific workflows to hide predefined ccs separating with commas.
 
-### Direct URL Link Parameters
+#### Direct URL Link Parameters
 List the parameter values in order of placement e.g. `recipient=test@gmail.com&recipient=test2@gmail.com`. If there is a predefined field, the item will be filled in the next input field. Each parameter has a specific key:
 - Agreement Name: `agreementName`
 - Message: `message`
@@ -127,7 +127,7 @@ List the parameter values in order of placement e.g. `recipient=test@gmail.com&r
     - Every third day: `EVERY_THIRD_DAY_UNTIL_SIGNED`
     - Every fifth day: `EVERY_FIFTH_DAY_UNTIL_SIGNED`
 
-## Integration Key
+### Integration Key
 You will be required to create an integration key with limited scopes for this application and add the integration key inside the .env file. [Click Me](https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html)
 
 ![integration key](docs/integration_key.png "Integration Key")
