@@ -14,137 +14,137 @@ import React, { Component } from 'react';
 
 // Component for managing a list of uploaded files or library documents.
 class FileList extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            setParentState: props.setParentState,
-            getParentState: props.getParentState,
-            workflowId: props.workflowId,
-            fileInfos: props.fileInfos ? props.fileInfos : []
+    this.state = {
+      setParentState: props.setParentState,
+      getParentState: props.getParentState,
+      workflowId: props.workflowId,
+      fileInfos: props.fileInfos ? props.fileInfos : []
+    };
+  }
+
+  componentDidMount() {
+    let list = this.state.fileInfos.map((item, i) => {
+      if (item.workflowLibraryDocumentSelectorList) {
+        return {
+          "name": item.name,
+          "workflowLibraryDocumentId": item.workflowLibraryDocumentSelectorList[i].workflowLibDoc
         };
+      }
+      else {
+        return {
+          "name": item.name,
+          "transientDocumentId": ""
+        };
+      }
+    });
+
+    this.state.setParentState({
+      fileInfos: list
+    });
+  }
+
+  // Refresh after selecting another workflow
+  static getDerivedStateFromProps(props, state) {
+    if (props.workflowId !== state.workflowId &&
+      props.fileInfos !== state.fileInfos) {
+      return {
+        workflowId: props.workflowId,
+        fileInfos: props.fileInfos
+      };
     }
+    return null;
+  }
 
-    componentDidMount() {
-        let list = this.state.fileInfos.map((item, i) => {
-            if (item.workflowLibraryDocumentSelectorList) {
-                return {
-                    "name": item.name,
-                    "workflowLibraryDocumentId": item.workflowLibraryDocumentSelectorList[i].workflowLibDoc
-                };
-            }
-            else {
-                return {
-                    "name": item.name,
-                    "transientDocumentId": ""
-                };
-            }
-        });
+  onFileUpload = async (event, index) => {
+    let file = event.target.files[0];
+    let transientDocument = await this.state.getParentState().signService.postTransient(file);
+    let transientDocumentId = transientDocument.transientDocumentId;
 
-        this.state.setParentState({
-            fileInfos: list
-        });
-    }
-
-    // Refresh after selecting another workflow
-    static getDerivedStateFromProps(props, state) {
-        if (props.workflowId !== state.workflowId &&
-            props.fileInfos !== state.fileInfos) {
-            return {
-                workflowId: props.workflowId,
-                fileInfos: props.fileInfos
-            };
+    // Update file item - local state
+    this.setState(state => {
+      let list = this.state.fileInfos.map((item, i) => {
+        if (i === index) {
+          item.file = file;
+          return item;
         }
-        return null;
-    }
+        else {
+          return item;
+        }
+      });
 
-    onFileUpload = async (event, index) => {
-        let file = event.target.files[0];
-        let transientDocument = await this.state.getParentState().signService.postTransient(file);
-        let transientDocumentId = transientDocument.transientDocumentId;
+      return {
+        fileInfos: list
+      }
+    });
 
-        // Update file item - local state
-        this.setState(state => {
-            let list = this.state.fileInfos.map((item, i) => {
-                if (i === index) {
-                    item.file = file;
-                    return item;
-                }
-                else {
-                    return item;
-                }
-            });
-
+    // Update upload file info - parent state
+    this.state.setParentState(state => {
+      let list = this.state.getParentState().fileInfos.map((item, i) => {
+        if (i === index) {
+          if (item.workflowLibraryDocumentSelectorList) {
             return {
-                fileInfos: list
+              "name": item.name,
+              "workflowLibraryDocumentId": item.workflowLibraryDocumentSelectorList[i].workflowLibDoc
             }
-        });
-
-        // Update upload file info - parent state
-        this.state.setParentState(state => {
-            let list = this.state.getParentState().fileInfos.map((item, i) => {
-                if (i === index) {
-                    if (item.workflowLibraryDocumentSelectorList) {
-                        return {
-                            "name": item.name,
-                            "workflowLibraryDocumentId": item.workflowLibraryDocumentSelectorList[i].workflowLibDoc
-                        }
-                    }
-                    else {
-                        return {
-                            "name": item.name,
-                            "transientDocumentId": transientDocumentId
-                        }
-                    }
-                }
-                else {
-                    return item;
-                }
-            });
-
+          }
+          else {
             return {
-                fileInfos: list
+              "name": item.name,
+              "transientDocumentId": transientDocumentId
             }
-        });
-    }
+          }
+        }
+        else {
+          return item;
+        }
+      });
 
-    render() {
-        return (
-            <div>
-                <div id="upload_header">
-                    <h3 id="upload_header_label" className="recipient_label">Files</h3>
+      return {
+        fileInfos: list
+      }
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <div id="upload_header">
+          <h3 id="upload_header_label" className="recipient_label">Files</h3>
+        </div>
+        <div id="upload_body">
+          {
+            this.state.fileInfos.map((item, index) =>
+              <div className="file_info_div row" id={`file_info_${item.name}`} key={index}>
+                <div className="col-lg-4">
+                  <h3>{item.label}</h3>
                 </div>
-                <div id="upload_body">
-                    {
-                        this.state.fileInfos.map((item, index) =>
-                            <div className="file_info_div row" id={`file_info_${item.name}`} key={index}>
-                                <div className="col-lg-4">
-                                    <h3>{item.label}</h3>
-                                </div>
-                                <div className="col-lg-8">
-                                    <div className="custom-file" id={`upload_${item.name}`}>
-                                        {item.workflowLibraryDocumentSelectorList ?
-                                            <div>
-                                                <h4>
-                                                    {item.workflowLibraryDocumentSelectorList[0].label}
-                                                </h4>
-                                            </div> :
-                                            <div>
-                                                <input type="file" className="custom-file-input"
-                                                    id={`logo_${item.name}`} onChange={(event) => this.onFileUpload(event, index)}></input>
-                                                <h4 className="custom-file-label text-truncate">
-                                                    {item.file ? item.file.name : "Please Upload A File"}</h4>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        )
+                <div className="col-lg-8">
+                  <div className="custom-file" id={`upload_${item.name}`}>
+                    {item.workflowLibraryDocumentSelectorList ?
+                      <div>
+                        <h4>
+                          {item.workflowLibraryDocumentSelectorList[0].label}
+                        </h4>
+                      </div> :
+                      <div>
+                        <input type="file" className="custom-file-input"
+                          id={`logo_${item.name}`} onChange={(event) => this.onFileUpload(event, index)}></input>
+                        <h4 className="custom-file-label text-truncate">
+                          {item.file ? item.file.name : "Please Upload A File"}</h4>
+                      </div>
                     }
+                  </div>
                 </div>
-            </div>
-        );
-    }
+              </div>
+            )
+          }
+        </div>
+      </div>
+    );
+  }
 }
 
 export default FileList;

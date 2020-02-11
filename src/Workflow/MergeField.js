@@ -14,105 +14,106 @@ import React, { Component } from 'react';
 
 // Component for managing merge fields
 class MergeField extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        let mergeFieldList = props.mergeFieldsInfo ? props.mergeFieldsInfo : [];
-        let fieldFill = props.fieldFill ? props.fieldFill : [];
-        mergeFieldList = this.fillDefaultValue(mergeFieldList, fieldFill);
+    let mergeFieldList = props.mergeFieldsInfo ? props.mergeFieldsInfo : [];
+    let fieldFill = props.fieldFill ? props.fieldFill : [];
+    mergeFieldList = this.fillDefaultValue(mergeFieldList, fieldFill);
 
-        this.state = {
-            setParentState: props.setParentState,
-            getParentState: props.getParentState,
-            workflowId: props.workflowId,
-            mergeFieldList: mergeFieldList
-        };
-    }
+    this.state = {
+      setParentState: props.setParentState,
+      getParentState: props.getParentState,
+      workflowId: props.workflowId,
+      mergeFieldList: mergeFieldList
+    };
+  }
 
-    // Fill input with query string
-    fillDefaultValue(mergeFieldList, fieldFill) {
+  // Fill input with query string
+  fillDefaultValue(mergeFieldList, fieldFill) {
+    if (Array.isArray(fieldFill)) {
+      fieldFill.map(item => {
         let field = mergeFieldList.find(f => !f.defaultValue);
-        if(Array.isArray(fieldFill)) {
-            fieldFill.map(item => {
-                if (field) {
-                    field.defaultValue = item;
-                }
-                return item;
-            });
+        if (field) {
+          field.defaultValue = item;
+        }
+        return item;
+      });
+    }
+    else {
+      let field = mergeFieldList.find(f => !f.defaultValue);
+      if (field) {
+        field.defaultValue = fieldFill;
+      }
+    }
+    return mergeFieldList;
+  }
+
+  // Refresh after selecting another workflow
+  static getDerivedStateFromProps(props, state) {
+    if (props.workflowId !== state.workflowId) {
+      return {
+        workflowId: props.workflowId
+      };
+    }
+    return null;
+  }
+
+  // Event handler when an item in the list changed
+  onFieldChanged = (event, index) => {
+    let val = event.target.value;
+
+    this.state.setParentState(state => {
+      let list = this.state.getParentState().mergeFieldGroup.map((item, i) => {
+        if (i === index) {
+          let fieldData = {
+            "displayName": item.displayName,
+            "defaultValue": val,
+            "fieldName": item.fieldName
+          }
+          return fieldData;
         }
         else {
-            if (field) {
-                field.defaultValue = fieldFill;
-            }
+          return item;
         }
-        return mergeFieldList;
-    }
+      });
 
-    // Refresh after selecting another workflow
-    static getDerivedStateFromProps(props, state) {
-        if (props.workflowId !== state.workflowId) {
-            return {
-                workflowId: props.workflowId
-            };
-        }
-        return null;
-    }
+      return {
+        mergeFieldGroup: list
+      }
+    });
+  }
 
-    // Event handler when an item in the list changed
-    onFieldChanged = (event, index) => {
-        let val = event.target.value;
-
-        this.state.setParentState(state => {
-            let list = this.state.getParentState().mergeFieldGroup.map((item, i) => {
-                if (i === index) {
-                    let fieldData = {
-                        "displayName": item.displayName,
-                        "defaultValue": val,
-                        "fieldName": item.fieldName
-                    }
-                    return fieldData;
-                }
-                else {
-                    return item;
-                }
-            });
-
-            return {
-                mergeFieldGroup: list
-            }
-        });
-    }
-
-    render() {
-        let mergeFieldGroup = this.state.getParentState().mergeFieldGroup;
-        let showMergeField = mergeFieldGroup && mergeFieldGroup.length >  0;
-        return (
-            <div>
-                { showMergeField &&
-                    <div>
-                        <div id="merge_header">
-                            <h3 id="merge_header_label" className="recipient_label">Fields</h3>
-                        </div>
-                        <div id="merge_body">
-                            {
-                                mergeFieldGroup.map((item, index) =>
-                                    <div className="merge_div row" id={`merge_${item.fieldName}`} key={index}>
-                                        <div className="col-lg-4">
-                                            <h3>{item.displayName}</h3>
-                                        </div>
-                                        <div className="col-lg-8">
-                                            <input type="text" className="merge_input" value={item.defaultValue}
-                                                id={`merge_input_${item.fieldName}`} onChange={(event) => this.onFieldChanged(event, index)}></input>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </div>
-                }
+  render() {
+    let mergeFieldGroup = this.state.getParentState().mergeFieldGroup;
+    let showMergeField = mergeFieldGroup && mergeFieldGroup.length > 0;
+    return (
+      <div>
+        {showMergeField &&
+          <div>
+            <div id="merge_header">
+              <h3 id="merge_header_label" className="recipient_label">Fields</h3>
             </div>
-        );
-    }
+            <div id="merge_body">
+              {
+                mergeFieldGroup.map((item, index) =>
+                  <div className="merge_div row" id={`merge_${item.fieldName}`} key={index}>
+                    <div className="col-lg-4">
+                      <h3>{item.displayName}</h3>
+                    </div>
+                    <div className="col-lg-8">
+                      <input type="text" className="merge_input" value={item.defaultValue}
+                        id={`merge_input_${item.fieldName}`} onChange={(event) => this.onFieldChanged(event, index)}></input>
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+          </div>
+        }
+      </div>
+    );
+  }
 }
 
 export default MergeField;

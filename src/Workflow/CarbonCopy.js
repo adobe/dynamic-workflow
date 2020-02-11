@@ -14,166 +14,173 @@ import React, { Component } from 'react';
 
 // Component for managing a list of carbon copy groups
 class CarbonCopy extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        let items = CarbonCopy.createCCGroup(props.ccsListInfo);
-        let ccEmails = props.ccEmails ? props.ccEmails : [];
-        items = this.fillDefaultValue(items, ccEmails);
+    let items = CarbonCopy.createCCGroup(props.ccsListInfo);
+    let ccEmails = props.ccEmails ? props.ccEmails : [];
+    console.log(ccEmails);
+    items = this.fillDefaultValue(items, ccEmails);
+    console.log(items);
 
-        this.state = {
-            setParentState: props.setParentState,
-            getParentState: props.getParentState,
-            workflowId: props.workflowId,
-            carbonCopyGroup: items,
-            hideCC: props.features.hideCC,
-            hideCCWorkflowList: props.features.hideCCWorkflowList,
-            workflowName: props.workflowName
-        };
+    this.state = {
+      setParentState: props.setParentState,
+      getParentState: props.getParentState,
+      workflowId: props.workflowId,
+      carbonCopyGroup: items,
+      hideCC: props.features.hideCC,
+      hideCCWorkflowList: props.features.hideCCWorkflowList,
+      workflowName: props.workflowName
+    };
 
-        props.setParentState(state => {
-            return {
-                carbonCopyGroup: this.createCcList(items)
+    props.setParentState(state => {
+      return {
+        carbonCopyGroup: this.createCcList(items)
+      }
+    });
+  }
+
+  // Fill input with query string
+  fillDefaultValue(ccList, ccEmails) {
+    if(Array.isArray(ccEmails)) {
+        ccEmails.map(email => {
+          let cc = ccList.find(c => !c.defaultValue);
+            if (cc) {
+                cc.defaultValue = email;
             }
+            return email;
         });
     }
+    else {
+      let cc = ccList.find(c => !c.defaultValue);
+        if (cc) {
+            cc.defaultValue = ccEmails;
+        }
+    }
+    return ccList;
 
-    // Fill input with query string
-    fillDefaultValue(ccList, ccEmails) {
-        let cc = ccList.find(c => !c.defaultValue);
-        if(Array.isArray(ccEmails)) {
-            ccEmails.map(email => {
-                if (cc) {
-                    cc.defaultValue = email;
-                }
-                return email;
-            });
+    // for (let i = 0; i < ccEmails.length; i++) {
+    //   for (let j = 0; j < ccList.length; j++) {
+    //     if (!ccList[j].defaultValue) {
+    //       ccList[j].defaultValue = ccEmails[i];
+    //     }
+    //   }
+    // }
+    // return ccList;
+  }
+
+  // Refresh after selecting another workflow
+  static getDerivedStateFromProps(props, state) {
+    if (props.workflowId !== state.workflowId) {
+      return {
+        workflowId: props.workflowId,
+        carbonCopyGroup: CarbonCopy.createCCGroup(props.ccsListInfo),
+        hideCC: props.features.hideCC,
+        hideCCWorkflowList: props.features.hideCCWorkflowList,
+        workflowName: props.workflowName
+      };
+    }
+    return null;
+  }
+
+  // Create a list of ccs for editing
+  static createCCGroup(ccsListInfo) {
+    let items = [];
+    if (ccsListInfo) {
+      ccsListInfo.map((cc, index) => {
+        for (let i = 0; i < cc.maxListCount; i++) {
+          let defaultValue = i === 0 ? cc.defaultValue : "";
+          let data = {
+            "label": cc.label,
+            "name": cc.name,
+            "defaultValue": defaultValue
+          }
+          items.push(data);
+        }
+        return items;
+      });
+    }
+
+    return items;
+  }
+
+  // Creates cc data for submit and group emails by name field
+  createCcList(localCCList) {
+    let list = [];
+    localCCList.map((item, i) => {
+      let ccItem = list.find(x => x.name === item.name);
+      if (item.defaultValue) {
+        if (ccItem) {
+          ccItem.emails.push(item.defaultValue);
         }
         else {
-            if (cc) {
-                cc.defaultValue = ccEmails;
-            }
+          // Create new ccItem that contains name and emails
+          list.push(ccItem = {
+            "name": item.name,
+            "emails": [item.defaultValue]
+          });
         }
-        return ccList;
-    }
+      }
+      return ccItem;
+    });
 
-    // Refresh after selecting another workflow
-    static getDerivedStateFromProps(props, state) {
-        if (props.workflowId !== state.workflowId) {
-            return {
-                workflowId: props.workflowId,
-                carbonCopyGroup: CarbonCopy.createCCGroup(props.ccsListInfo),
-                hideCC: props.features.hideCC,
-                hideCCWorkflowList: props.features.hideCCWorkflowList,
-                workflowName: props.workflowName
-            };
-        }
-        return null;
-    }
+    return list;
+  }
 
-    // Create a list of ccs for editing
-    static createCCGroup(ccsListInfo) {
-        let items = [];
-        if (ccsListInfo) {
-            ccsListInfo.map((cc, index) => {
-                for (let i = 0; i < cc.maxListCount; i++) {
-                    let defaultValue = i === 0 ? cc.defaultValue : "";
-                    let item = {
-                        "label": cc.label,
-                        "name": cc.name,
-                        "defaultValue": defaultValue
-                    }
-                    items.push(item);
-                }
-                return items;
-            });
-        }
+  // Event handler when an item in the list changed
+  onCcChanged = (event, index) => {
+    let val = event.target.value;
 
-        return items;
-    }
+    let localCCList = this.state.carbonCopyGroup.map((item, i) => {
+      if (i === index) {
+        item.defaultValue = val;
+        item.modified = true;
+      }
+      return item
+    });
 
-    // Creates cc data for submit and group emails by name field
-    createCcList(localCCList) {
-        let list = [];
-        localCCList.map((item, i) => {
-            let ccItem = list.find(x => x.name === item.name);
-            if (item.defaultValue) {
-                if (ccItem) {
-                    ccItem.emails.push(item.defaultValue);
-                }
-                else {
-                    // Create new ccItem that contains name and emails
-                    let ccData = [item.defaultValue];
-                    let ccItem = {
-                        "name": item.name,
-                        "emails": ccData
-                    }
-                    list.push(ccItem);
-                }
-            }
-            return ccItem;
-        });
+    // Update cc for local edit
+    this.setState(state => {
+      return {
+        carbonCopyGroup: localCCList
+      }
+    });
 
-        return list;
-    }
+    let parentCCList = this.createCcList(localCCList);
 
-    // Event handler when an item in the list changed
-    onCcChanged = (event, index) => {
-        let val = event.target.value;
+    // Update cc list for submit
+    this.state.setParentState(state => {
+      return {
+        carbonCopyGroup: parentCCList
+      }
+    });
+  }
 
-        let localCCList = this.state.carbonCopyGroup.map((item, i) => {
-            if (i === index) {
-                item.defaultValue = val;
-                item.modified = true;
-                return item;
-            }
-            else {
-                return item;
-            }
-        });
+  render() {
+    let hideCC = this.state.hideCC;
+    let hideCCWorkflows = this.state.hideCCWorkflowList && (this.state.hideCCWorkflowList.indexOf(this.state.workflowName) >= 0) ? true : false;
+    let hideAll = this.state.hideCCWorkflowList === "" ? true : false;
 
-        // Update cc for local edit
-        this.setState(state => {
-            return {
-                carbonCopyGroup: localCCList
-            }
-        });
-
-        let parentCCList = this.createCcList(localCCList);
-
-        // Update cc list for submit
-        this.state.setParentState(state => {
-            return {
-                carbonCopyGroup: parentCCList
-            }
-        });
-    }
-
-    render() {
-        let hideCC = this.state.hideCC;
-        let hideCCWorkflows = this.state.hideCCWorkflowList && (this.state.hideCCWorkflowList.indexOf(this.state.workflowName) >= 0) ? true : false;
-        let hideAll = this.state.hideCCWorkflowList === "" ? true : false;
-
-        return (
-            <div>
-                {
-                    this.state.carbonCopyGroup &&
-                    this.state.carbonCopyGroup.map((cc, i) =>
-                        <div className={(cc.defaultValue && hideCC && hideCCWorkflows) ? "recipient_hidden" :
-                            (cc.defaultValue && hideCC && hideAll) ? "recipient_hidden" : "add_border_bottom"}
-                            id={`cc_div_${i}`} key={i}>
-                            <h3 className="recipient_label">{cc.label}</h3>
-                            <input type="text" id={`cc_${i}`} name={`cc_${i}`}
-                                className={!cc.modified ? "recipient_form_input predefined_input" : "recipient_form_input"}
-                                placeholder="Enter Cc's Email" value={cc.defaultValue}
-                                onChange={(event) => this.onCcChanged(event, i)}>
-                            </input>
-                        </div>
-                    )
-                }
+    return (
+      <div>
+        {
+          this.state.carbonCopyGroup &&
+          this.state.carbonCopyGroup.map((cc, i) =>
+            <div className={(cc.defaultValue && hideCC && hideCCWorkflows) ? "recipient_hidden" :
+              (cc.defaultValue && hideCC && hideAll) ? "recipient_hidden" : "add_border_bottom"}
+              id={`cc_div_${i}`} key={i}>
+              <h3 className="recipient_label">{cc.label}</h3>
+              <input type="text" id={`cc_${i}`} name={`cc_${i}`}
+                className={!cc.modified ? "recipient_form_input predefined_input" : "recipient_form_input"}
+                placeholder="Enter Cc's Email" value={cc.defaultValue}
+                onChange={(event) => this.onCcChanged(event, i)}>
+              </input>
             </div>
-        );
-    }
+          )
+        }
+      </div>
+    );
+  }
 }
 
 export default CarbonCopy;

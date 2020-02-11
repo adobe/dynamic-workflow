@@ -12,16 +12,16 @@ governing permissions and limitations under the License.
 
 // Holds environment variables from .env file
 module.exports = {
-    integration: process.env.REACT_APP_SIGN_API_INTEGRATION,
-    host: process.env.REACT_APP_SIGN_API_HOST,
-    endpoint: process.env.REACT_APP_SIGN_API_ENDPOINT,
-    port: process.env.REACT_APP_PORT,
-    allMaxSubmits: process.env.REACT_APP_ALL_MAX_SUBMITS,
-    maxSubmits: process.env.REACT_APP_MAX_SUBMITS,
-    timeoutPeriod: process.env.REACT_APP_TIMEOUT_PERIOD,
-    hideSelector: (process.env.REACT_APP_HIDE_SELECTOR === 'true'),
-    hideRecipient: (process.env.REACT_APP_HIDE_PREDEFINED_RECIPIENT === 'true'),
-    hideWorkflowList: process.env.REACT_APP_HIDE_PREDEFINED_RECIPIENT_WORKFLOW_LIST,
-    hideCC: (process.env.REACT_APP_HIDE_PREDEFINED_CC === 'true'),
-    hideCCWorkflowList: process.env.REACT_APP_HIDE_PREDEFINED_CC_WORKFLOW_LIST
+  integration: process.env.REACT_APP_SIGN_API_INTEGRATION,
+  host: process.env.REACT_APP_SIGN_API_HOST,
+  endpoint: process.env.REACT_APP_SIGN_API_ENDPOINT,
+  port: process.env.REACT_APP_PORT,
+  allMaxSubmits: process.env.REACT_APP_ALL_MAX_SUBMITS,
+  maxSubmits: process.env.REACT_APP_MAX_SUBMITS,
+  timeoutPeriod: process.env.REACT_APP_TIMEOUT_PERIOD,
+  hideSelector: (process.env.REACT_APP_HIDE_SELECTOR === 'true'),
+  hideRecipient: (process.env.REACT_APP_HIDE_PREDEFINED_RECIPIENT === 'true'),
+  hideWorkflowList: process.env.REACT_APP_HIDE_PREDEFINED_RECIPIENT_WORKFLOW_LIST,
+  hideCC: (process.env.REACT_APP_HIDE_PREDEFINED_CC === 'true'),
+  hideCCWorkflowList: process.env.REACT_APP_HIDE_PREDEFINED_CC_WORKFLOW_LIST
 }

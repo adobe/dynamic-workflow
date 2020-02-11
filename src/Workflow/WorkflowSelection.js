@@ -17,108 +17,108 @@ import WorkflowService from '../Services/WorkflowService';
 import queryString from 'query-string';
 
 class WorkflowSelection extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        let workflowName = null;
-        if (props.match && props.match.params) {
-            workflowName = props.match.params.name;
-        }
-
-        let locationSearch = queryString.parse(this.props.location.search);
-        let queryData = locationSearch ? locationSearch : null;
-
-        this.state = {
-            hideSelector: props.hideSelector,
-            workflows: [],
-            workflowName: workflowName,
-            workflowId: null,
-            signService: new SignService(),
-            workflowService: new WorkflowService(),
-            queryData : {
-                agreementName: queryData.agreementName,
-                message: queryData.message,
-                recipientEmails: queryData.recipient,
-                ccEmails: queryData.cc,
-                fieldFill: queryData.field,
-                deadlineFill: queryData.deadline,
-                reminderFill: queryData.reminder
-            }
-        };
+    let workflowName = null;
+    if (props.match && props.match.params) {
+      workflowName = props.match.params.name;
     }
 
-    async componentDidMount() {
-        let workflows = await this.state.signService.getWorkflows();
-        let workflowId = this.state.workflowService.getWorkflowId(workflows, this.state.workflowName);
+    let locationSearch = queryString.parse(this.props.location.search);
+    let queryData = locationSearch ? locationSearch : null;
 
-        if (workflows) {
-            this.setState({
-                workflows: workflows,
-                workflowId: workflowId
-            });
+    this.state = {
+      hideSelector: props.hideSelector,
+      workflows: [],
+      workflowName: workflowName,
+      workflowId: null,
+      signService: new SignService(),
+      workflowService: new WorkflowService(),
+      queryData: {
+        agreementName: queryData.agreementName,
+        message: queryData.message,
+        recipientEmails: queryData.recipient,
+        ccEmails: queryData.cc,
+        fieldFill: queryData.field,
+        deadlineFill: queryData.deadline,
+        reminderFill: queryData.reminder
+      }
+    };
+  }
 
-        }
+  async componentDidMount() {
+    let workflows = await this.state.signService.getWorkflows();
+    let workflowId = this.state.workflowService.getWorkflowId(workflows, this.state.workflowName);
+
+    if (workflows) {
+      this.setState({
+        workflows: workflows,
+        workflowId: workflowId
+      });
+
     }
+  }
 
-    // Sets workflowId to show correct workflow data
-    onWorkflowChanged = (event) => {
-        let workflowId = event.target.value;
-        this.setState({
-            selectedWorkflowId: workflowId
-        })
-    }
+  // Sets workflowId to show correct workflow data
+  onWorkflowChanged = (event) => {
+    let workflowId = event.target.value;
+    this.setState({
+      selectedWorkflowId: workflowId
+    })
+  }
 
-    runWorkflow = () => {
-        this.setState({
-            workflowId: this.state.selectedWorkflowId
-        })
-    }
+  runWorkflow = () => {
+    this.setState({
+      workflowId: this.state.selectedWorkflowId
+    })
+  }
 
-    render() {
-        return (
-            <div className="container h-100">
-                <div className="row h-100 justify-content-center align-items-center">
-                    <div id="workflow_form">
-                        { !this.state.hideSelector &&
-                            <div id="workflow_form_top">
-                                <div id="workflow_form_top_wrapper">
-                                    <div id="workflow_selector">
-                                        <form>
-                                            <div className="form-group">
-                                                <label htmlFor="workflow_dropdown" id="workflow_dropdown_label">Workflow Selector</label>
-                                                <select className="form-control" id="workflow_dropdown"
-                                                    value={this.state.workflowName}
-                                                    onChange={this.onWorkflowChanged}
-                                                    >
-                                                    <option value=""></option>
-                                                    {
-                                                        this.state.workflows ? this.state.workflows.map(
-                                                            workflow =>
-                                                                <option key={workflow.name} value={workflow.workflowId}>
-                                                                    {workflow.displayName}
-                                                                </option>
-                                                        ) : null
-                                                    }
-                                                </select>
-                                            </div>
-                                            <button type="button" className="btn btn-primary btn-custom" id="option_submit_button"
-                                                onClick={this.runWorkflow}>Select
+  render() {
+    return (
+      <div className="container h-100">
+        <div className="row h-100 justify-content-center align-items-center">
+          <div id="workflow_form">
+            {!this.state.hideSelector &&
+              <div id="workflow_form_top">
+                <div id="workflow_form_top_wrapper">
+                  <div id="workflow_selector">
+                    <form>
+                      <div className="form-group">
+                        <label htmlFor="workflow_dropdown" id="workflow_dropdown_label">Workflow Selector</label>
+                        <select className="form-control" id="workflow_dropdown"
+                          value={this.state.workflowName}
+                          onChange={this.onWorkflowChanged}
+                        >
+                          <option value=""></option>
+                          {
+                            this.state.workflows ? this.state.workflows.map(
+                              workflow =>
+                                <option key={workflow.name} value={workflow.workflowId}>
+                                  {workflow.displayName}
+                                </option>
+                            ) : null
+                          }
+                        </select>
+                      </div>
+                      <button type="button" className="btn btn-primary btn-custom" id="option_submit_button"
+                        onClick={this.runWorkflow}>Select
                                             </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        <div id="workflow_form_bottom">
-                            <div id="workflow_form_bot_wrapper">
-                                <AgreementForm workflowId={this.state.workflowId} queryData={this.state.queryData}></AgreementForm>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
+                  </div>
                 </div>
+              </div>
+            }
+            <div id="workflow_form_bottom">
+              <div id="workflow_form_bot_wrapper">
+                <AgreementForm workflowId={this.state.workflowId} queryData={this.state.queryData}></AgreementForm>
+              </div>
             </div>
-        );
-    }
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default WorkflowSelection;

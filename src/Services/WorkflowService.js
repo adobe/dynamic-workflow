@@ -12,32 +12,32 @@ governing permissions and limitations under the License.
 
 class WorkflowService {
 
-    // Gets workflow Id for a workflow name.
-    getWorkflowId(workflows, workflowName) {
-        let workflow = workflows.find(w => w.displayName === workflowName);
-        return workflow ? workflow.workflowId : null;
+  // Gets workflow Id for a workflow name.
+  getWorkflowId(workflows, workflowName) {
+    let workflow = workflows.find(w => w.displayName === workflowName);
+    return workflow ? workflow.workflowId : null;
+  }
+
+  createAgreementData(source) {
+    let agreement = {
+      "documentCreationInfo": {
+        "fileInfos": source.fileInfos,
+        "name": source.agreementName,
+        "recipientsListInfo": source.recipientsList,
+        "ccs": source.carbonCopyGroup,
+        "securityOptions": source.passOption,
+        "mergeFieldInfo": source.mergeFieldGroup,
+        "reminderFrequency": source.reminders,
+        "message": source.message
+      }
+    };
+
+    if (source.deadline !== "") {
+      agreement.documentCreationInfo.expirationInfo = source.deadline;
     }
 
-    createAgreementData(source) {
-        let agreement =  {
-            "documentCreationInfo": {
-                "fileInfos": source.fileInfos,
-                "name": source.agreementName,
-                "recipientsListInfo": source.recipientsList,
-                "ccs": source.carbonCopyGroup,
-                "securityOptions": source.passOption,
-                "mergeFieldInfo": source.mergeFieldGroup,
-                "reminderFrequency": source.reminders,
-                "message": source.message
-            }
-        };
-
-        if (source.deadline !== "") {
-            agreement.documentCreationInfo.expirationInfo = source.deadline;
-        }
-
-        return agreement;
-    }
+    return agreement;
+  }
 }
 
 export default WorkflowService;

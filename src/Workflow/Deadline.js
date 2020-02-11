@@ -14,98 +14,98 @@ import React, { Component } from 'react';
 
 // Component for managing a list of carbon copy groups
 class Deadline extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        let date = Deadline.getNextDay();
+    let date = Deadline.getNextDay();
 
-        this.state = {
-            setParentState: props.setParentState,
-            getParentState: props.getParentState,
-            workflowId: props.workflowId,
-            hasDeadlineChecked: true,
-            visible: props.deadlineVisible,
-            date: props.deadlineFill ? props.deadlineFill : date
-        };
+    this.state = {
+      setParentState: props.setParentState,
+      getParentState: props.getParentState,
+      workflowId: props.workflowId,
+      hasDeadlineChecked: true,
+      visible: props.deadlineVisible,
+      date: props.deadlineFill ? props.deadlineFill : date
+    };
 
-        this.state.setParentState({
-            deadline: this.getDaysTillDeadline(props.deadlineFill ? props.deadlineFill : date)
-        });
+    this.state.setParentState({
+      deadline: this.getDaysTillDeadline(props.deadlineFill ? props.deadlineFill : date)
+    });
+  }
+
+  // Refresh after selecting another workflow
+  static getDerivedStateFromProps(props, state) {
+    if (props.workflowId !== state.workflowId) {
+      return {
+        workflowId: props.workflowId,
+        workflow: props.workflow,
+        hasDeadlineChecked: true,
+        visible: props.deadlineVisible,
+        date: props.deadlineFill ? props.deadlineFill : Deadline.getNextDay()
+      };
     }
+    return null;
+  }
 
-    // Refresh after selecting another workflow
-    static getDerivedStateFromProps(props, state) {
-        if (props.workflowId !== state.workflowId) {
-            return {
-                workflowId: props.workflowId,
-                workflow: props.workflow,
-                hasDeadlineChecked: true,
-                visible: props.deadlineVisible,
-                date: props.deadlineFill ? props.deadlineFill : Deadline.getNextDay()
-            };
-        }
-        return null;
+  // Get date for next day
+  static getNextDay() {
+    let date = new Date();
+    date.setDate(date.getDate() + 1);
+
+    let dd = ("0" + (date.getDate())).slice(-2);
+    let mm = ("0" + (date.getMonth() + 1)).slice(-2);
+    let yyyy = date.getFullYear();
+    date = yyyy + '-' + mm + '-' + dd;
+
+    return date;
+  }
+
+  // Get number of days until signing deadline
+  getDaysTillDeadline(selectedDate) {
+    let todayDate = new Date();
+    let dateInput = new Date(selectedDate);
+    let diffTime = Math.abs(dateInput - todayDate);
+    let expirationInfo = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return expirationInfo;
+  }
+
+  // Event handler when checkbox changed
+  onCheckboxChanged = (event) => {
+    this.setState({ [event.target.name]: event.target.checked });
+
+    if (!event.target.checked) {
+      this.state.setParentState({ deadline: '' });
     }
+  }
 
-    // Get date for next day
-    static getNextDay() {
-        let date = new Date();
-        date.setDate(date.getDate() + 1);
+  // Event handler when deadline changed
+  onDeadlineChanged = (event) => {
+    let selectedDate = event.target.value;
+    this.setState({
+      date: selectedDate
+    });
 
-        let dd = ("0" + (date.getDate())).slice(-2);
-        let mm = ("0" + (date.getMonth() +　1)).slice(-2);
-        let yyyy = date.getFullYear();
-        date = yyyy + '-' + mm + '-' + dd ;
+    this.state.setParentState({ deadline: this.getDaysTillDeadline(selectedDate) });
+  }
 
-        return date;
-    }
-
-    // Get number of days until signing deadline
-    getDaysTillDeadline(selectedDate) {
-        let todayDate = new Date();
-        let dateInput = new Date(selectedDate);
-        let diffTime = Math.abs(dateInput - todayDate);
-        let expirationInfo = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        return expirationInfo;
-    }
-
-    // Event handler when checkbox changed
-    onCheckboxChanged = (event) => {
-        this.setState({ [event.target.name]: event.target.checked });
-
-        if (!event.target.checked) {
-            this.state.setParentState({ deadline: '' });
-        }
-    }
-
-    // Event handler when deadline changed
-    onDeadlineChanged = (event) => {
-        let selectedDate = event.target.value;
-        this.setState({
-            date: selectedDate
-        });
-
-        this.state.setParentState({ deadline: this.getDaysTillDeadline(selectedDate) });
-    }
-
-    render() {
-        return (
-            this.state.visible ?
-            <div className="add_border_bottom" id="deadline_div">
-                <input type="checkbox" name="hasDeadlineChecked" id="deadline_checkbox"
-                    checked={this.state.hasDeadlineChecked} onChange={this.onCheckboxChanged}></input>
-                <label className="checkbox_input" htmlFor="deadline_checkbox">Completion Deadline</label>
-                {
-                    this.state.hasDeadlineChecked &&
-                    <div id="sub_deadline_div" className="add_border_bottom">
-                        <input type="date" name="deadline" id="deadline_input" value={this.state.date}
-                            className="recipient_form_input" onChange={this.onDeadlineChanged}></input>
-                    </div>
-                }
-            </div> : (<div></div>)
-        );
-    }
+  render() {
+    return (
+      this.state.visible ?
+        <div className="add_border_bottom" id="deadline_div">
+          <input type="checkbox" name="hasDeadlineChecked" id="deadline_checkbox"
+            checked={this.state.hasDeadlineChecked} onChange={this.onCheckboxChanged}></input>
+          <label className="checkbox_input" htmlFor="deadline_checkbox">Completion Deadline</label>
+          {
+            this.state.hasDeadlineChecked &&
+            <div id="sub_deadline_div" className="add_border_bottom">
+              <input type="date" name="deadline" id="deadline_input" value={this.state.date}
+                className="recipient_form_input" onChange={this.onDeadlineChanged}></input>
+            </div>
+          }
+        </div> : (<div></div>)
+    );
+  }
 }
 
 export default Deadline;
