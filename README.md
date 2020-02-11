@@ -83,7 +83,7 @@ pm2 start ~/Dynamic/Workflow/server/server.js
 ```
 
 ## Configuration
-There is a sample env file, `.env.dist`, that needs to be copied to `.env` and modified for your environment.
+There is a sample env file in the `server` folder, `.env.dist`, that needs to be copied to `.env` and modified for your environment.
 
 There are three main components within the configuration file.
 
@@ -95,16 +95,47 @@ There are three main components within the configuration file.
 - `integration`:   This is your integration key for Adobe Sign. Please see the integration key section.
 
 ## Features
-
+- `REACT_APP_ALL_MAX_SUBMITS`: This will determine the amount of submissions for ALL workflows combined.
+- `REACT_APP_MAX_SUBMITS`: This will determine the amount of submissions for a workflow. 
+- `REACT_APP_HIDE_SELECTOR`: This turn on the feature to hide the workflow selector and use direct url links only.
+  - `true`: Turn on
+  - `false`: Turn off
 - `REACT_APP_HIDE_PREDEFINED_RECIPIENT`: This turns on the feature to hide predefined recipients in your workflow.
   - `true`: Turn on
   - `false`: Turn off
-- `REACT_APP_HIDE_PREDEFINED_RECIPIENT_WORKFLOW_LIST`: A list to target specific workflows to hide predefined recipients.
+- `REACT_APP_HIDE_PREDEFINED_RECIPIENT_WORKFLOW_LIST`: A list to target specific workflows to hide predefined recipients separating with commas.
+- `REACT_APP_HIDE_PREDEFINED_CC`: This turns on the feature to hide predefined ccs in your workflow.
+  - `true`: Turn on
+  - `false`: Turn off
+- `REACT_APP_HIDE_PREDEFINED_CC_WORKFLOW_LIST`: A list to target specific workflows to hide predefined ccs separating with commas.
+
+### Direct URL Link Parameters
+List the parameter values in order of placement e.g. `recipient=test@gmail.com&recipient=test2@gmail.com`. If there is a predefined field, the item will be filled in the next input field. Each parameter has a specific key:
+- Agreement Name: `agreementName`
+- Message: `message`
+- Recipient Emails: `recipient`
+- CC Emails: `cc`
+- Merge Field: `field`
+- Deadline: `deadline`
+  - The deadline date to be signed needs to be formatted: YYYY/MM/DD
+- Reminder: `reminder`
+  - Options for reminder:
+    - Every day: `DAILY_UNTIL_SIGNED`
+    - Every week: `WEEKLY_UNTIL_SIGNED`
+    - Every business day: `WEEKDAILY_UNTIL_SIGNED`
+    - Every other day: `EVERY_OTHER_DAY_UNTIL_SIGNED`
+    - Every third day: `EVERY_THIRD_DAY_UNTIL_SIGNED`
+    - Every fifth day: `EVERY_FIFTH_DAY_UNTIL_SIGNED`
 
 ## Integration Key
-You will be required to create an integration key with limited scopes for this application and add the integration key inside the config.yaml file. [Click Me](https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html)
+You will be required to create an integration key with limited scopes for this application and add the integration key inside the .env file. [Click Me](https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html)
 
 ![integration key](docs/integration_key.png "Integration Key")
+
+### Major Contributors
+- https://github.com/sophiastan
+- https://github.com/nwcell
+- https://github.com/NathanNguyen345
 
 ### Contributing
 Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
