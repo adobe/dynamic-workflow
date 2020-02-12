@@ -87,17 +87,17 @@ class RecipientsList extends Component {
 
   // Event handler when an item in the list changed
   onEmailChanged = (event, index) => {
+    let val = event.target.value;
     let emailData = {
-      "email": event.target.value
+      "email": val
     }
 
     // Update email text for recipient
     this.setState(state => {
       let list = this.state.recipientsList.map((item, i) => {
         if (i === index) {
-          item.defaultValue = event.target.value;
+          item.defaultValue = val;
           item.modified = true;
-          return item;
         }
         return item;
       });

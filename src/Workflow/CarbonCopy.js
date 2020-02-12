@@ -19,9 +19,7 @@ class CarbonCopy extends Component {
 
     let items = CarbonCopy.createCCGroup(props.ccsListInfo);
     let ccEmails = props.ccEmails ? props.ccEmails : [];
-    console.log(ccEmails);
     items = this.fillDefaultValue(items, ccEmails);
-    console.log(items);
 
     this.state = {
       setParentState: props.setParentState,
@@ -42,31 +40,22 @@ class CarbonCopy extends Component {
 
   // Fill input with query string
   fillDefaultValue(ccList, ccEmails) {
-    if(Array.isArray(ccEmails)) {
-        ccEmails.map(email => {
-          let cc = ccList.find(c => !c.defaultValue);
-            if (cc) {
-                cc.defaultValue = email;
-            }
-            return email;
-        });
+    if (Array.isArray(ccEmails)) {
+      ccEmails.map(email => {
+        let cc = ccList.find(c => !c.defaultValue);
+        if (cc) {
+          cc.defaultValue = email;
+        }
+        return email;
+      });
     }
     else {
       let cc = ccList.find(c => !c.defaultValue);
-        if (cc) {
-            cc.defaultValue = ccEmails;
-        }
+      if (cc) {
+        cc.defaultValue = ccEmails;
+      }
     }
     return ccList;
-
-    // for (let i = 0; i < ccEmails.length; i++) {
-    //   for (let j = 0; j < ccList.length; j++) {
-    //     if (!ccList[j].defaultValue) {
-    //       ccList[j].defaultValue = ccEmails[i];
-    //     }
-    //   }
-    // }
-    // return ccList;
   }
 
   // Refresh after selecting another workflow
@@ -108,6 +97,8 @@ class CarbonCopy extends Component {
   createCcList(localCCList) {
     let list = [];
     localCCList.map((item, i) => {
+      // Find the item in list with same name in targeted list
+      // True if name already exists in list
       let ccItem = list.find(x => x.name === item.name);
       if (item.defaultValue) {
         if (ccItem) {

@@ -68,11 +68,8 @@ class FileList extends Component {
       let list = this.state.fileInfos.map((item, i) => {
         if (i === index) {
           item.file = file;
-          return item;
         }
-        else {
-          return item;
-        }
+        return item;
       });
 
       return {

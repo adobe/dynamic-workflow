@@ -66,12 +66,11 @@ class MergeField extends Component {
     this.state.setParentState(state => {
       let list = this.state.getParentState().mergeFieldGroup.map((item, i) => {
         if (i === index) {
-          let fieldData = {
+          return {
             "displayName": item.displayName,
             "defaultValue": val,
             "fieldName": item.fieldName
           }
-          return fieldData;
         }
         else {
           return item;
