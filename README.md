@@ -115,9 +115,9 @@ List the parameter values in order of placement e.g. `recipient=test@gmail.com&r
 - Message: `message`
 - Recipient Emails: `recipient`
 - CC Emails: `cc`
-- Merge Field: `field`
+- Merge Fields: `field`
 - Deadline: `deadline`
-  - The deadline date to be signed needs to be formatted: YYYY/MM/DD
+  - The deadline date to be signed needs to be formatted: YYYY-MM-DD
 - Reminder: `reminder`
   - Options for reminder:
     - Every day: `DAILY_UNTIL_SIGNED`
