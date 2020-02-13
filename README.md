@@ -133,9 +133,9 @@ You will be required to create an integration key with limited scopes for this a
 ![integration key](docs/integration_key.png "Integration Key")
 
 ### Major Contributors
-- https://github.com/sophiastan
-- https://github.com/nwcell
-- https://github.com/NathanNguyen345
+- [Sophia Tan](https://github.com/sophiastan)
+- [Travis Krause](https://github.com/nwcell)
+- [Nathan Nguyen](https://github.com/NathanNguyen345)
 
 ### Contributing
 Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
