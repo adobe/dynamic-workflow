@@ -1,4 +1,4 @@
-# Dynamic Workflow v1.1
+# Dynamic Workflow
 Dynamic Workflow built on top of express using Adobe Sign API.
 
 ![sign image](docs/sign_image.png "Sign Image")
@@ -7,7 +7,7 @@ Dynamic Workflow built on top of express using Adobe Sign API.
 Dynamic workflows allow users to specify the next participants within an agreement.
 
 ## Disclaimer
-This application is currently on version 1.1. There is a known issue that has been submitted to JIRA for participant groups. The feature is currently there, but the functionality has a bug. Once this issue is resolved, a patch will be issued out.
+There is a known issue that has been submitted to JIRA for participant groups. The feature is currently there, but the functionality has a bug. Once this issue is resolved, a patch will be issued out.
 
 ## Features
 | Features | Description |
@@ -60,7 +60,7 @@ cd dynamic-workflow
 npm install
 ```
 
-### Dev Server w/ nodemon
+### Installing nodemon
 Use nodemon as a dev node on production. *We will use pm2 as our process manager*
 
 ```sh
@@ -75,20 +75,15 @@ sudo apt-get install lib2cap-bin
 sudo setcap cap/net/bind/service=+ep `readlink -f \`which node\``
 ```
 
-### Prod Node w/ pm2
-`pm2` is a tool for running production node servers.  Install pm2 to and run application in the background
+### Install pm2
+Install pm2 to and run application in the background
 ```sh
-sudo npm install pm2@latest -g
-
-# Run production server
-pm2 start ~/dynamic-workflow/server.js
-
-# Run server on system reboot
-pm2 startup systemd
+npm install pm2 -g
+pm2 start ~/Dynamic/Workflow/server/server.js
 ```
 
 ## Configuration
-There is a sample configuration file, `config/config.sample.yaml`, that needs to be copied to `config/config.yaml` and modified for your environment.
+There is a sample env file in the `server` folder, `.env.dist`, that needs to be copied to `.env` and modified for your environment.
 
 There are three main components within the configuration file.
 
@@ -99,17 +94,48 @@ There are three main components within the configuration file.
 ### Enterprise
 - `integration`:   This is your integration key for Adobe Sign. Please see the integration key section.
 
-## Features
+### Features
+- `REACT_APP_ALL_MAX_SUBMITS`: This will determine the amount of submissions for ALL workflows combined.
+- `REACT_APP_MAX_SUBMITS`: This will determine the amount of submissions for a workflow. 
+- `REACT_APP_HIDE_SELECTOR`: This turn on the feature to hide the workflow selector and use direct url links only.
+  - `true`: Turn on
+  - `false`: Turn off
+- `REACT_APP_HIDE_PREDEFINED_RECIPIENT`: This turns on the feature to hide predefined recipients in your workflow.
+  - `true`: Turn on
+  - `false`: Turn off
+- `REACT_APP_HIDE_PREDEFINED_RECIPIENT_WORKFLOW_LIST`: A list to target specific workflows to hide predefined recipients separating with commas.
+- `REACT_APP_HIDE_PREDEFINED_CC`: This turns on the feature to hide predefined ccs in your workflow.
+  - `true`: Turn on
+  - `false`: Turn off
+- `REACT_APP_HIDE_PREDEFINED_CC_WORKFLOW_LIST`: A list to target specific workflows to hide predefined ccs separating with commas.
 
-- `hide_predefined`: This turns on the feature to hide predefined recipients in your workflow.
-  - `yes`: Turn on
-  - `no`: Turn off
-- `hide_workflow_list`: A list to target specific workflows to hide predefined recipients.
+#### Direct URL Link Parameters
+List the parameter values in order of placement e.g. `recipient=test@gmail.com&recipient=test2@gmail.com`. If there is a predefined field, the item will be filled in the next input field. Each parameter has a specific key:
+- Agreement Name: `agreementName`
+- Message: `message`
+- Recipient Emails: `recipient`
+- CC Emails: `cc`
+- Merge Fields: `field`
+- Deadline: `deadline`
+  - The deadline date to be signed needs to be formatted: YYYY-MM-DD
+- Reminder: `reminder`
+  - Options for reminder:
+    - Every day: `DAILY_UNTIL_SIGNED`
+    - Every week: `WEEKLY_UNTIL_SIGNED`
+    - Every business day: `WEEKDAILY_UNTIL_SIGNED`
+    - Every other day: `EVERY_OTHER_DAY_UNTIL_SIGNED`
+    - Every third day: `EVERY_THIRD_DAY_UNTIL_SIGNED`
+    - Every fifth day: `EVERY_FIFTH_DAY_UNTIL_SIGNED`
 
-## Integration Key
-You will be required to create an integration key with limited scopes for this application and add the integration key inside the config.yaml file. [Click Me](https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html)
+### Integration Key
+You will be required to create an integration key with limited scopes for this application and add the integration key inside the .env file. [Click Me](https://helpx.adobe.com/sign/kb/how-to-create-an-integration-key.html)
 
 ![integration key](docs/integration_key.png "Integration Key")
+
+### Major Contributors
+- [Sophia Tan](https://github.com/sophiastan)
+- [Travis Krause](https://github.com/nwcell)
+- [Nathan Nguyen](https://github.com/NathanNguyen345)
 
 ### Contributing
 Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.

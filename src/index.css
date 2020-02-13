@@ -24,6 +24,10 @@ governing permissions and limitations under the License.
     --workflow-form-submit-color: #2175c8;
 }
 
+#root{
+    height: 100vh;
+}
+
 
 body{
     background: var(--application-background-color);
@@ -257,7 +261,7 @@ h4{
     .option_wrapper{
         margin: 10px 0 10px 0;
     }
-    
+
 }
 
 @media only screen and (min-width: 798) {
