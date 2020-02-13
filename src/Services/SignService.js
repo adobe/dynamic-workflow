@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 // Service for commmunicating with Sign API and server
-const features = require('./features.js');
+import features from './features';
 
 class SignService {
     constructor() {

@@ -10,8 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-// This class handles reading config data from a config file.
-const features = require('./features.js');
+// This class handles reading config data from .env file.
+import features from './features';
 
 class ConfigService {
     constructor() {
