@@ -1,4 +1,4 @@
 .DS_Store
-config/config.roger.yaml
+config/config.yaml
 node_modules/
 ~$*
