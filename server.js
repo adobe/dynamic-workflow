@@ -123,7 +123,7 @@ app.get('/api/getLibraryDocuments/:id', async function(req, res, next) {
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/:id', async function(req, res, next){
+app.post('/api/postAgreement/:id', async function(req, res){
 
     function postAgreement() {
         /***
@@ -142,9 +142,39 @@ app.post('/api/postAgreement/:id', async function(req, res, next){
             body: JSON.stringify(req.body)})
     }
 
-    const api_response = await postAgreement();
-    const data = await api_response.json();
+    // console.log('request body', req.body);
+    // console.log('body in JSON', JSON.stringify(req.body));
 
+    console.log('first', req.body.documentCreationInfo.recipientsListInfo);
+  console.log('second', req.body.documentCreationInfo.recipientsListInfo[0].recipients);
+
+  console.log(req.body.documentCreationInfo.recipientsListInfo.length);
+
+  let o = 0;
+
+  console.log(req.body.documentCreationInfo.recipientsListInfo.length > o);
+
+  let okToSubmit = true;
+
+  for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
+    console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
+    for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
+      console.log('hey we at least made it this far brah!');
+      if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+        console.log('found bad email');
+        okToSubmit = false;
+      }
+    }
+  }
+  let data;
+   if (okToSubmit) {
+     const api_response = await postAgreement();
+     data = await api_response.json();
+   } else {
+     data = {code: 'MISC_ERROR', message: 'One or more emails are not formatted properly'};
+   }
+
+   console.log('return data', data);
     res.json(data);
 });
 
@@ -180,6 +210,7 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
     fs.unlink(req.file.path, function (err) {
         if (err) return console.log(err);
     });
+
 
     res.json(data)
   })
