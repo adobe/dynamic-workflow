@@ -9,7 +9,7 @@ port: 80
 # This is the server information needed to point the application to your Sign Console.
 server:
   # The host address to your Sign Console.
-  host: 
+  host:
 
   # DO NOT CHANGE THE FOLLOW TWO CONFIGURATION.
   # This is the endpoint
@@ -20,7 +20,7 @@ enterprise:
   # This is your integration key for Adobe Sign. This key
   # is needed to get access to perform synchronization between Admin
   # Console and Adobe Sign.
-  integration: 
+  integration:
 
 # This is the feature configuration.
 features:
@@ -55,3 +55,9 @@ features:
     #- Notice how list items are comment out
     - "Workflow name here"
     - "Another workflow namer here"
+
+    # Email regex to be used to restrict emails used during signing
+    email_regex: ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
+
+    # Error to display if there is an error with the email validation
+    email_error_message: "There is a problem with your email address."

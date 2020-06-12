@@ -33,11 +33,13 @@ const config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'config', 'con
 const app = express();
 
 // Configuration
-var integration = config['enterprise']['integration'];
-var host = config['server']['host'];
-var endpoint = config['server']['endpoint'];
-var url = host + endpoint;
-var port = process.env.PORT || config.port || 80;
+let integration = config['enterprise']['integration'];
+let host = config['server']['host'];
+let endpoint = config['server']['endpoint'];
+let url = host + endpoint;
+let port = process.env.PORT || config.port || 80;
+let emailRegex = config['features']['email_regex'];
+let emailErrorMessage = config['features']['email_error_message'];
 
 app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.urlencoded({
@@ -79,7 +81,7 @@ app.get('/api/getWorkflows', async function (req, res, next) {
 });
 
 // GET /workflows/{workflowId}
-app.get('/api/getWorkflowById/:id', async function(req, res, next){
+app.get('/api/getWorkflowById/:id', async function(req, res){
 
     function getWorkflowById() {
         /***
@@ -142,39 +144,26 @@ app.post('/api/postAgreement/:id', async function(req, res){
             body: JSON.stringify(req.body)})
     }
 
-    // console.log('request body', req.body);
-    // console.log('body in JSON', JSON.stringify(req.body));
+    let okToSubmit = true;
 
-    console.log('first', req.body.documentCreationInfo.recipientsListInfo);
-  console.log('second', req.body.documentCreationInfo.recipientsListInfo[0].recipients);
-
-  console.log(req.body.documentCreationInfo.recipientsListInfo.length);
-
-  let o = 0;
-
-  console.log(req.body.documentCreationInfo.recipientsListInfo.length > o);
-
-  let okToSubmit = true;
-
-  for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
-    console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
-    for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
-      console.log('hey we at least made it this far brah!');
-      if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
-        console.log('found bad email');
-        okToSubmit = false;
+    for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
+      console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
+      for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
+        if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(emailRegex)) {
+          okToSubmit = false;
+        }
       }
     }
-  }
-  let data;
-   if (okToSubmit) {
-     const api_response = await postAgreement();
-     data = await api_response.json();
-   } else {
-     data = {code: 'MISC_ERROR', message: 'One or more emails are not formatted properly'};
-   }
 
-   console.log('return data', data);
+    let data;
+
+    if (okToSubmit) {
+       const api_response = await postAgreement();
+       data = await api_response.json();
+    } else {
+       data = {code: 'MISC_ERROR', message: emailErrorMessage};
+    }
+
     res.json(data);
 });
 
