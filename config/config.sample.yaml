@@ -56,8 +56,8 @@ features:
     - "Workflow name here"
     - "Another workflow namer here"
 
-    # Email regex to be used to restrict emails used during signing
-    email_regex: ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
+  # Email regex to be used to restrict emails used during signing
+  email_regex: ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
 
-    # Error to display if there is an error with the email validation
-    email_error_message: "There is a problem with your email address."
+  # Error to display if there is an error with the email validation
+  email_error_message: "There is a problem with your email address."
