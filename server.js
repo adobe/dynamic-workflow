@@ -49,7 +49,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-
+// Get index.html page from server
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/static/test.html');
 });
