@@ -170,25 +170,22 @@ app.get('/api/getSigningUrls/:id', async function(req, res, next){
             'x-api-user': x_api_user
         };
 
-
-            var sign_in_response = await fetch(url + endpoint, {
+        const sign_in_response = await fetch(url + endpoint, {
             method:'GET',
             headers: headers})             
              
-             const sign_in_data =  await sign_in_response.json();
-             if(sign_in_data.code !== 'AGREEMENT_NOT_SIGNABLE'){
-                 return sign_in_data;
-             }else{
-                 await sleep(2000);
-                 count++;
-                 
+        const sign_in_data =  await sign_in_response.json();
+        if(sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE'){
                  //retry for 5 times with 2000ms delay
-                 if(count >= 5){
+                if(count >= 5){
                      return sign_in_data;
-                 }else{
+                }else{
+                     await sleep(2000);
+                     count++;
                      return await getSigningUrls(count);
-                 }
-             }
+                }
+        }
+        return sign_in_data;
     }
 
     const data = await getSigningUrls();
