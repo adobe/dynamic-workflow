@@ -25,6 +25,7 @@ class DynamicForm {
     this.cc_group = [];
     this.pass_option = "";
     this.reminders = "";
+    this.sign_now = "";
   }
 
   async buildRecipientsForm() {
@@ -52,6 +53,7 @@ class DynamicForm {
     this.data = await this.workflow_data;
 
     // Set up triggers for features in config
+    this.sign_now = await this.getSignNowSetting('sign_now');
     let hide_predefined_setting = this.getHidePredefinedSetting('hide_predefined');
     let hidden_list = this.getHiddenWorkflowList('hide_workflow_list');
     let hide_all_trigger = this.setHideAllTrigger(hide_predefined_setting, hidden_list);
@@ -65,6 +67,7 @@ class DynamicForm {
     let hide_cc_predefined_trigger = this.setHidePredefinedTrigger(
       hide_all_cc_trigger, hide_cc_settings, this.data['displayName'], hide_cc_list);
 
+
     // Build Form Body
     this.createInstructionField(this.data['description']);
     this.creatAgreementLabelField();
@@ -75,6 +78,7 @@ class DynamicForm {
     this.createHeaderLabel("upload", "Files");
     this.createLayoutDivs("merge");
     this.createHeaderLabel("merge", "Fields");
+    this.createLoader();
 
     // Get Recipient Information
     for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
@@ -178,6 +182,18 @@ class DynamicForm {
 
   }
 
+  
+
+  async getSignNowSetting(name) {
+    /***
+     * This function gets the sign_now setting from the config file
+     */
+
+    let sign_now_predefined_setting = await this.features;
+
+    return sign_now_predefined_setting[name];
+  }
+
   async getHidePredefinedSetting(name) {
     /***
      * This function gets the hide_predefined setting from the config file
@@ -237,6 +253,25 @@ class DynamicForm {
     }
 
     return hide_predefined_trigger;
+  }
+
+   createLoader() {
+    /**
+     * This function will create loader experience
+     */
+
+      // Create element
+    var loader_div = document.createElement('div');
+
+    // Assign properties
+    loader_div.id = 'loader';
+    loader_div.role = 'status';
+    loader_div.className = 'spinner-border';
+
+    // Append to recipient_form
+    document.getElementById('recipient_form').append(loader_div);
+    document.getElementById('loader').hidden = true;
+
   }
 
   createInstructionField(msg) {
@@ -420,6 +455,8 @@ class DynamicForm {
         async_wf_obj.updateCcGroup(wf_data['ccsListInfo'][0], this.cc_group);
       }
 
+      document.getElementById('loader').hidden = false;
+
       var response = await fetch('/api/postAgreement/' + async_wf_obj.workflow_id, {
         method: 'POST',
         headers: {
@@ -434,13 +471,42 @@ class DynamicForm {
           return data;
         });
 
-      if ('url' in response) {
-        alert('Agreement Sent');
-        window.location.reload();
-      } else {
-        async_wf_obj.clearData();
-        alert(response['message']);
+      if(this.sign_now == 'yes'){
+        var URlresponse = await fetch('/api/getSigningUrls/' + response.agreementId, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }
+      }).then(function (resp) {
+        return resp.json()
+      })
+        .then(function (data) {
+          return data;
+        });
+
+
+
+       if('signingUrlSetInfos' in URlresponse){
+         window.location.href = URlresponse.signingUrlSetInfos[0].signingUrls[0].esignUrl;
+       }else{
+         async_wf_obj.clearData();
+          alert(URlresponse['message']);
+       }
+       
+
+      }else{
+        document.getElementById('loader').hidden = true;
+        if ('url' in response) {
+          alert('Agreement Sent');
+          window.location.reload();
+        } else {
+          async_wf_obj.clearData();
+          alert(response['message']);
+        }
       }
+
+
     }.bind(this);
 
     // Add button to the parent div

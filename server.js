@@ -14,6 +14,8 @@ governing permissions and limitations under the License.
 const express = require('express');
 const async = require('express-async-await');
 const fetch = require('node-fetch');
+const sleep = require('await-sleep');
+
 const bodyParser = require('body-parser');
 
 // Form Data, Multer, & Uploads
@@ -38,6 +40,8 @@ var host = config['server']['host'];
 var endpoint = config['server']['endpoint'];
 var url = host + endpoint;
 var port = process.env.PORT || config.port || 80;
+var x_api_user = config['features']['x-api-user'];
+
 
 app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.urlencoded({
@@ -45,7 +49,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-// Get index.html page from server
+
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/static/test.html');
 });
@@ -64,7 +68,8 @@ app.get('/api/getWorkflows', async function (req, res, next) {
          */
         const endpoint = '/workflows';
         const headers = {
-            'Access-Token': integration
+            'Access-Token': integration,
+            'x-api-user': x_api_user
         };
 
         return fetch(url + endpoint, {
@@ -87,7 +92,8 @@ app.get('/api/getWorkflowById/:id', async function(req, res, next){
          */
         const endpoint = "/workflows/" + req.params.id;
         const headers = {
-            'Access-Token': integration
+            'Access-Token': integration,
+            'x-api-user': x_api_user
         };
 
         return fetch(url + endpoint, {
@@ -110,7 +116,8 @@ app.get('/api/getLibraryDocuments/:id', async function(req, res, next) {
          */
         const endpoint = "/libraryDocuments/" + req.params.id + "/documents";
         const headers = {
-            'Access-Token': integration
+            'Access-Token': integration,
+            'x-api-user': x_api_user
         };
 
         return fetch(url + endpoint, {method: 'GET', headers: headers})
@@ -132,6 +139,7 @@ app.post('/api/postAgreement/:id', async function(req, res, next){
         const endpoint = "/workflows/" + req.params.id + "/agreements";
         const headers = {
             'Access-Token': integration,
+            'x-api-user': x_api_user,
             Accept: 'application/json',
             'Content-Type': 'application/json'
         };
@@ -148,6 +156,47 @@ app.post('/api/postAgreement/:id', async function(req, res, next){
     res.json(data);
 });
 
+
+// GET /agreements/{agreementId}/signingUrls
+app.get('/api/getSigningUrls/:id', async function(req, res, next){
+
+    async function getSigningUrls(count=0) {
+        /***
+         * This function gets URL for the e-sign page for the current signer(s) of an agreement.
+         */
+        const endpoint = "/agreements/" + req.params.id + "/signingUrls";
+        const headers = {
+            'Access-Token': integration,
+            'x-api-user': x_api_user
+        };
+
+
+            var sign_in_response = await fetch(url + endpoint, {
+            method:'GET',
+            headers: headers})             
+             
+             const sign_in_data =  await sign_in_response.json();
+             if(sign_in_data.code !== 'AGREEMENT_NOT_SIGNABLE'){
+                 return sign_in_data;
+             }else{
+                 await sleep(2000);
+                 count++;
+                 
+                 //retry for 5 times with 2000ms delay
+                 if(count >= 5){
+                     return sign_in_data;
+                 }else{
+                     return await getSigningUrls(count);
+                 }
+             }
+    }
+
+    const data = await getSigningUrls();
+    //const data =  await api_response.json();
+
+    res.json(data);
+});
+
 // POST /transientDocuments
 app.post('/api/postTransient', upload.single('myfile'), async function (req, res, next) {
 
@@ -157,7 +206,8 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
          */
         const endpoint = "/transientDocuments";
         const headers = {
-            'Access-Token': integration
+            'Access-Token': integration,
+            'x-api-user': x_api_user
         };
 
         return fetch(url + endpoint, {
