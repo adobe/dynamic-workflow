@@ -35,13 +35,19 @@ async function updateDropdownMenu(workflow_data) {
     }
 }
 
-function runWorkflow() {
+function runWorkflow(id) {
     /**
      *  This is the controller function.
      */
 
-    // Get workflow ID
-    var workflow_id = getWorkflowId();
+    // Get workflow ID from deeplink or dropdown selector
+    var workflow_id = '';
+    if(id){
+       workflow_id = id;
+    }else{
+
+       workflow_id = getWorkflowId();
+    }
 
     document.getElementById('dynamic_form').hidden = true;
 
@@ -98,6 +104,85 @@ function getWorkflowId(){
 
     return dropdown_selection.options[dropdown_selection.selectedIndex].value;
 }
+
+
+
+
+
+async function deeplinkCheck() {
+    // validate and redirect to deeplink workflow
+
+ const is_deeplink_allowed =  await getDeeplinkSetting('deep_links');
+ const is_index_disabled =  await getIndexSetting('disable_index');
+ if(is_deeplink_allowed === 'yes'){
+     const urlParams = new URLSearchParams(window.location.search);
+     const workflow_id = urlParams.get('id');
+
+     if(workflow_id && (is_index_disabled === 'yes')){
+         document.getElementById('workflow_form_top').hidden = true;
+         runWorkflow(workflow_id);
+     }else{
+        document.getElementById('workflow_selector').hidden = true;
+        createErrorMessage();
+     }
+
+  }
+  
+}
+
+
+async function createErrorMessage() {
+    /**
+     * This function will create the agreement name label
+     */
+
+      // Create element
+    var error_message = document.createElement('h3');
+
+    // Assign properties
+    error_message.innerHTML = 'Error: Workflow not found';
+    error_message.className = 'error_message';
+
+    // Append to parent
+    document.getElementById('workflow_form_top_wrapper').append(error_message);
+
+  }
+
+async function getDeeplinkSetting(name){
+    /***
+     * This function gets the deep_links setting from the config file
+     */
+         var get_features =  await fetch('/features')
+        .then(function (resp) {
+            return resp.json()
+        })
+        .then(function (data) {
+            return data;
+        });
+
+    let deeplink_predefined_setting = await get_features;
+
+    return deeplink_predefined_setting[name];
+  }
+
+  async function getIndexSetting(name){
+    /***
+     * This function gets the deep_links setting from the config file
+     */
+         var get_features =  await fetch('/features')
+        .then(function (resp) {
+            return resp.json()
+        })
+        .then(function (data) {
+            return data;
+        });
+
+    let deeplink_predefined_setting = await get_features;
+
+    return deeplink_predefined_setting[name];
+  }
+
+deeplinkCheck();
 
 // Fetch all workflow data
 var workflow_data = fetch('/api/getWorkflows')

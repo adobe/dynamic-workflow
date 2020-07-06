@@ -69,6 +69,7 @@ class DynamicForm {
 
 
     // Build Form Body
+    this.createFormTitleField(this.data['displayName']);
     this.createInstructionField(this.data['description']);
     this.creatAgreementLabelField();
     this.createAgreementInputField();
@@ -271,6 +272,23 @@ class DynamicForm {
     // Append to recipient_form
     document.getElementById('recipient_form').append(loader_div);
     document.getElementById('loader').hidden = true;
+
+  }
+
+   createFormTitleField(title) {
+    /**
+     * This function will create the agreement name label
+     */
+
+      // Create element
+    var title_label = document.createElement('h1');
+
+    // Assign properties
+    title_label.innerHTML = title;
+    title_label.className = 'recipient_title';
+
+    // Append to parent
+    document.getElementById('instruction_section').append(title_label);
 
   }
 
