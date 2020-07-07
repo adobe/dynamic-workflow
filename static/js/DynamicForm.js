@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 class DynamicForm {
 
-  constructor(parent_div, data, agreement_data, features) {
+  constructor(parent_div, data, agreement_data, features,query_params) {
     this.parent_div = parent_div;
     this.workflow_data = data;
     this.agreement_data = agreement_data;
@@ -26,6 +26,7 @@ class DynamicForm {
     this.pass_option = "";
     this.reminders = "";
     this.sign_now = "";
+    this.query_params = query_params;
   }
 
   async buildRecipientsForm() {
@@ -177,10 +178,25 @@ class DynamicForm {
     this.createRecipientFormButton(this.agreement_data, this.workflow_data);
 
     document.getElementById('dynamic_form').hidden = false;
+
+    this.applyDefaultValuesFromQueryParms(this.query_params)
+
   }
 
   removeDivs() {
 
+  }
+
+  applyDefaultValuesFromQueryParms(query_params){
+
+    const params = query_params.toString();
+    const entries = query_params.entries();
+
+    for(const entry of entries) {
+      if(document.getElementById(entry[0])){
+        document.getElementById(entry[0]).value = entry[1];
+      }
+    }
   }
 
   

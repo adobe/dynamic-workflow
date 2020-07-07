@@ -74,10 +74,11 @@ function runWorkflow(id) {
 
     // Grab the parent div from the dynamic form
     var parent_form_div = document.getElementById("recipient_form");
+    const query_params = new URLSearchParams(window.location.search);
 
     // Create the dynamic form
     var dynamic_form = new DynamicForm(
-        parent_form_div, workflow_data, workflow_agreement_data, get_features);
+        parent_form_div, workflow_data, workflow_agreement_data, get_features,query_params);
     dynamic_form.buildRecipientsForm();
 
     showHiddenDiv();
@@ -105,18 +106,15 @@ function getWorkflowId(){
     return dropdown_selection.options[dropdown_selection.selectedIndex].value;
 }
 
-
-
-
-
 async function deeplinkCheck() {
     // validate and redirect to deeplink workflow
 
- const is_deeplink_allowed =  await getDeeplinkSetting('deep_links');
- const is_index_disabled =  await getIndexSetting('disable_index');
+ const settings = await getSettings();
+ const is_deeplink_allowed =  settings['deep_links'];
+ const is_index_disabled =  settings['disable_index'];
  if(is_deeplink_allowed === 'yes'){
-     const urlParams = new URLSearchParams(window.location.search);
-     const workflow_id = urlParams.get('id');
+     const url_params = new URLSearchParams(window.location.search);
+     const workflow_id = url_params.get('id');
 
      if(workflow_id && (is_index_disabled === 'yes')){
          document.getElementById('workflow_form_top').hidden = true;
@@ -130,10 +128,9 @@ async function deeplinkCheck() {
   
 }
 
-
 async function createErrorMessage() {
     /**
-     * This function will create the agreement name label
+     * This function will create error message if workflow id is not available
      */
 
       // Create element
@@ -148,9 +145,10 @@ async function createErrorMessage() {
 
   }
 
-async function getDeeplinkSetting(name){
-    /***
-     * This function gets the deep_links setting from the config file
+
+  async function getSettings(){
+     /***
+     * This function gets the setting from the config file
      */
          var get_features =  await fetch('/features')
         .then(function (resp) {
@@ -160,26 +158,9 @@ async function getDeeplinkSetting(name){
             return data;
         });
 
-    let deeplink_predefined_setting = await get_features;
+    let predefined_setting = await get_features;
 
-    return deeplink_predefined_setting[name];
-  }
-
-  async function getIndexSetting(name){
-    /***
-     * This function gets the deep_links setting from the config file
-     */
-         var get_features =  await fetch('/features')
-        .then(function (resp) {
-            return resp.json()
-        })
-        .then(function (data) {
-            return data;
-        });
-
-    let deeplink_predefined_setting = await get_features;
-
-    return deeplink_predefined_setting[name];
+    return predefined_setting;
   }
 
 deeplinkCheck();
