@@ -179,7 +179,7 @@ class DynamicForm {
 
     document.getElementById('dynamic_form').hidden = false;
 
-    this.applyDefaultValuesFromQueryParms(this.query_params)
+    this.applyDefaultValuesFromQueryParams(this.query_params)
 
   }
 
@@ -187,7 +187,7 @@ class DynamicForm {
 
   }
 
-  applyDefaultValuesFromQueryParms(query_params){
+  applyDefaultValuesFromQueryParams(query_params){
 
     const params = query_params.toString();
     const entries = query_params.entries();
