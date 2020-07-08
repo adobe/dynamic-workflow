@@ -41,7 +41,8 @@ var endpoint = config['server']['endpoint'];
 var url = host + endpoint;
 var port = process.env.PORT || config.port || 80;
 var x_api_user = config['features']['x-api-user'];
-
+let emailRegex = config['features']['email_regex'];
+let emailErrorMessage = config['features']['email_error_message'];
 
 app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.urlencoded({
@@ -84,7 +85,7 @@ app.get('/api/getWorkflows', async function (req, res, next) {
 });
 
 // GET /workflows/{workflowId}
-app.get('/api/getWorkflowById/:id', async function(req, res, next){
+app.get('/api/getWorkflowById/:id', async function(req, res){
 
     function getWorkflowById() {
         /***
@@ -130,7 +131,7 @@ app.get('/api/getLibraryDocuments/:id', async function(req, res, next) {
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/:id', async function(req, res, next){
+app.post('/api/postAgreement/:id', async function(req, res){
 
     function postAgreement() {
         /***
@@ -150,8 +151,25 @@ app.post('/api/postAgreement/:id', async function(req, res, next){
             body: JSON.stringify(req.body)})
     }
 
-    const api_response = await postAgreement();
-    const data = await api_response.json();
+    let okToSubmit = true;
+
+    for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
+      console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
+      for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
+        if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(emailRegex)) {
+          okToSubmit = false;
+        }
+      }
+    }
+
+    let data;
+
+    if (okToSubmit) {
+       const api_response = await postAgreement();
+       data = await api_response.json();
+    } else {
+       data = {code: 'MISC_ERROR', message: emailErrorMessage};
+    }
 
     res.json(data);
 });
@@ -172,8 +190,8 @@ app.get('/api/getSigningUrls/:id', async function(req, res, next){
 
         const sign_in_response = await fetch(url + endpoint, {
             method:'GET',
-            headers: headers})             
-             
+            headers: headers})
+
         const sign_in_data =  await sign_in_response.json();
         if(sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE'){
                  //retry for 5 times with 2000ms delay
@@ -227,6 +245,7 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
     fs.unlink(req.file.path, function (err) {
         if (err) return console.log(err);
     });
+
 
     res.json(data)
   })

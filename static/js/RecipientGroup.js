@@ -12,8 +12,10 @@ governing permissions and limitations under the License.
 
 class RecipientGroup{
 
-    constructor(group_id, parent_div, recipient_group_data){
+    constructor(group_id, parent_div, recipient_group_data, email_regex, email_error_message){
         this.parent_div = parent_div;
+        this.email_regex = email_regex;
+        this.email_error_message = email_error_message;
         this.group_id = group_id;
         this.recipient_group_data = recipient_group_data;
         this.number_of_members = 0;
@@ -28,11 +30,11 @@ class RecipientGroup{
 
         // Create the element
         var recipient_div = document.createElement('div');
-        
+
         // Add attributes
         recipient_div.id = "recipient_group_" + this.group_id;
         recipient_div.className = "add_border_bottom";
-        
+
         var parent_div = document.getElementById('recipient_section')
         parent_div.append(recipient_div);
 
@@ -73,6 +75,8 @@ class RecipientGroup{
         input.name = 'recipient_' + this.group_id;
         input.className = 'recipient_form_input';
         input.placeholder = "Enter Recipient's Email";
+        input.pattern = this.email_regex;
+        input.title = this.email_error_message;
 
         input.onchange = function(){
             this.email = input.value
@@ -161,6 +165,8 @@ class RecipientGroup{
         participent_input.placeholder = "Enter Recipient's Email";
         participent_input.id = participent_id;
         participent_input.name = participent_id;
+        participent_input.pattern = this.email_regex;
+        participent_input.title = this.email_error_message;
 
         // Append to the div before buttons
         var target = document.getElementById("add_section_" + this.group_id);

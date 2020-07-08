@@ -66,6 +66,8 @@ class DynamicForm {
     let hide_all_cc_trigger = this.setHideAllTrigger(hide_cc_settings, hide_cc_list);
     let hide_cc_predefined_trigger = this.setHidePredefinedTrigger(
       hide_all_cc_trigger, hide_cc_settings, this.data['displayName'], hide_cc_list);
+    let email_regex = this.getEmailRegex('email_regex');
+    let email_error_message = this.getEmailErrorMessage('email_error_message');
 
 
     // Build Form Body
@@ -82,11 +84,12 @@ class DynamicForm {
 
     // Get Recipient Information
     for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
-
+      let emailError = await email_error_message;
+      let emailRegex = await email_regex;
       let recipient_group_data = this.data['recipientsListInfo'][counter];
 
       this.recipient_groups.push(new RecipientGroup(
-        this.recipeint_group_id, this.parent_div.children[1].children, recipient_group_data));
+        this.recipeint_group_id, this.parent_div.children[1].children, recipient_group_data, emailRegex, emailError));
       this.recipient_groups[counter].createRecipientDiv();
       this.recipient_groups[counter].createRecipientLabelField();
       this.recipient_groups[counter].createRecipientInputField(hide_all_trigger, hide_predefined_trigger);
@@ -182,7 +185,7 @@ class DynamicForm {
 
   }
 
-  
+
 
   async getSignNowSetting(name) {
     /***
@@ -192,6 +195,26 @@ class DynamicForm {
     let sign_now_predefined_setting = await this.features;
 
     return sign_now_predefined_setting[name];
+  }
+
+  async getEmailRegex(name) {
+
+    /***
+     * This function gets the email_regex setting from the config file
+     */
+
+    let email_regex_setting = await this.features;
+
+    return email_regex_setting[name];
+  }
+
+  async getEmailErrorMessage(name) {
+    /***
+     * This function gets the email_error_message setting from the config file
+     */
+    let email_error_message_setting = await this.features;
+
+    return email_error_message_setting[name];
   }
 
   async getHidePredefinedSetting(name) {
@@ -493,7 +516,7 @@ class DynamicForm {
          async_wf_obj.clearData();
           alert(URlresponse['message']);
        }
-       
+
 
       }else{
         document.getElementById('loader').hidden = true;
