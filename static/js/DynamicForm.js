@@ -80,7 +80,6 @@ class DynamicForm {
     this.createHeaderLabel("upload", "Files");
     this.createLayoutDivs("merge");
     this.createHeaderLabel("merge", "Fields");
-    this.createLoader();
 
     // Get Recipient Information
     for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
@@ -179,7 +178,7 @@ class DynamicForm {
 
     document.getElementById('dynamic_form').hidden = false;
 
-    this.applyDefaultValuesFromQueryParams(this.query_params)
+    this.applyDefaultValuesFromQueryParams(this.query_params);
 
   }
 
@@ -272,26 +271,7 @@ class DynamicForm {
     return hide_predefined_trigger;
   }
 
-   createLoader() {
-    /**
-     * This function will create loader experience
-     */
-
-      // Create element
-    var loader_div = document.createElement('div');
-
-    // Assign properties
-    loader_div.id = 'loader';
-    loader_div.role = 'status';
-    loader_div.className = 'spinner-border';
-
-    // Append to recipient_form
-    document.getElementById('recipient_form').append(loader_div);
-    document.getElementById('loader').hidden = true;
-
-  }
-
-   createFormTitleField(title) {
+  createFormTitleField(title) {
     /**
      * This function will create the agreement name label
      */
@@ -504,6 +484,9 @@ class DynamicForm {
         .then(function (data) {
           return data;
         });
+
+
+        //setTimeout(() => { console.log('World!'); }, 2000);
 
       if(this.sign_now == 'yes'){
         var URlresponse = await fetch('/api/getSigningUrls/' + response.agreementId, {

@@ -115,16 +115,39 @@ async function deeplinkCheck() {
     const url_params = new URLSearchParams(window.location.search);
     const workflow_id = url_params.get('id');
 
-    if(workflow_id && (is_index_disabled === 'yes')){
-      document.getElementById('workflow_form_top').hidden = true;
-      runWorkflow(workflow_id);
-    }else{
-      document.getElementById('workflow_selector').hidden = true;
+    if(workflow_id){
+      await runWorkflow(workflow_id);
+    } else if(is_index_disabled === 'yes'){
       createErrorMessage();
+    }
+
+    if(is_index_disabled === 'no'){
+      document.getElementById("workflow_dropdown").value = workflow_id;
     }
 
   }
 
+}
+
+async function createWorkflowSelector() {
+  // check if dropdown index is disabled and verify deeplinks
+
+  const settings = await getSettings();
+  const is_index_disabled =  settings['disable_index'];
+  if(is_index_disabled === 'yes'){
+    document.getElementById('workflow_form_top').hidden = true;
+  }else{
+      // Fetch all workflow data
+    var workflow_data = fetch('/api/getWorkflows')
+    .then(function (resp) {
+      return resp.json();
+    })
+    .then(function (data) {
+      return data;
+    });
+    await updateDropdownMenu(workflow_data); 
+  }
+  await deeplinkCheck();
 }
 
 async function createErrorMessage() {
@@ -140,7 +163,7 @@ async function createErrorMessage() {
   error_message.className = 'error_message';
 
   // Append to parent
-  document.getElementById('workflow_form_top_wrapper').append(error_message);
+  document.getElementById('workflow_form').append(error_message);
 
 }
 
@@ -162,15 +185,6 @@ async function getSettings(){
   return predefined_setting;
 }
 
-deeplinkCheck();
+createWorkflowSelector();
 
-// Fetch all workflow data
-var workflow_data = fetch('/api/getWorkflows')
-  .then(function (resp) {
-    return resp.json();
-  })
-  .then(function (data) {
-    return data;
-  });
 
-updateDropdownMenu(workflow_data);
