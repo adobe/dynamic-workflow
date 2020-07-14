@@ -35,7 +35,7 @@ async function updateDropdownMenu(workflow_data) {
   }
 }
 
-function runWorkflow(id) {
+async function runWorkflow(id) {
   /**
      *  This is the controller function.
      */
@@ -51,7 +51,7 @@ function runWorkflow(id) {
   document.getElementById('dynamic_form').hidden = true;
 
   // Fetch workflow data by ID
-  var workflow_data = fetch('/api/getWorkflowById/' + workflow_id)
+  var workflow_data = await fetch('/api/getWorkflowById/' + workflow_id)
     .then(function (resp) {
       return resp.json();
     })
@@ -59,7 +59,11 @@ function runWorkflow(id) {
       return data;
     });
 
-  // Fetch application features
+  if(workflow_data.code === 'INVALID_WORKFLOW_ID'){
+    alert(workflow_data.message);
+  } else{
+
+// Fetch application features
   var get_features = fetch('/features')
     .then(function (resp) {
       return resp.json();
@@ -81,6 +85,7 @@ function runWorkflow(id) {
   dynamic_form.buildRecipientsForm();
 
   showHiddenDiv();
+   }
 }
 
 function showHiddenDiv(){

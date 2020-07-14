@@ -141,7 +141,7 @@ app.get('/api/getSigningUrls/:id', async function(req, res){
       headers: headers});
 
     const sign_in_data =  await sign_in_response.json();
-    if(sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE'  || sign_in_data.code === 'BAD_REQUEST'){
+    if(sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE'){
       //retry for 5 times with 1000ms delay
       if(count >= 5){
         return sign_in_data;
@@ -155,7 +155,6 @@ app.get('/api/getSigningUrls/:id', async function(req, res){
   }
 
   const data = await getSigningUrls();
-  //const data =  await api_response.json();
 
   res.json(data);
 });

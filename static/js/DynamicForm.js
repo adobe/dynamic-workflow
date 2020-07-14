@@ -192,8 +192,13 @@ class DynamicForm {
     const entries = query_params.entries();
 
     for(const entry of entries) {
-      if(document.getElementById(entry[0])){
-        document.getElementById(entry[0]).value = entry[1];
+      if(document.getElementById(entry[0])){  
+        //handing checkboxes     
+        if(document.getElementById(entry[0]).type === 'checkbox'){
+          document.getElementById(entry[0]).checked = (entry[1] === 'true');
+        }else{
+          document.getElementById(entry[0]).value = entry[1];
+        }
       }
     }
   }
@@ -485,33 +490,27 @@ class DynamicForm {
           return data;
         });
 
-
-        //setTimeout(() => { console.log('World!'); }, 2000);
-
       if(this.sign_now == 'yes'){
         var URlresponse = await fetch('/api/getSigningUrls/' + response.agreementId, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }
-      }).then(function (resp) {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          }
+        }).then(function (resp) {
         return resp.json()
-      })
+        })
         .then(function (data) {
           return data;
-        });
+         });
 
-
-
-       if('signingUrlSetInfos' in URlresponse){
-         window.location.href = URlresponse.signingUrlSetInfos[0].signingUrls[0].esignUrl;
-       }else{
-         async_wf_obj.clearData();
+        if('signingUrlSetInfos' in URlresponse){
+          window.location.href = URlresponse.signingUrlSetInfos[0].signingUrls[0].esignUrl;
+        }else{
+          async_wf_obj.clearData();
           alert(URlresponse['message']);
-       }
+        }
        
-
       }else{
         document.getElementById('loader').hidden = true;
         if ('url' in response) {
