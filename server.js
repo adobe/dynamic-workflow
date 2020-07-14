@@ -48,6 +48,8 @@ if (config['features']['x-api-user']) {
   headers['x-api-user'] = config['features']['x-api-user'];
 }
 
+let emailRegex = config['features']['email_regex'];
+let emailErrorMessage = config['features']['email_error_message'];
 
 app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.urlencoded({
@@ -120,14 +122,33 @@ app.post('/api/postAgreement/:id', async function(req, res){
       body: JSON.stringify(req.body)});
   }
 
-  const api_response = await postAgreement();
-  const data = await api_response.json();
+
+    let okToSubmit = true;
+
+    for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
+      console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
+      for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
+        if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(emailRegex)) {
+          okToSubmit = false;
+        }
+      }
+    }
+
+    let data;
+
+    if (okToSubmit) {
+       const api_response = await postAgreement();
+       data = await api_response.json();
+    } else {
+       data = {code: 'MISC_ERROR', message: emailErrorMessage};
+    }
 
   res.json(data);
 });
 
 
 // GET /agreements/{agreementId}/signingUrls
+
 app.get('/api/getSigningUrls/:id', async function(req, res){
 
   async function getSigningUrls(count=0) {
@@ -184,6 +205,7 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
   const api_response = await postTransient();
   const data = await api_response.json();
 
+
   // Delete uploaded doc after transient call
   fs.unlink(req.file.path, function (err) {
     if (err) return console.log(err);
@@ -191,5 +213,6 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
 
   res.json(data);
 });
+
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
