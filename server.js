@@ -57,11 +57,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-// Get index.html page from server
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/static/test.html');
-});
-
 // Get features from config files
 app.get('/features', function (req, res){
   res.json(config['features']);

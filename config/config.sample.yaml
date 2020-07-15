@@ -40,9 +40,14 @@ features:
   deep_links: no
 
   #This feature disable workflow dropdown selector
-  # yes to disable 
+  # yes to disable
   # no to enable
   disable_index: no
+
+  # This feature will inject any CSS string put here before anything else loads
+  # Use a string
+  # Not a pointer to a CSS file, should be minified string
+  css_override:
 
   # This feature will allow the userId or email of API caller using the account or group token in the
   # format userid:{userId} OR email:{email}. If it is not specified, then the caller is inferred from the token.

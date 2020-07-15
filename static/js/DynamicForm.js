@@ -185,19 +185,14 @@ class DynamicForm {
 
   }
 
-  removeDivs() {
-
-  }
-
-
   applyDefaultValuesFromQueryParams(query_params){
 
     const params = query_params.toString();
     const entries = query_params.entries();
 
     for(const entry of entries) {
-      if(document.getElementById(entry[0])){  
-        //handing checkboxes     
+      if(document.getElementById(entry[0])){
+        //handing checkboxes
         if(document.getElementById(entry[0]).type === 'checkbox'){
           document.getElementById(entry[0]).checked = (entry[1] === 'true');
         }else{
