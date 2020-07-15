@@ -181,12 +181,6 @@ class DynamicForm {
     document.getElementById('dynamic_form').hidden = false;
   }
 
-  removeDivs() {
-
-  }
-
-
-
   async getSignNowSetting(name) {
     /***
      * This function gets the sign_now setting from the config file
