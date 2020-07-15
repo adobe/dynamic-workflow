@@ -15,8 +15,18 @@ async function updateDropdownMenu(workflow_data) {
      * This function will use the data from the fetch method getLibraryDoc and process the data
      * into the dropdown menu of our html.
      */
+    let get_features = fetch('/features')
+      .then(function (resp) {
+        return resp.json()
+      })
+      .then(function (data) {
+        let styleElement = document.createElement("style");
+        styleElement.innerHTML = data['css_override'];
+        document.getElementsByTagName("head")[0].appendChild(styleElement);
+        return data;
+      });
 
-        // Declare workflow data and create an empty array
+    // Declare workflow data and create an empty array
     const workflow_list = await workflow_data;
 
     // Iterate through workflow data and assign text/value to array for drop-down options
