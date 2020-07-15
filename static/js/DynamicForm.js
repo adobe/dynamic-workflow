@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 class DynamicForm {
 
-  constructor(parent_div, data, agreement_data, features) {
+  constructor(parent_div, data, agreement_data, features,query_params) {
     this.parent_div = parent_div;
     this.workflow_data = data;
     this.agreement_data = agreement_data;
@@ -26,6 +26,7 @@ class DynamicForm {
     this.pass_option = "";
     this.reminders = "";
     this.sign_now = "";
+    this.query_params = query_params;
   }
 
   async buildRecipientsForm() {
@@ -71,6 +72,7 @@ class DynamicForm {
 
 
     // Build Form Body
+    this.createFormTitleField(this.data['displayName']);
     this.createInstructionField(this.data['description']);
     this.creatAgreementLabelField();
     this.createAgreementInputField();
@@ -80,7 +82,6 @@ class DynamicForm {
     this.createHeaderLabel("upload", "Files");
     this.createLayoutDivs("merge");
     this.createHeaderLabel("merge", "Fields");
-    this.createLoader();
 
     // Get Recipient Information
     for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
@@ -179,6 +180,26 @@ class DynamicForm {
     this.createRecipientFormButton(this.agreement_data, this.workflow_data);
 
     document.getElementById('dynamic_form').hidden = false;
+
+    this.applyDefaultValuesFromQueryParams(this.query_params);
+
+  }
+
+  applyDefaultValuesFromQueryParams(query_params){
+
+    const params = query_params.toString();
+    const entries = query_params.entries();
+
+    for(const entry of entries) {
+      if(document.getElementById(entry[0])){
+        //handing checkboxes
+        if(document.getElementById(entry[0]).type === 'checkbox'){
+          document.getElementById(entry[0]).checked = (entry[1] === 'true');
+        }else{
+          document.getElementById(entry[0]).value = entry[1];
+        }
+      }
+    }
   }
 
   async getSignNowSetting(name) {
@@ -272,22 +293,20 @@ class DynamicForm {
     return hide_predefined_trigger;
   }
 
-   createLoader() {
+  createFormTitleField(title) {
     /**
-     * This function will create loader experience
+     * This function will create the agreement name label
      */
 
       // Create element
-    var loader_div = document.createElement('div');
+    var title_label = document.createElement('h1');
 
     // Assign properties
-    loader_div.id = 'loader';
-    loader_div.role = 'status';
-    loader_div.className = 'spinner-border';
+    title_label.innerHTML = title;
+    title_label.className = 'recipient_title';
 
-    // Append to recipient_form
-    document.getElementById('recipient_form').append(loader_div);
-    document.getElementById('loader').hidden = true;
+    // Append to parent
+    document.getElementById('instruction_section').append(title_label);
 
   }
 
@@ -490,28 +509,24 @@ class DynamicForm {
 
       if(this.sign_now == 'yes'){
         var URlresponse = await fetch('/api/getSigningUrls/' + response.agreementId, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }
-      }).then(function (resp) {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          }
+        }).then(function (resp) {
         return resp.json()
-      })
+        })
         .then(function (data) {
           return data;
-        });
+         });
 
-
-
-       if('signingUrlSetInfos' in URlresponse){
-         window.location.href = URlresponse.signingUrlSetInfos[0].signingUrls[0].esignUrl;
-       }else{
-         async_wf_obj.clearData();
+        if('signingUrlSetInfos' in URlresponse){
+          window.location.href = URlresponse.signingUrlSetInfos[0].signingUrls[0].esignUrl;
+        }else{
+          async_wf_obj.clearData();
           alert(URlresponse['message']);
-       }
-
-
+        }
       }else{
         document.getElementById('loader').hidden = true;
         if ('url' in response) {

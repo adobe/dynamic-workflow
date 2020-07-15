@@ -144,6 +144,15 @@ h4{
     background-color: var(--workflow-form-submit-color);
 }
 
+.recipient_title{
+    text-align: center;
+}
+
+.error_message{
+    text-align: center;
+    margin: 20px;
+}
+
 .recipient_hidden{
     visibility: hidden;
     width: 0;

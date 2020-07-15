@@ -34,6 +34,16 @@ features:
   # no to email
   sign_now: yes
 
+  #This feature will navigate the user to a workflow via a URL path
+  # yes to allow deeplinking
+  # no to deny deeplinking
+  deep_links: no
+
+  #This feature disable workflow dropdown selector
+  # yes to disable
+  # no to enable
+  disable_index: no
+
   # This feature will inject any CSS string put here before anything else loads
   # Use a string
   # Not a pointer to a CSS file, should be minified string
