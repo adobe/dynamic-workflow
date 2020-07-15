@@ -15,17 +15,6 @@ async function updateDropdownMenu(workflow_data) {
      * This function will use the data from the fetch method getLibraryDoc and process the data
      * into the dropdown menu of our html.
      */
-    let get_features = fetch('/features')
-      .then(function (resp) {
-        return resp.json()
-      })
-      .then(function (data) {
-        let styleElement = document.createElement("style");
-        styleElement.innerHTML = data['css_override'];
-        document.getElementsByTagName("head")[0].appendChild(styleElement);
-        return data;
-      });
-
   // Declare workflow data and create an empty array
   const workflow_list = await workflow_data;
 
@@ -200,6 +189,18 @@ async function getSettings(){
   return predefined_setting;
 }
 
+async function getCssOverride() {
+  //get the settings
+  let settings = await getSettings();
+  //create and set a style element if css override is present
+  if (settings['css_override']) {
+    let styleElement = document.createElement("style");
+    styleElement.innerHTML = settings['css_override'];
+    document.getElementsByTagName("head")[0].appendChild(styleElement);
+  }
+}
+
+getCssOverride();
 createWorkflowSelector();
 
 
