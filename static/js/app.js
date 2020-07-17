@@ -17,19 +17,38 @@ async function updateDropdownMenu(workflow_data) {
      */
   // Declare workflow data and create an empty array
   const workflow_list = await workflow_data;
+  let final_list = [];
+
+  //get allow workflow list
+  let settings = await getSettings();
+
+  //get allowed workflows property from the config
+  let allowedWorkflows = settings['allowed_workflows'];
 
   // Iterate through workflow data and assign text/value to array for drop-down options
   for (let i = 0; i < workflow_list.length; i++) {
     workflow_list[i].text = workflow_list[i].displayName;
     workflow_list[i].value = workflow_list[i].workflowId;
-    delete workflow_list[i].displayName;
-    delete workflow_list[i].workflowId;
+
+    // if the allowedWorkflows config is set...
+    if (allowedWorkflows) {
+      //...only show workflows on the allowed workflow list, otherwise...
+      if (allowedWorkflows.includes(workflow_list[i].workflowId)) {
+        console.log('this one is allowed', workflow_list[i].workflowId);
+        final_list.push(workflow_list[i]);
+      }
+    } else {
+      //...just add the darn thing and move on
+      final_list.push(workflow_list[i]);
+    }
+
   }
 
   // Add elements from options array into the drop down menu
   const selectBox = document.getElementById('workflow_dropdown');
-  for (let j = 0, l = workflow_list.length; j < l; j++) {
-    const option = workflow_list[j];
+  for (let j = 0; j < final_list.length; j++) {
+    const option = final_list[j];
+    // console.log('option being added', option)
     selectBox.options.add(new Option(option.text, option.value, option.selected));
   }
 }

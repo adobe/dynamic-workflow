@@ -34,6 +34,14 @@ features:
   # no to email
   sign_now: yes
 
+  # This feature will allow workflows to be filtered to only show the workflows desired.
+  # Should be strings in list below
+  # List empty: all workflows shown in dropdown list
+  allowed_workflows:
+    #-
+    - "Workflow ID"
+    -  "Workflow ID 2"
+      
   #This feature will navigate the user to a workflow via a URL path
   # yes to allow deeplinking
   # no to deny deeplinking
