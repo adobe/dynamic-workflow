@@ -53,17 +53,35 @@ async function updateDropdownMenu(workflow_data) {
   }
 }
 
+async function updateQueryStringParameter(key, value) {
+  let uri = window.location.protocol + "//" + window.location.host + window.location.search;
+  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+  var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+  if (uri.match(re)) {
+    return uri.replace(re, '$1' + key + "=" + value + '$2');
+  }
+  else {
+    return uri + separator + key + "=" + value;
+  }
+}
+
+async function updateId(value) {
+  newUrl = updateQueryStringParameter('id', value);
+  window.history.pushState({}, null, await newUrl)
+}
+
 async function runWorkflow(id) {
   /**
-     *  This is the controller function.
-     */
+   *  This is the controller function.
+   */
 
   // Get workflow ID from deeplink or dropdown selector
   var workflow_id = '';
-  if(id){
+  if(id) {
     workflow_id = id;
-  }else{
+  } else {
     workflow_id = getWorkflowId();
+    updateId(workflow_id)
   }
 
   document.getElementById('dynamic_form').hidden = true;
@@ -120,8 +138,8 @@ function showHiddenDiv(){
 
 function getWorkflowId(){
   /**
-     * This function will get the workflow id from the selected drop down options.
-     */
+   * This function will get the workflow id from the selected drop down options.
+   */
 
   let dropdown_selection = document.getElementById('workflow_dropdown');
 
@@ -213,9 +231,11 @@ async function getCssOverride() {
   let settings = await getSettings();
   //create and set a style element if css override is present
   if (settings['css_override']) {
-    let styleElement = document.createElement("style");
-    styleElement.innerHTML = settings['css_override'];
-    document.getElementsByTagName("head")[0].appendChild(styleElement);
+    let stylesheet = document.styleSheets[0];
+    let cssList = settings['css_override'].trim(";").split(";");
+    cssList.forEach((cssItem) => {
+      stylesheet.insertRule(cssItem, stylesheet.cssRules.length);
+    })
   }
 }
 
