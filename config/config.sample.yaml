@@ -38,9 +38,8 @@ features:
   # Should be strings in list below
   # List empty: all workflows shown in dropdown list
   allowed_workflows:
-    #-
-    - "Workflow ID"
-    -  "Workflow ID 2"
+    # - "Workflow ID"
+    # -  "Workflow ID 2"
 
   #This feature will navigate the user to a workflow via a URL path
   # yes to allow deeplinking
@@ -59,6 +58,9 @@ features:
   # Example: "#workflow_form_top {background-color: red !important}; .recipient_title {display:none}"
   css_override: ""
 
+  # Disable extra options
+  # this setting disables the grey sidebar that enables senders to control reminders
+  disable_extra_options: no
 
   # This feature will allow the userId or email of API caller using the account or group token in the
   # format userid:{userId} OR email:{email}. If it is not specified, then the caller is inferred from the token.
@@ -78,7 +80,7 @@ features:
   # This feature will hide predefined cc recipients within your workflow
   # yes to hide
   # no to show
-  hide_cc: yes
+  hide_cc: no
 
   # If hide_cc is yes
   # HIDE ALL PREDEFINED CC RECIPIENTS ACROSS ALL WORKFLOWS:

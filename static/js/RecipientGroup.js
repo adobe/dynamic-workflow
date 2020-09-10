@@ -82,6 +82,12 @@ class RecipientGroup{
             this.email = input.value
         }.bind(this);
 
+        // remove ${sender.email} as default value
+        if (this.recipient_group_data['defaultValue'] == "${sender.email}") {
+          console.warn(input.id + " is set to default to the sender's email.  Default email is sender does not work with dynamic workflow.  This might cause unexpected behaviour.")
+          this.recipient_group_data['defaultValue'] = "";
+        }
+
         // If data is not blank, fill it in with predefine information
         if (this.recipient_group_data['defaultValue'] !== "") {
             input.value = this.recipient_group_data['defaultValue'];

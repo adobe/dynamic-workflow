@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 class DynamicForm {
 
-  constructor(parent_div, data, agreement_data, features,query_params) {
+  constructor(parent_div, data, agreement_data, settings, query_params) {
     this.parent_div = parent_div;
     this.workflow_data = data;
     this.agreement_data = agreement_data;
@@ -21,11 +21,10 @@ class DynamicForm {
     this.file_info = [];
     this.merge_fields = [];
     this.deadline = "";
-    this.features = features;
+    this.settings = settings;
     this.cc_group = [];
     this.pass_option = "";
     this.reminders = "";
-    this.sign_now = "";
     this.query_params = query_params;
   }
 
@@ -54,22 +53,16 @@ class DynamicForm {
     this.data = await this.workflow_data;
 
     // Set up triggers for features in config
-    this.sign_now = await this.getSignNowSetting('sign_now');
-    let hide_predefined_setting = this.getHidePredefinedSetting('hide_predefined');
-    let hidden_list = this.getHiddenWorkflowList('hide_workflow_list');
-    let hide_all_trigger = this.setHideAllTrigger(hide_predefined_setting, hidden_list);
-    let hide_predefined_trigger = this.setHidePredefinedTrigger(
-      hide_all_trigger, hide_predefined_setting, this.data['displayName'], hidden_list);
+    let hide_predefined = this.settings.hide_predefined;
+    let hide_workflow_list = this.settings.hide_workflow_list;
+    let hide_all_trigger = this.settings.hide_predefined && !this.settings.hide_workflow_list.length;
+    let hide_predefined_trigger = this.applyHideRule(hide_predefined, hide_workflow_list, this.data['displayName']);
 
     // Set up cc triggers for features in configs
-    let hide_cc_settings = this.getHidePredefinedSetting('hide_cc');
-    let hide_cc_list = this.getHiddenWorkflowList('hide_cc_workflow_list');
-    let hide_all_cc_trigger = this.setHideAllTrigger(hide_cc_settings, hide_cc_list);
-    let hide_cc_predefined_trigger = this.setHidePredefinedTrigger(
-      hide_all_cc_trigger, hide_cc_settings, this.data['displayName'], hide_cc_list);
-    let email_regex = this.getEmailRegex('email_regex');
-    let email_error_message = this.getEmailErrorMessage('email_error_message');
-
+    let hide_cc = this.settings.hide_cc;
+    let hide_cc_workflow_list = this.settings.hide_cc_workflow_list;
+    let hide_all_cc_trigger = this.settings.hide_cc && !this.settings.hide_cc_workflow_list.length;
+    let hide_cc_predefined_trigger = this.applyHideRule(hide_cc, hide_cc_workflow_list, this.data['displayName']);
 
     // Build Form Body
     this.createFormTitleField(this.data['displayName']);
@@ -83,10 +76,15 @@ class DynamicForm {
     this.createLayoutDivs("merge");
     this.createHeaderLabel("merge", "Fields");
 
+    // Hide Extra Options Section
+    if (this.settings.disable_extra_options) {
+      this.hideExtraOptions();
+    }
+
     // Get Recipient Information
     for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
-      let emailError = await email_error_message;
-      let emailRegex = await email_regex;
+      let emailError = this.settings.email_error_message;
+      let emailRegex = this.settings.email_regex;
       let recipient_group_data = this.data['recipientsListInfo'][counter];
 
       this.recipient_groups.push(new RecipientGroup(
@@ -182,12 +180,9 @@ class DynamicForm {
     document.getElementById('dynamic_form').hidden = false;
 
     this.applyDefaultValuesFromQueryParams(this.query_params);
-
   }
 
   applyDefaultValuesFromQueryParams(query_params){
-
-    const params = query_params.toString();
     const entries = query_params.entries();
 
     for(const entry of entries) {
@@ -202,95 +197,14 @@ class DynamicForm {
     }
   }
 
-  async getSignNowSetting(name) {
-    /***
-     * This function gets the sign_now setting from the config file
+  async applyHideRule(enabled, itemList, item) {
+    /**
+     * If enabled and either in list or there is no list.
      */
-
-    let sign_now_predefined_setting = await this.features;
-
-    return sign_now_predefined_setting[name];
-  }
-
-  async getEmailRegex(name) {
-
-    /***
-     * This function gets the email_regex setting from the config file
-     */
-
-    let email_regex_setting = await this.features;
-
-    return email_regex_setting[name];
-  }
-
-  async getEmailErrorMessage(name) {
-    /***
-     * This function gets the email_error_message setting from the config file
-     */
-    let email_error_message_setting = await this.features;
-
-    return email_error_message_setting[name];
-  }
-
-  async getHidePredefinedSetting(name) {
-    /***
-     * This function gets the hide_predefined setting from the config file
-     */
-
-    let hide_predefined_setting = await this.features;
-
-    return hide_predefined_setting[name];
-  }
-
-  async getHiddenWorkflowList(name) {
-    /***
-     * This function gets the hide_workflow_list from the config file
-     */
-
-    let feature = await this.features;
-
-    return feature[name];
-  }
-
-  async setHideAllTrigger(settings, hidden_list) {
-    /***
-     * This function sets the hide all trigger for predefined workflows.
-     * @param {Object} setting Hide_Predefined settings
-     * @param {Object} hidden_list Hide_Workflw_List
-     */
-
-    this.settings = await settings;
-    this.hidden_list = await hidden_list;
-    let hide_all_trigger = false
-
-    if (this.settings === 'yes' && this.hidden_list === null) {
-      hide_all_trigger = true;
+    if (enabled && itemList.length) {
+      return itemList.includes(item);
     }
-
-    return hide_all_trigger;
-  }
-
-  async setHidePredefinedTrigger(hide_all_trigger, hide_predefined_setting, workflow_name, hidden_list) {
-    /***
-     * This function sets the hide_predefed trigger for workflows
-     * @param {Object} hide_all_trigger Hide all trigger settings
-     * @param {Object} hide_predefined_setting Hide predefined settings
-     * @param {String} workflow_name Selected workflow name
-     * @param {Object} hidden_list Hidden list from config
-     */
-
-    let trigger = await hide_all_trigger;
-    let settings = await hide_predefined_setting;
-    let list = await hidden_list;
-    var hide_predefined_trigger = false;
-
-    if (!(trigger)) {
-      if (settings === 'yes') {
-        hide_predefined_trigger = list.includes(workflow_name);
-      }
-    }
-
-    return hide_predefined_trigger;
+    return false;
   }
 
   createFormTitleField(title) {
@@ -298,7 +212,7 @@ class DynamicForm {
      * This function will create the agreement name label
      */
 
-      // Create element
+    // Create element
     var title_label = document.createElement('h1');
 
     // Assign properties
@@ -507,7 +421,7 @@ class DynamicForm {
           return data;
         });
 
-      if(this.sign_now == 'yes'){
+      if(this.settings.sign_now){
         var URlresponse = await fetch('/api/getSigningUrls/' + response.agreementId, {
           method: 'GET',
           headers: {
@@ -515,7 +429,7 @@ class DynamicForm {
             'Content-Type': 'application/json',
           }
         }).then(function (resp) {
-        return resp.json()
+          return resp.json()
         })
         .then(function (data) {
           return data;
@@ -526,19 +440,23 @@ class DynamicForm {
         }else{
           async_wf_obj.clearData();
           alert(URlresponse['message']);
+          window.location.reload();
         }
-      }else{
+      } else {
         document.getElementById('loader').hidden = true;
         if ('url' in response) {
           alert('Agreement Sent');
-          window.location.reload();
+          if (self.settings.disable_index) {
+            window.location.href = window.location.href.split('?')[0];
+          } else {
+            window.location.reload();
+          }
         } else {
           async_wf_obj.clearData();
           alert(response['message']);
+          window.location.reload();
         }
       }
-
-
     }.bind(this);
 
     // Add button to the parent div
@@ -556,5 +474,10 @@ class DynamicForm {
     while (removed_div.firstChild) {
       removed_div.removeChild(removed_div.firstChild)
     }
+  }
+
+  hideExtraOptions() {
+    document.getElementById("main-options").classList.replace("col-lg-7", "col-lg-12");
+    document.getElementById("extra-options").classList.replace("col-lg-5", "form_hidden");
   }
 }

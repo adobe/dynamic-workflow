@@ -67,8 +67,8 @@ app.get('/api/getWorkflows', async function (req, res) {
 
   function getWorkflows() {
     /***
-         * This function makes a request to get workflows
-         */
+     * This function makes a request to get workflows
+     */
     const endpoint = '/workflows';
 
     return fetch(url + endpoint, {
@@ -87,8 +87,8 @@ app.get('/api/getWorkflowById/:id', async function(req, res){
 
   function getWorkflowById() {
     /***
-         * This function makes a request to get workflow by ID
-         */
+     * This function makes a request to get workflow by ID
+     */
     const endpoint = '/workflows/' + req.params.id;
 
     return fetch(url + endpoint, {
@@ -107,8 +107,8 @@ app.post('/api/postAgreement/:id', async function(req, res){
 
   function postAgreement() {
     /***
-         * This function post agreements
-         */
+     * This function post agreements
+     */
     const endpoint = '/workflows/' + req.params.id + '/agreements';
 
     return fetch(url + endpoint, {
@@ -180,8 +180,8 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
 
   function postTransient() {
     /***
-         * This functions post transient
-         */
+     * This functions post transient
+     */
     const endpoint = '/transientDocuments';
 
     return fetch(url + endpoint, {
