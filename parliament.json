@@ -1,0 +1,45 @@
+{
+  "name": "Parliament Onboarding",
+  "version": "1.0.0",
+  "description": "Onboarding docs for Parliament",
+  "author": "DevRel Team",
+  "view_type": "mdbook",
+  "meta_keywords": "adobe, parliament",
+  "meta_description": "default description",
+  "publish_date": "30/08/2018",
+  "show_edit_github_banner": false,
+  "base_path": "https://raw.githubusercontent.com",
+  "pages": [
+    {
+      "importedFileName": "readme",
+      "pages": [
+        {
+          "importedFileName": "main",
+          "pages": [],
+          "path": "adobe/dynamic-workflow/master/docs/main.md",
+          "title": "Main"
+        },
+        {
+          "importedFileName": "user_guide",
+          "pages": [],
+          "path": "adobe/dynamic-workflow/master/docs/user_guide.md",
+          "title": "User Guide"
+        },
+        {
+          "importedFileName": "deploy",
+          "pages": [],
+          "path": "adobe/dynamic-workflow/master/docs/deploy.md",
+          "title": "Build/Deploy"
+        },
+        {
+          "importedFileName": "configuration",
+          "pages": [],
+          "path": "adobe/dynamic-workflow/master/docs/configuration.md",
+          "title": "Configurations"
+        }
+      ],
+      "path": "adobe/dynamic-workflow/master/docs/main.md",
+      "title": "Overview"
+    }
+  ]
+}
