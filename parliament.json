@@ -14,12 +14,6 @@
       "importedFileName": "readme",
       "pages": [
         {
-          "importedFileName": "main",
-          "pages": [],
-          "path": "adobe/dynamic-workflow/master/docs/main.md",
-          "title": "Main"
-        },
-        {
           "importedFileName": "user_guide",
           "pages": [],
           "path": "adobe/dynamic-workflow/master/docs/user_guide.md",

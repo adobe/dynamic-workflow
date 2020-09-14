@@ -1,15 +1,19 @@
 # Dynamic Workflow
+
 Dynamic Workflow built on top of express using Adobe Sign API.
 
 ![sign image](https://user-images.githubusercontent.com/33329695/71855049-d8464b80-3094-11ea-94db-88a0fc492723.png "Sign Image")
 
 ## Overview
+
 Dynamic workflows allow users to specify the next participants within an agreement.
 
 ## Disclaimer
+
 This application is currently on version 1.1. There is a known issue that has been submitted to JIRA for participant groups. The feature is currently there, but the functionality has a bug. Once this issue is resolved, a patch will be issued out.
 
 ## Features
+
 | Features | Description |
 | --- | --- |
 | Dynamic Routing | Allows user to provide the next participant associated with the workflow. |
