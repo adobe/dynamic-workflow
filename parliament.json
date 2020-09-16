@@ -1,7 +1,7 @@
 {
   "name": "Parliament Onboarding",
   "version": "1.0.0",
-  "description": "Onboarding docs for Parliament",
+  "description": "Allow anyone to trigger a complex signing process",
   "author": "DevRel Team",
   "view_type": "mdbook",
   "meta_keywords": "adobe, parliament",
