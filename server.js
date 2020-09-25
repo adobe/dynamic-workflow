@@ -157,9 +157,13 @@ app.get('/api/getSigningUrls/:id', async function(req, res){
       headers: headers});
 
     const sign_in_data =  await sign_in_response.json();
-    if(sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE'){
-      //retry for 5 times with 1000ms delay
-      if(count >= 5){
+
+    // Look for times to retry and default to 15, if not found
+    const retries = 'sign_now_retries' in config['features'] ? config['features']['sign_now_retries'] : 15;
+
+    if(sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE' || sign_in_data.code === 'BAD_REQUEST'){
+      // retry for n times with 1s delay
+      if(count >= retries){
         return sign_in_data;
       }else{
         await sleep(1000);
@@ -183,10 +187,13 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
      * This functions post transient
      */
     const endpoint = '/transientDocuments';
+    let newHeader = { ...headers };
+    delete newHeader['Accept'];
+    delete newHeader['Content-Type'];
 
     return fetch(url + endpoint, {
       method: 'POST',
-      headers: headers,
+      headers: newHeader,
       body: form
     });
   }
