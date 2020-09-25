@@ -159,7 +159,7 @@ app.get('/api/getSigningUrls/:id', async function(req, res){
     const sign_in_data =  await sign_in_response.json();
 
     // Look for times to retry and default to 15, if not found
-    const retries = 'sign_now_retries' in config['features'] ? config['features']['sign_now_retries'] : 15;
+    const retries = 'sign_now_retries' in config['features'] ? config['features']['sign_now_retries'] : 60;
 
     if(sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE' || sign_in_data.code === 'BAD_REQUEST'){
       // retry for n times with 1s delay
