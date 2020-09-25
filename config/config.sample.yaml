@@ -33,7 +33,7 @@ features:
   # yes to redirect
   # no to email
   sign_now: yes
-  sign_now_retries: 15
+  sign_now_retries: 60
 
   # This feature will allow workflows to be filtered to only show the workflows desired.
   # Should be strings in list below
