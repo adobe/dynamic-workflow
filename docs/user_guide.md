@@ -1,4 +1,4 @@
-# Dynamic Workflow v1.1
+# Dynamic Workflow
 Dynamic Workflow built on top of express using Adobe Sign API.
 
 ![image](https://user-images.githubusercontent.com/33329695/71855049-d8464b80-3094-11ea-94db-88a0fc492723.png)
