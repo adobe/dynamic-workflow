@@ -141,6 +141,7 @@ class FileInfo {
 
     upload_input.onchange = async function () {
       // Spinner Start
+      document.getElementById('recipient_submit_button').disabled = true;
       document.getElementById('loader').hidden = false;
 
       upload_label.innerText = upload_input.files[0]['name'];
@@ -162,6 +163,7 @@ class FileInfo {
 
       // Spinner End
       document.getElementById('loader').hidden = true;
+      document.getElementById('recipient_submit_button').disabled = false;
     }.bind(this);
   }
 
