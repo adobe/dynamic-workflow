@@ -14,6 +14,7 @@ governing permissions and limitations under the License.
 const express = require('express');
 const fetch = require('node-fetch');
 const sleep = require('await-sleep');
+require('dotenv').config()
 
 const bodyParser = require('body-parser');
 
@@ -39,8 +40,15 @@ var endpoint = config['server']['endpoint'];
 var url = host + endpoint;
 var port = process.env.PORT || config.port || 80;
 
+var integration_key = null;
+if ('enterprise' in config && config.enterprise && 'integration' in config.enterprise && config.enterprise.integration) {
+  integration_key = config['enterprise']['integration'];
+} else {
+  integration_key = process.env.INTEGRATION_KEY;
+}
+
 var headers = {
-  'Access-Token': config['enterprise']['integration'],
+  'Access-Token': integration_key,
   'Accept': 'application/json',
   'Content-Type': 'application/json'
 };

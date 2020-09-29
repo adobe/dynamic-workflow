@@ -2,4 +2,8 @@
 config/config.yaml
 node_modules/
 .build-docs.sh
+.env
+.env.dev
+.env.stage
+.env.prod
 ~$*
