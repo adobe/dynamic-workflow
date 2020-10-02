@@ -21,7 +21,7 @@ const bodyParser = require('body-parser');
 // Form Data, Multer, & Uploads
 const FormData = require('form-data');
 const fs = require('fs');
-const multer  = require('multer');
+const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 // HTTPS & Path
@@ -35,14 +35,14 @@ const config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'config', 'con
 const app = express();
 
 // Configuration
-var host = config['server']['host'];
-var endpoint = config['server']['endpoint'];
+var host = config.server.host.replace(/\/$/, '');
+var endpoint = config.server.endpoint;
 var url = host + endpoint;
 var port = process.env.PORT || config.port || 80;
 
 var integration_key = null;
 if ('enterprise' in config && config.enterprise && 'integration' in config.enterprise && config.enterprise.integration) {
-  integration_key = config['enterprise']['integration'];
+  integration_key = config.enterprise.integration;
 } else {
   integration_key = process.env.INTEGRATION_KEY;
 }
@@ -66,7 +66,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // Get features from config files
-app.get('/features', function (req, res){
+app.get('/features', function (req, res) {
   res.json(config['features']);
 });
 
@@ -81,7 +81,8 @@ app.get('/api/getWorkflows', async function (req, res) {
 
     return fetch(url + endpoint, {
       method: 'GET',
-      headers: headers});
+      headers: headers
+    });
   }
 
   const workflow_list = await getWorkflows();
@@ -91,7 +92,7 @@ app.get('/api/getWorkflows', async function (req, res) {
 });
 
 // GET /workflows/{workflowId}
-app.get('/api/getWorkflowById/:id', async function(req, res){
+app.get('/api/getWorkflowById/:id', async function (req, res) {
 
   function getWorkflowById() {
     /***
@@ -101,7 +102,8 @@ app.get('/api/getWorkflowById/:id', async function(req, res){
 
     return fetch(url + endpoint, {
       method: 'GET',
-      headers: headers});
+      headers: headers
+    });
   }
 
   const workflow_by_id = await getWorkflowById();
@@ -111,7 +113,7 @@ app.get('/api/getWorkflowById/:id', async function(req, res){
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/:id', async function(req, res){
+app.post('/api/postAgreement/:id', async function (req, res) {
 
   function postAgreement() {
     /***
@@ -120,31 +122,32 @@ app.post('/api/postAgreement/:id', async function(req, res){
     const endpoint = '/workflows/' + req.params.id + '/agreements';
 
     return fetch(url + endpoint, {
-      method:'POST',
+      method: 'POST',
       headers: headers,
-      body: JSON.stringify(req.body)});
+      body: JSON.stringify(req.body)
+    });
   }
 
 
-    let okToSubmit = true;
+  let okToSubmit = true;
 
-    for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
-      console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
-      for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
-        if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(emailRegex)) {
-          okToSubmit = false;
-        }
+  for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
+    console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
+    for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
+      if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(emailRegex)) {
+        okToSubmit = false;
       }
     }
+  }
 
-    let data;
+  let data;
 
-    if (okToSubmit) {
-       const api_response = await postAgreement();
-       data = await api_response.json();
-    } else {
-       data = {code: 'MISC_ERROR', message: emailErrorMessage};
-    }
+  if (okToSubmit) {
+    const api_response = await postAgreement();
+    data = await api_response.json();
+  } else {
+    data = { code: 'MISC_ERROR', message: emailErrorMessage };
+  }
 
   res.json(data);
 });
@@ -152,28 +155,29 @@ app.post('/api/postAgreement/:id', async function(req, res){
 
 // GET /agreements/{agreementId}/signingUrls
 
-app.get('/api/getSigningUrls/:id', async function(req, res){
+app.get('/api/getSigningUrls/:id', async function (req, res) {
 
-  async function getSigningUrls(count=0) {
+  async function getSigningUrls(count = 0) {
     /***
      * This function gets URL for the e-sign page for the current signer(s) of an agreement.
      */
     const endpoint = '/agreements/' + req.params.id + '/signingUrls';
 
     const sign_in_response = await fetch(url + endpoint, {
-      method:'GET',
-      headers: headers});
+      method: 'GET',
+      headers: headers
+    });
 
-    const sign_in_data =  await sign_in_response.json();
+    const sign_in_data = await sign_in_response.json();
 
     // Look for times to retry and default to 15, if not found
     const retries = 'sign_now_retries' in config['features'] ? config['features']['sign_now_retries'] : 60;
 
-    if(sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE' || sign_in_data.code === 'BAD_REQUEST'){
+    if (sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE' || sign_in_data.code === 'BAD_REQUEST') {
       // retry for n times with 1s delay
-      if(count >= retries){
+      if (count >= retries) {
         return sign_in_data;
-      }else{
+      } else {
         await sleep(1000);
         count++;
         return await getSigningUrls(count);
