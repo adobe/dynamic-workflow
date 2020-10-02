@@ -182,15 +182,15 @@ class DynamicForm {
     this.applyDefaultValuesFromQueryParams(this.query_params);
   }
 
-  applyDefaultValuesFromQueryParams(query_params){
+  applyDefaultValuesFromQueryParams(query_params) {
     const entries = query_params.entries();
 
-    for(const entry of entries) {
-      if(document.getElementById(entry[0])){
+    for (const entry of entries) {
+      if (document.getElementById(entry[0])) {
         //handing checkboxes
-        if(document.getElementById(entry[0]).type === 'checkbox'){
+        if (document.getElementById(entry[0]).type === 'checkbox') {
           document.getElementById(entry[0]).checked = (entry[1] === 'true');
-        }else{
+        } else {
           document.getElementById(entry[0]).value = entry[1];
         }
       }
@@ -229,7 +229,7 @@ class DynamicForm {
      * This function will create the agreement name label
      */
 
-      // Create element
+    // Create element
     var instruction_label = document.createElement('h3');
 
     // Assign properties
@@ -246,7 +246,7 @@ class DynamicForm {
      * This function will create the agreement name label
      */
 
-      // Create element
+    // Create element
     var message_label = document.createElement('h3');
 
     // Assign properties
@@ -262,7 +262,7 @@ class DynamicForm {
      * This function will create the agreement name input field
      */
 
-      // Create element
+    // Create element
     var message_input = document.createElement('textarea');
 
     // Assign properties
@@ -288,7 +288,7 @@ class DynamicForm {
      * This function will create the agreement name label
      */
 
-      // Create element
+    // Create element
     var agreement_name_label = document.createElement('h3');
 
     // Assign properties
@@ -305,7 +305,7 @@ class DynamicForm {
      * This function will create the agreement name input field
      */
 
-      // Create element
+    // Create element
     var agreement_name_input = document.createElement('input');
 
     // Assign properties
@@ -330,7 +330,7 @@ class DynamicForm {
      * This function will create the file info div
      */
 
-      // Create the element
+    // Create the element
     var file_header_div = document.createElement('div');
     var file_body_div = document.createElement('div');
 
@@ -349,7 +349,7 @@ class DynamicForm {
      * This function will append the file label to the file header
      */
 
-      // Create the element
+    // Create the element
     var file_header_label = document.createElement('h3');
 
     // Assign the attributes
@@ -421,7 +421,7 @@ class DynamicForm {
           return data;
         });
 
-      if(this.settings.sign_now){
+      if (this.settings.sign_now) {
         var URlresponse = await fetch('/api/getSigningUrls/' + response.agreementId, {
           method: 'GET',
           headers: {
@@ -431,13 +431,13 @@ class DynamicForm {
         }).then(function (resp) {
           return resp.json()
         })
-        .then(function (data) {
-          return data;
-         });
+          .then(function (data) {
+            return data;
+          });
 
-        if('signingUrlSetInfos' in URlresponse){
+        if ('signingUrlSetInfos' in URlresponse) {
           window.location.href = URlresponse.signingUrlSetInfos[0].signingUrls[0].esignUrl;
-        }else{
+        } else {
           async_wf_obj.clearData();
           alert(URlresponse['message']);
           window.location.reload();
@@ -479,5 +479,6 @@ class DynamicForm {
   hideExtraOptions() {
     document.getElementById("main-options").classList.replace("col-lg-7", "col-lg-12");
     document.getElementById("extra-options").classList.replace("col-lg-5", "form_hidden");
+    document.getElementById("extra-options").hide;
   }
 }
