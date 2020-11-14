@@ -88,7 +88,12 @@ class DynamicForm {
       let recipient_group_data = this.data['recipientsListInfo'][counter];
 
       this.recipient_groups.push(new RecipientGroup(
-        this.recipeint_group_id, this.parent_div.children[1].children, recipient_group_data, emailRegex, emailError));
+        this.recipeint_group_id,
+        this.parent_div.children[1].children,
+        recipient_group_data,
+        emailRegex,
+        emailError
+      ));
       this.recipient_groups[counter].createRecipientDiv();
       this.recipient_groups[counter].createRecipientLabelField();
       this.recipient_groups[counter].createRecipientInputField(hide_all_trigger, hide_predefined_trigger);
@@ -180,6 +185,25 @@ class DynamicForm {
     document.getElementById('dynamic_form').hidden = false;
 
     this.applyDefaultValuesFromQueryParams(this.query_params);
+
+    this.applyListeners();
+  }
+
+  valid() {
+    const form = document.getElementById('recipient_form');
+    return form.checkValidity();
+  }
+
+  applyListeners() {
+    const form = document.getElementById('recipient_form');
+    const checkValidation = () => {
+      let submit = document.getElementById('recipient_submit_button');
+      submit.disabled = !this.valid();
+    }
+
+    form.addEventListener('input', () => { checkValidation() });
+    form.addEventListener('change', () => { checkValidation() });
+    form.addEventListener('keyup', () => { checkValidation() });
   }
 
   applyDefaultValuesFromQueryParams(query_params) {
@@ -376,6 +400,7 @@ class DynamicForm {
     form_button.innerHTML = "Submit";
     form_button.type = "button";
     form_button.id = "recipient_submit_button";
+    form_button.disabled = !this.valid();
 
     // If password is required disable the button
     if (this.pass_option.required) {

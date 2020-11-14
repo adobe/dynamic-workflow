@@ -9,7 +9,7 @@ port: 80
 # This is the server information needed to point the application to your Sign Console.
 server:
   # The host address to your Sign Console.
-  host:
+  host: "{enter base uri here}"
 
   # DO NOT CHANGE THE FOLLOW TWO CONFIGURATION.
   # This is the endpoint
@@ -20,16 +20,11 @@ enterprise:
   # This is your integration key for Adobe Sign. This key
   # is needed to get access to perform synchronization between Admin
   # Console and Adobe Sign.
-  integration:
+  integration: "{enter access token here}"
 
 # This is the feature configuration.
 features:
-  # This feature will hide predefined recipients within your workflow.
-  # yes to hide
-  # no to show
-  hide_predefined: yes
-
-  # This feature will allow first signer to be redirected to the ready to complete document immediately
+   # This feature will allow first signer to be redirected to the ready to complete document immediately
   # yes to redirect
   # no to email
   sign_now: yes
@@ -39,8 +34,8 @@ features:
   # Should be strings in list below
   # List empty: all workflows shown in dropdown list
   allowed_workflows:
-    # - "Workflow ID"
-    # -  "Workflow ID 2"
+    # - "{workflow name}"
+    # - "{workflow id}"
 
   #This feature will navigate the user to a workflow via a URL path
   # yes to allow deeplinking
@@ -56,43 +51,35 @@ features:
   # Use a minified CSS string.
   # Rules are delimited w/ a `;` semicolon
   # If a rule is not overriding, you might need to use the `!important` hack.
-  # Example: "#workflow_form_top {background-color: red !important}; .recipient_title {display:none}"
-  css_override: ""
+  css_override: "#agreement_section, #message_section, {display: none !important}"
+  # css_override: "#main-options {display:none}"  # Hide Options Section
+  # css_override: "#main-options {display:none}; #recipient_submit_button {background-color: red !important}"  # Hide Options Section
 
   # Disable extra options
   # this setting disables the grey sidebar that enables senders to control reminders
-  disable_extra_options: no
+  disable_extra_options: yes
 
   # This feature will allow the userId or email of API caller using the account or group token in the
   # format userid:{userId} OR email:{email}. If it is not specified, then the caller is inferred from the token.
   x-api-user: ""
 
-  # If hide_predefined is yes
-  # HIDE ALL PREDEFINED RECIPIENTS ACROSS ALL WORKFLOWS:
-  ## Comment out all the list items (-) by adding a # in front of it.
+  # This feature will hide predefined recipients within your workflow.
+  hide_predefined: yes
 
   # HIDE PREDEFINED RECIPIENTS WITH TARGET WORKFLOWS
   ## Add workflow names under hide_workflow_list such as " - Workflow name"
   hide_workflow_list:
-    #- Notice how list items are comment out
-    - "Workflow name here"
-    - "Another workflow namer here"
+    # - "{workflow name}"
+    # - "{workflow id}"
 
-  # This feature will hide predefined cc recipients within your workflow
-  # yes to hide
-  # no to show
-  hide_cc: no
+  # Hide predefined cc recipients within your workflow
+  hide_cc: yes
 
-  # If hide_cc is yes
-  # HIDE ALL PREDEFINED CC RECIPIENTS ACROSS ALL WORKFLOWS:
-  ## Comment out all the list items (-) by adding a # in front of it.
-
-  # HIDE PREDEFINED CC RECIPIENTS WITH TARGET WORKFLOWS
+  # Hide predefined cc recipients with target workflows
   ## Add workflow names under hide_cc_workflow_list such as " - Workflow name"
   hide_cc_workflow_list:
-    #- Notice how list items are comment out
-    - "Workflow name here"
-    - "Another workflow namer here"
+    # - "{workflow name}"
+    # - "{workflow id}"
 
   # Email regex to be used to restrict emails used during signing
   email_regex: ^\w+([\.\+-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
