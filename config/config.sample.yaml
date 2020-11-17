@@ -51,7 +51,7 @@ features:
   # Use a minified CSS string.
   # Rules are delimited w/ a `;` semicolon
   # If a rule is not overriding, you might need to use the `!important` hack.
-  css_override: "#agreement_section, #message_section, {display: none !important}"
+  css_override: "#agreement_section, #message_section {display: none !important}"
   # css_override: "#main-options {display:none}"  # Hide Options Section
   # css_override: "#main-options {display:none}; #recipient_submit_button {background-color: red !important}"  # Hide Options Section
 
