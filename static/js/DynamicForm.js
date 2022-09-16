@@ -248,16 +248,25 @@ class DynamicForm {
 
   }
 
-  createInstructionField(msg) {
+ 
+    createInstructionField(msg) {
     /**
      * This function will create the agreement name label
      */
 
     // Create element
     var instruction_label = document.createElement('h3');
-
     // Assign properties
-    instruction_label.innerHTML = msg;
+    // If DOMParser is supported, use it
+    // Otherwise, fallback to old-school method
+    if (window.DOMParser) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(msg, 'text/html');
+        instruction_label.innerHTML =  doc.body.textContent;
+    } else{
+        instruction_label.innerHTML = msg;
+    }
+
     instruction_label.className = 'recipient_label';
 
     // Append to parent
