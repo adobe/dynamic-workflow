@@ -48,7 +48,7 @@ if ('enterprise' in config && config.enterprise && 'integration' in config.enter
 }
 
 var headers = {
-  'Access-Token': integration_key,
+  'Authorization': 'Bearer '+ integration_key,
   'Accept': 'application/json',
   'Content-Type': 'application/json'
 };
@@ -78,13 +78,13 @@ app.get('/api/getWorkflows', async function (req, res) {
      * This function makes a request to get workflows
      */
     const endpoint = '/workflows';
-
+              console.log(url + endpoint);
     return fetch(url + endpoint, {
       method: 'GET',
       headers: headers
     });
   }
-
+   
   const workflow_list = await getWorkflows();
   const data = await workflow_list.json();
 
@@ -95,11 +95,13 @@ app.get('/api/getWorkflows', async function (req, res) {
 app.get('/api/getWorkflowById/:id', async function (req, res) {
 
   function getWorkflowById() {
+    
+  console.log(req.params.id)
     /***
      * This function makes a request to get workflow by ID
      */
     const endpoint = '/workflows/' + req.params.id;
-
+   console.log(endpoint)
     return fetch(url + endpoint, {
       method: 'GET',
       headers: headers

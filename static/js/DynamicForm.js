@@ -113,10 +113,18 @@ class DynamicForm {
         max = cc_group_data['maxListCount'];
       }
       //only occurs if not set. Is user specifically does add a max or min, it sends the right number.
-      let cc_group_recipients = cc_group_data['defaultValue'].split(",");
+        console.log('-----', cc_group_data['defaultValues'].length)
+        let cc_group_recipients = [];
+        if(cc_group_data['defaultValues'].length > 1){
+         cc_group_recipients = cc_group_data['defaultValues'].split(",");
+        } else {
+            cc_group_recipients = cc_group_data['defaultValues'];
+        }
+        console.log('--------cc_group_recipients----------',cc_group_recipients[0]);
       for (let counter = 0; counter < max; counter++) {
         // If cc group is editable we create the max # of cc recipients
         if (cc_group_data['editable']) {
+          console.log('inside editable -- ',cc_group_recipients[0]);
           this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1)))
           this.cc_group[counter].createCcDiv();
           this.cc_group[counter].createCcLabelField();
@@ -124,6 +132,7 @@ class DynamicForm {
         }
         // If not editable only create the predefine ones
         else {
+            console.log('inside else -- ',cc_group_recipients[0]);
           if (counter < cc_group_recipients.length) {
             this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1)))
             this.cc_group[counter].createCcDiv();
@@ -437,6 +446,7 @@ class DynamicForm {
 
       if ('ccsListInfo' in wf_data) {
         async_wf_obj.updateCcGroup(wf_data['ccsListInfo'][0], this.cc_group);
+           console.log('CC LIST ',wf_data['ccsListInfo'][0]);
       }
 
       document.getElementById('loader').hidden = false;

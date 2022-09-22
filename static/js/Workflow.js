@@ -101,9 +101,16 @@ class Workflow {
      */
 
     const editable = cc_group_data['editable'];
-    const cc_list = cc_group_data['defaultValue'].split(",");
+       let cc_list = [];
+        if(cc_group_data['defaultValues'].length > 1){
+         cc_list = cc_group_data['defaultValues'].split(",");
+        } else {
+            cc_list = cc_group_data['defaultValues'];
+        }
+   
+       console.log('CC ',cc_list);
     var add_to_cc_list = [];
-
+       
     for (let counter = 0; counter < cc_group.length; counter++) {
       if (!(editable)) {
         if (counter < cc_list.length) {

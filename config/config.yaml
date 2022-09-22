@@ -13,7 +13,7 @@ server:
 
   # DO NOT CHANGE THE FOLLOW TWO CONFIGURATION.
   # This is the endpoint
-  endpoint: "/api/rest/v5"
+  endpoint: "/api/rest/v6"
 
 # This is the enterprise setting to get access to your Sign Console.
 enterprise:
@@ -64,7 +64,7 @@ features:
   x-api-user: ""
 
   # This feature will hide predefined recipients within your workflow.
-  hide_predefined: yes
+  hide_predefined: no
 
   # HIDE PREDEFINED RECIPIENTS WITH TARGET WORKFLOWS
   ## Add workflow names under hide_workflow_list such as " - Workflow name"
@@ -73,7 +73,7 @@ features:
     # - "{workflow id}"
 
   # Hide predefined cc recipients within your workflow
-  hide_cc: yes
+  hide_cc: no
 
   # Hide predefined cc recipients with target workflows
   ## Add workflow names under hide_cc_workflow_list such as " - Workflow name"

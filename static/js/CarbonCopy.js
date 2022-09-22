@@ -34,6 +34,8 @@ class CarbonCopy{
 
         var parent_div = document.getElementById('cc_section')
         parent_div.append(cc_div);
+        
+        console.log('DIV ',cc_div);
 
         // Append to parent
         this.target_div = cc_div;
@@ -46,7 +48,7 @@ class CarbonCopy{
 
         // Create label for recipient
         var label = document.createElement('h3');
-
+ console.log('label -- ',label);
         // Add attributes
         label.className = "recipient_label";
         label.innerHTML = "CC";

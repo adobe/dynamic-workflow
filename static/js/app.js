@@ -70,13 +70,13 @@ async function updateDropdownMenu(workflow_data) {
   // Iterate through workflow data and assign text/value to array for drop-down options
   for (let i = 0; i < workflow_list.length; i++) {
     workflow_list[i].text = workflow_list[i].displayName;
-    workflow_list[i].value = workflow_list[i].workflowId;
+    workflow_list[i].value = workflow_list[i].id;
 
     // if the allowedWorkflows config is set...
     if (allowedWorkflows.length > 0) {
       //...only show workflows on the allowed workflow list, otherwise...
-      if (allowedWorkflows.includes(workflow_list[i].workflowId)) {
-        console.log('this one is allowed', workflow_list[i].workflowId);
+      if (allowedWorkflows.includes(workflow_list[i].id)) {
+        console.log('this one is allowed', workflow_list[i].id);
         final_list.push(workflow_list[i]);
       }
     } else {
@@ -115,6 +115,7 @@ async function runWorkflow(id) {
   /**
    *  This is the controller function.
    */
+ console.log('id----',id)
 
   // Get workflow ID from deeplink or dropdown selector
   var workflow_id = '';
@@ -182,9 +183,10 @@ async function deeplinkCheck() {
   let disableIndex = await getSetting('disable_index');
 
   if (deepLinks) {
+       console.log('window.location.search----',window.location.search)
     let url_params = new URLSearchParams(window.location.search);
     let workflow_id = url_params.get('id');
-
+    console.log('workflow_id----',url_params.get('id'))
     if(workflow_id){
       await runWorkflow(workflow_id);
     } else if (disableIndex) {
