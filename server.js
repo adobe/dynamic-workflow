@@ -115,13 +115,13 @@ app.get('/api/getWorkflowById/:id', async function (req, res) {
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/:id', async function (req, res) {
+app.post('/api/postAgreement/', async function (req, res) {
 
   function postAgreement() {
     /***
      * This function post agreements
      */
-    const endpoint = '/workflows/' + req.params.id + '/agreements';
+    const endpoint = '/agreements/';
 
     return fetch(url + endpoint, {
       method: 'POST',
@@ -133,10 +133,10 @@ app.post('/api/postAgreement/:id', async function (req, res) {
 
   let okToSubmit = true;
 
-  for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
-    console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
-    for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
-      if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(emailRegex)) {
+  for (let o = 0; req.body.participantSetsInfo.length > o; o++) {
+    console.log(req.body.participantSetsInfo[o].memberInfos);
+    for (let i = 0; req.body.participantSetsInfo[o].memberInfos.length > i; i++) {
+      if (!req.body.participantSetsInfo[o].memberInfos[i].email.match(emailRegex)) {
         okToSubmit = false;
       }
     }

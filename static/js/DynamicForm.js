@@ -410,6 +410,7 @@ class DynamicForm {
      * @param {Object} workflow_data The object that stores the workflow data
      */
     var async_wf_obj = await workflow_object;
+	var async_agreement_obj = await workflow_object;
     var wf_data = await workflow_data;
 
     // Create the button and style it
@@ -427,31 +428,42 @@ class DynamicForm {
 
     // Add onClick event to submit button
     form_button.onclick = async function () {
-      async_wf_obj.updateAgreementName();
-      async_wf_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
-      async_wf_obj.updateFileInfos(this.file_info);
-      async_wf_obj.updateMergeFieldInfos(this.merge_fields);
-      async_wf_obj.updateReminder(this.reminders);
-      async_wf_obj.updateMessage(document.getElementById('messages_input').value);
+	
+	  async_agreement_obj.updateAgreementName();
+	  async_agreement_obj.updateFileInfos(this.file_info);
+	  async_agreement_obj.updateMergeFieldInfos(this.merge_fields);
+	  async_agreement_obj.updateMessage(document.getElementById('messages_input').value);
+	  async_agreement_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
+	  async_agreement_obj.updateworkflowId(async_wf_obj.workflow_id);
+	  async_agreement_obj.updateName()
+	  async_agreement_obj.updatesignatureType();
+	  async_agreement_obj.updateState();
+	  
+      //async_wf_obj.updateAgreementName();
+      //async_wf_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
+      //async_wf_obj.updateFileInfos(this.file_info);
+      //async_wf_obj.updateMergeFieldInfos(this.merge_fields);
+      //async_wf_obj.updateReminder(this.reminders);
+      //async_wf_obj.updateMessage(document.getElementById('messages_input').value);
 
-      if (wf_data['passwordInfo'].visible) {
-        async_wf_obj.createOpenPass(this.pass_option.getPass(), this.pass_option.getProtection());
-      }
+      //if (wf_data['passwordInfo'].visible) {
+      //  async_wf_obj.createOpenPass(this.pass_option.getPass(), this.pass_option.getProtection());
+      //}
 
-      if ('expirationInfo' in this.data) {
-        if (this.deadline.checked) {
-          async_wf_obj.updateDeadline(this.deadline.today_date);
-        }
-      }
+      //if ('expirationInfo' in this.data) {
+        //if (this.deadline.checked) {
+          //async_wf_obj.updateDeadline(this.deadline.today_date);
+        //}
+      //}
 
-      if ('ccsListInfo' in wf_data) {
-        async_wf_obj.updateCcGroup(wf_data['ccsListInfo'][0], this.cc_group);
-           console.log('CC LIST ',wf_data['ccsListInfo'][0]);
-      }
+      //if ('ccsListInfo' in wf_data) {
+      //  async_wf_obj.updateCcGroup(wf_data['ccsListInfo'][0], this.cc_group);
+        //   console.log('CC LIST ',wf_data['ccsListInfo'][0]);
+      //}
 
       document.getElementById('loader').hidden = false;
-
-      var response = await fetch('/api/postAgreement/' + async_wf_obj.workflow_id, {
+	  console.log('JSON.stringify(async_wf_obj.jsonData())------------',JSON.stringify(async_wf_obj.jsonData()))
+      var response = await fetch('/api/postAgreement/', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -466,7 +478,7 @@ class DynamicForm {
         });
 
       if (this.settings.sign_now) {
-        var URlresponse = await fetch('/api/getSigningUrls/' + response.agreementId, {
+        var URlresponse = await fetch('/api/getSigningUrls/' + response.id, {
           method: 'GET',
           headers: {
             Accept: 'application/json',
