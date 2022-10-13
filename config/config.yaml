@@ -57,7 +57,7 @@ features:
 
   # Disable extra options
   # this setting disables the grey sidebar that enables senders to control reminders
-  disable_extra_options: yes
+  disable_extra_options: no
 
   # This feature will allow the userId or email of API caller using the account or group token in the
   # format userid:{userId} OR email:{email}. If it is not specified, then the caller is inferred from the token.

@@ -124,31 +124,35 @@ class Workflow {
     const editable = cc_group_data['editable'];
        let cc_list = [];
         if(cc_group_data['defaultValues'].length > 1){
-         cc_list = cc_group_data['defaultValues'].split(",");
+         cc_list = cc_group_data['defaultValues'];
         } else {
             cc_list = cc_group_data['defaultValues'];
         }
    
-       console.log('CC ',cc_list);
+       
     var add_to_cc_list = [];
        
     for (let counter = 0; counter < cc_group.length; counter++) {
       if (!(editable)) {
         if (counter < cc_list.length) {
-          add_to_cc_list.push(cc_list[counter]);
+          this.carbon_copy_group.push(
+              {
+                "label": cc_group_data['label'],
+                "email": cc_list[counter]
+              }
+            );
+             
         }
       }
       else {
-        add_to_cc_list.push(cc_group[counter].email);
+        //add_to_cc_list.push(cc_group[counter].email);
+          this.carbon_copy_group.push(
+          {
+            "label": cc_group_data['label'],
+            "email": cc_group[counter].email
+          });
       }
     }
-
-    this.carbon_copy_group.push([
-      {
-        "name": cc_group_data['name'],
-        "emails": add_to_cc_list
-      }
-    ]);
   }
 
   updateFileInfos(file_Infos) {
@@ -197,17 +201,12 @@ class Workflow {
      * @param {Date} today The date object for today
      */
 
-    const date_input = document.getElementById('deadline_input').value;
-
-    const today_date = new Date(today);
-    const selected_date = new Date(date_input);
-
-    const diffTime = Math.abs(selected_date - today_date);
-    this.deadline = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    let date_input = new Date(document.getElementById('deadline_input').value);
+      this.deadline = date_input;
 
   }
 
-  createOpenPass(pass, protection) {
+  createOpenPass(pass,protection) {
     /***
      * This function builds out the security option.
      * @param {String} pass The pass for the agreement
@@ -215,8 +214,8 @@ class Workflow {
      */
 
     var data = {
+     "protectOpen": protection,
       "openPassword": pass,
-      "protectOpen": protection
     }
 
     this.pass_option = data;
@@ -264,7 +263,7 @@ class Workflow {
           "name": this.agreement_name,
           "participantSetsInfo": this.participantSetsInfo,
           "ccs": this.carbon_copy_group,
-          "securityOptions": this.pass_option,
+          "securityOption": this.pass_option,
           "mergeFieldInfo": this.merge_field_group,
           "reminderFrequency": this.reminders,
           "message": this.msg,
@@ -282,7 +281,7 @@ class Workflow {
           "ccs": this.carbon_copy_group,
           "securityOptions": this.pass_option,
           "mergeFieldInfo": this.merge_field_group,
-          "daysUntilSigningDeadline": this.deadline,
+          "expirationTime": this.deadline,
           "reminderFrequency": this.reminders,
           "message": this.msg,
 		  "name":this.name,
