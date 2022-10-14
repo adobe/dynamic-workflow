@@ -33,7 +33,8 @@ class RecipientGroup {
 
     // Add attributes
     recipient_div.id = "recipient_group_" + this.group_id;
-    recipient_div.className = "add_border_bottom";
+    recipient_div.className = "add_border_bottom" ;
+	
 
     var parent_div = document.getElementById('recipient_section')
     parent_div.append(recipient_div);
@@ -52,6 +53,9 @@ class RecipientGroup {
 
     // Add attributes
     label.className = "recipient_label";
+	if(this.required){
+		label.id = "required";
+	}
     label.innerHTML = this.recipient_group_data['label'];
 
     // Append to parent
