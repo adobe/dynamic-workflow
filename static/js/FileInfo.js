@@ -33,6 +33,7 @@ class FileInfo {
 
     // Assign the attributes
     file_info_div.id = "file_info_" + this.file_name;
+	
     file_info_div.className = 'file_info_div row';
 
     // Create grid
@@ -57,7 +58,9 @@ class FileInfo {
 
     // Create the element
     var doc_label = document.createElement('h3');
-
+	if(this.required){
+		doc_label.id = "required";
+	}
     // Add the attributes
     doc_label.innerText = this.label;
 
