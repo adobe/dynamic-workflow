@@ -256,8 +256,13 @@ class DynamicForm {
     // Create element
     var instruction_label = document.createElement('h3');
 
-    // Assign properties
-    instruction_label.innerHTML = msg;
+    if (window.DOMParser) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(msg, 'text/html');
+        instruction_label.innerHTML =  doc.body.textContent;
+    } else{
+        instruction_label.innerHTML = msg;
+    }
     instruction_label.className = 'recipient_label';
 
     // Append to parent
