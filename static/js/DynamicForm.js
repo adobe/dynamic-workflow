@@ -131,7 +131,7 @@ class DynamicForm {
             //console.log('inside else -- ',cc_group_recipients[0]);
         for (let counter = 0; counter < cc_group_recipients.length; counter++){
           //if (counter < cc_group_recipients.length) {
-            this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1)))
+            this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1),cc_group_data))
             this.cc_group[counter].createCcDiv();
             this.cc_group[counter].createCcLabelField();
             this.cc_group[counter].createCcInputField(hide_all_cc_trigger, hide_cc_predefined_trigger);
@@ -440,7 +440,7 @@ class DynamicForm {
       //async_wf_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
       //async_wf_obj.updateFileInfos(this.file_info);
       //async_wf_obj.updateMergeFieldInfos(this.merge_fields);
-      //async_wf_obj.updateReminder(this.reminders);
+      async_wf_obj.updateReminder(this.reminders);
       //async_wf_obj.updateMessage(document.getElementById('messages_input').value);
 
       if (wf_data['passwordInfo'].visible) {
