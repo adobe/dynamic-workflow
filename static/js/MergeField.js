@@ -54,7 +54,9 @@ class MergeField{
 
         // Create element
         var merge_field_label = document.createElement('h3');
-
+		if(this.required){
+			merge_field_label.id = "required";
+		}
         // Add attributes
         merge_field_label.innerText = this.display_name;
 

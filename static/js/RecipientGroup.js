@@ -52,6 +52,9 @@ class RecipientGroup {
 
     // Add attributes
     label.className = "recipient_label";
+	if(this.required){
+		label.id = "required";
+	}
     label.innerHTML = this.recipient_group_data['label'];
 
     // Append to parent

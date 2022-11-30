@@ -57,7 +57,9 @@ class FileInfo {
 
     // Create the element
     var doc_label = document.createElement('h3');
-
+	if(this.required){
+		doc_label.id = "required";
+	}
     // Add the attributes
     doc_label.innerText = this.label;
 
