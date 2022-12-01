@@ -126,7 +126,7 @@ class Reminder{
             'Every third day': 'EVERY_THIRD_DAY_UNTIL_SIGNED',
             'Every fifth day': 'EVERY_FIFTH_DAY_UNTIL_SIGNED'
         }
-
+		dropdown.value = 'DAILY_UNTIL_SIGNED';
         this.sub_div.append(dropdown)
 
         for (const [key, value] of Object.entries(dropdown_options)) {

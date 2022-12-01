@@ -117,7 +117,7 @@ class DynamicForm {
       for (let counter = 0; counter < max; counter++) {
         // If cc group is editable we create the max # of cc recipients
         if (cc_group_data['editable']) {
-          this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1)))
+          this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1),cc_group_data))
           this.cc_group[counter].createCcDiv();
           this.cc_group[counter].createCcLabelField();
           this.cc_group[counter].createCcInputField(hide_all_cc_trigger, hide_cc_predefined_trigger);
@@ -125,7 +125,7 @@ class DynamicForm {
         // If not editable only create the predefine ones
         else {
           if (counter < cc_group_recipients.length) {
-            this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1)))
+            this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1),cc_group_data))
             this.cc_group[counter].createCcDiv();
             this.cc_group[counter].createCcLabelField();
             this.cc_group[counter].createCcInputField(hide_all_cc_trigger, hide_cc_predefined_trigger);

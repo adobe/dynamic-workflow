@@ -12,12 +12,13 @@ governing permissions and limitations under the License.
 
 class CarbonCopy{
 
-    constructor(parent_div, email, id){
+    constructor(parent_div, email, id,cc_group_data){
         this.parent_div = parent_div;
         this.email = email;
         this.id = id;
         this.target_div = "";
         this.predefined = false;
+		this.cc_group_data = cc_group_data;
     }
 
     createCcDiv(){
@@ -87,7 +88,9 @@ class CarbonCopy{
             input.value = this.email;
             input.className = input.className + " predefined_input";
             this.predefined = true;
-
+		 if (!(this.cc_group_data['editable'])) {
+			input.disabled = true;
+		  }
             // Hide all settings turned on
             if(hide_all_trigger && !(hide_predefined_trigger)){
                 var recipient_div = document.getElementById("cc_div_" + this.id);

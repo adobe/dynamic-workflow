@@ -24,7 +24,10 @@ governing permissions and limitations under the License.
     --workflow-form-submit-color: #2175c8;
 }
 
-
+#required:after{
+    content:" *";
+    color: red;
+}
 body{
     background: var(--application-background-color);
     font-family: "adobe-clean-n4", "adobe-clean", Helvetica, Arial, sans-serif;
