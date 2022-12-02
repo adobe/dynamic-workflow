@@ -112,26 +112,15 @@ class DynamicForm {
       } else {
         max = cc_group_data['maxListCount'];
       }
-      //only occurs if not set. Is user specifically does add a max or min, it sends the right number.
-      let cc_group_recipients = cc_group_data['defaultValue'].split(",");
-      for (let counter = 0; counter < max; counter++) {
-        // If cc group is editable we create the max # of cc recipients
-        if (cc_group_data['editable']) {
-          this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1),cc_group_data))
-          this.cc_group[counter].createCcDiv();
-          this.cc_group[counter].createCcLabelField();
-          this.cc_group[counter].createCcInputField(hide_all_cc_trigger, hide_cc_predefined_trigger);
-        }
-        // If not editable only create the predefine ones
-        else {
-          if (counter < cc_group_recipients.length) {
-            this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1),cc_group_data))
+       let cc_group_recipients = [];
+        cc_group_recipients = cc_group_data['defaultValues'];
+      
+        for (let counter = 0; counter < cc_group_recipients.length; counter++){
+			this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1),cc_group_data))
             this.cc_group[counter].createCcDiv();
             this.cc_group[counter].createCcLabelField();
             this.cc_group[counter].createCcInputField(hide_all_cc_trigger, hide_cc_predefined_trigger);
           }
-        }
-      }
     }
 
     // Get FileInfo information
@@ -397,6 +386,7 @@ class DynamicForm {
      * @param {Object} workflow_data The object that stores the workflow data
      */
     var async_wf_obj = await workflow_object;
+	var async_agreement_obj = await workflow_object;
     var wf_data = await workflow_data;
 
     // Create the button and style it
@@ -414,15 +404,26 @@ class DynamicForm {
 
     // Add onClick event to submit button
     form_button.onclick = async function () {
-      async_wf_obj.updateAgreementName();
-      async_wf_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
-      async_wf_obj.updateFileInfos(this.file_info);
-      async_wf_obj.updateMergeFieldInfos(this.merge_fields);
+	
+	  async_agreement_obj.updateAgreementName();
+	  async_agreement_obj.updateFileInfos(this.file_info);
+	  async_agreement_obj.updateMergeFieldInfos(this.merge_fields);
+	  async_agreement_obj.updateMessage(document.getElementById('messages_input').value);
+	  async_agreement_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
+	  async_agreement_obj.updateworkflowId(async_wf_obj.workflow_id);
+	  async_agreement_obj.updateName()
+	  async_agreement_obj.updatesignatureType();
+	  async_agreement_obj.updateState();
+	  
+      //async_wf_obj.updateAgreementName();
+      //async_wf_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
+      //async_wf_obj.updateFileInfos(this.file_info);
+      //async_wf_obj.updateMergeFieldInfos(this.merge_fields);
       async_wf_obj.updateReminder(this.reminders);
-      async_wf_obj.updateMessage(document.getElementById('messages_input').value);
+      //async_wf_obj.updateMessage(document.getElementById('messages_input').value);
 
       if (wf_data['passwordInfo'].visible) {
-        async_wf_obj.createOpenPass(this.pass_option.getPass(), this.pass_option.getProtection());
+       async_wf_obj.createOpenPass(this.pass_option.getPass(), this.pass_option.getProtection());
       }
 
       if ('expirationInfo' in this.data) {
@@ -452,7 +453,7 @@ class DynamicForm {
         });
 
       if (this.settings.sign_now) {
-        var URlresponse = await fetch('/api/getSigningUrls/' + response.agreementId, {
+        var URlresponse = await fetch('/api/getSigningUrls/' + response.id, {
           method: 'GET',
           headers: {
             Accept: 'application/json',

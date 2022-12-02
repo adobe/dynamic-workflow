@@ -48,7 +48,7 @@ if ('enterprise' in config && config.enterprise && 'integration' in config.enter
 }
 
 var headers = {
-  'Access-Token': integration_key,
+  'Authorization': 'Bearer '+ integration_key,
   'Accept': 'application/json',
   'Content-Type': 'application/json'
 };
@@ -113,14 +113,14 @@ app.get('/api/getWorkflowById/:id', async function (req, res) {
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/:id', async function (req, res) {
+app.post('/api/postAgreement/', async function (req, res) {
 
   function postAgreement() {
     /***
      * This function post agreements
      */
-    const endpoint = '/workflows/' + req.params.id + '/agreements';
-
+    const endpoint = '/agreements/';
+	console.log(JSON.stringify(req.body))
     return fetch(url + endpoint, {
       method: 'POST',
       headers: headers,
@@ -131,10 +131,10 @@ app.post('/api/postAgreement/:id', async function (req, res) {
 
   let okToSubmit = true;
 
-  for (let o = 0; req.body.documentCreationInfo.recipientsListInfo.length > o; o++) {
-    console.log(req.body.documentCreationInfo.recipientsListInfo[o].recipients);
-    for (let i = 0; req.body.documentCreationInfo.recipientsListInfo[o].recipients.length > i; i++) {
-      if (!req.body.documentCreationInfo.recipientsListInfo[o].recipients[i].email.match(emailRegex)) {
+  for (let o = 0; req.body.participantSetsInfo.length > o; o++) {
+    console.log(req.body.participantSetsInfo[o].memberInfos);
+    for (let i = 0; req.body.participantSetsInfo[o].memberInfos.length > i; i++) {
+      if (!req.body.participantSetsInfo[o].memberInfos[i].email.match(emailRegex)) {
         okToSubmit = false;
       }
     }
@@ -171,9 +171,9 @@ app.get('/api/getSigningUrls/:id', async function (req, res) {
     const sign_in_data = await sign_in_response.json();
 
     // Look for times to retry and default to 15, if not found
-    const retries = 'sign_now_retries' in config['features'] ? config['features']['sign_now_retries'] : 60;
+    const retries = 'sign_now_retries' in config['features'] ? config['features']['sign_now_retries'] : 600;
 
-    if (sign_in_data.code === 'AGREEMENT_NOT_SIGNABLE' || sign_in_data.code === 'BAD_REQUEST') {
+    if (sign_in_data.code === 'AGREEMENT_NOT_EXPOSED' || sign_in_data.code === 'BAD_REQUEST') {
       // retry for n times with 1s delay
       if (count >= retries) {
         return sign_in_data;
