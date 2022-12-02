@@ -15,8 +15,8 @@ class Workflow {
   constructor(workflow_id) {
     this.workflow_id = workflow_id;
     this.agreement_name = "";
-    this.file_infos = [];
-    this.recipients_list = [];
+    this.file_Infos = [];
+    this.participantSetsInfo = [];
     this.recipient_group = [];
     this.carbon_copy_group = [];
     this.merge_field_group = [];
@@ -24,6 +24,10 @@ class Workflow {
     this.deadline = "";
     this.reminders = "";
     this.message = "";
+	this.name;
+	this.signatureType;
+	this.state;
+	this.workflowId;
   }
 
   setAgreementName(agreement_name) {
@@ -34,7 +38,20 @@ class Workflow {
 
     this.agreement_name = agreement_name;
   }
-
+ 
+  updatesignatureType(){
+	  this.signatureType = 'ESIGN';
+  }
+  updateName(){
+	  var agreement_name = document.getElementById('agreement_name');
+      this.name = agreement_name.value;
+  }
+  updateState(){
+	  this.state = 'IN_PROCESS';
+  }
+  updateworkflowId(workflow_id){
+	  this.workflowId = workflow_id;
+  }
   updateAgreementName() {
     /***
      * This function will update the agreement name
@@ -52,7 +69,9 @@ class Workflow {
      */
 
     // Go through API recipients
+	let orderNum = 0;
     for (const i in recipient_group_data) {
+	   ++orderNum;
       const required = Boolean(recipient_group_data[i]['minListCount'])
       const email = recipient_groups[i].email;
       const defaultValue = recipient_group_data[i]['defaultValue'];
@@ -85,9 +104,11 @@ class Workflow {
         }
       }
       if (groups.length && groups[0]['email']) {
-        this.recipients_list.push({
-          'name': recipient_group_data[i]['name'],
-          'recipients': groups
+		this.participantSetsInfo.push({
+		  'label':recipient_group_data[i]['label'],
+          'memberInfos': groups,
+		  'order': orderNum,
+		  'role': recipient_group_data[i]['role']
         })
       }
     }
@@ -101,47 +122,58 @@ class Workflow {
      */
 
     const editable = cc_group_data['editable'];
-    const cc_list = cc_group_data['defaultValue'].split(",");
+       let cc_list = [];
+        if(cc_group_data['defaultValues'].length > 1){
+         cc_list = cc_group_data['defaultValues'];
+        } else {
+            cc_list = cc_group_data['defaultValues'];
+        }
+   
+       
     var add_to_cc_list = [];
 
     for (let counter = 0; counter < cc_group.length; counter++) {
       if (!(editable)) {
         if (counter < cc_list.length) {
-          add_to_cc_list.push(cc_list[counter]);
+          this.carbon_copy_group.push(
+              {
+                "label": cc_group_data['label'],
+                "email": cc_list[counter]
+              }
+            );
+             
         }
       }
       else {
-        add_to_cc_list.push(cc_group[counter].email);
+        //add_to_cc_list.push(cc_group[counter].email);
+          this.carbon_copy_group.push(
+          {
+            "label": cc_group_data['label'],
+            "email": cc_group[counter].email
+          });
       }
     }
-
-    this.carbon_copy_group.push([
-      {
-        "name": cc_group_data['name'],
-        "emails": add_to_cc_list
-      }
-    ]);
   }
 
-  updateFileInfos(file_infos) {
+  updateFileInfos(file_Infos) {
     /***
      * This function updates the file infos
-     * @param {Object} file_infos The file info object that holds file info
+     * @param {Object} file_Infos The file info object that holds file info
      */
 
-    for (let i = 0; i < file_infos.length; i++) {
-      if (file_infos[i]['workflow_lib_doc_id'] !== null) {
-        this.file_infos.push(
+    for (let i = 0; i < file_Infos.length; i++) {
+      if (file_Infos[i]['workflow_lib_doc_id'] !== null) {
+        this.file_Infos.push(
           {
-            "name": file_infos[i]['file_name'],
-            "workflowLibraryDocumentId": file_infos[i]['workflow_lib_doc_id'][0]['workflowLibDoc']
+            "libraryDocumentId": file_Infos[i]['workflow_lib_doc_id'][0]['workflowLibDoc'],
+			"label":file_Infos[i].label
           }
         )
-      } else if (file_infos[i]['transient_id'] !== null) {
-        this.file_infos.push(
+      } else if (file_Infos[i]['transient_id'] !== null) {
+        this.file_Infos.push(
           {
-            "name": file_infos[i]['file_name'],
-            "transientDocumentId": file_infos[i].transient_id
+            "transientDocumentId": file_Infos[i].transient_id,
+			"label":file_Infos[i].label
           }
         )
       }
@@ -169,17 +201,12 @@ class Workflow {
      * @param {Date} today The date object for today
      */
 
-    const date_input = document.getElementById('deadline_input').value;
-
-    const today_date = new Date(today);
-    const selected_date = new Date(date_input);
-
-    const diffTime = Math.abs(selected_date - today_date);
-    this.deadline = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    let date_input = new Date(document.getElementById('deadline_input').value);
+      this.deadline = date_input;
 
   }
 
-  createOpenPass(pass, protection) {
+  createOpenPass(pass,protection) {
     /***
      * This function builds out the security option.
      * @param {String} pass The pass for the agreement
@@ -187,6 +214,7 @@ class Workflow {
      */
 
     var data = {
+     "protectOpen": protection,
       "openPassword": pass,
       "protectOpen": protection
     }
@@ -219,8 +247,8 @@ class Workflow {
      * This function clears data from the workflow.
      */
 
-    this.file_infos = [];
-    this.recipients_list = [];
+    this.file_Infos = [];
+    this.participantSetsInfo = [];
     this.recipient_group = [];
     this.merge_field_group = [];
   }
@@ -232,31 +260,35 @@ class Workflow {
 
     if (this.deadline === "") {
       return {
-        "documentCreationInfo": {
-          "fileInfos": this.file_infos,
+          "fileInfos": this.file_Infos,
           "name": this.agreement_name,
-          "recipientsListInfo": this.recipients_list,
+          "participantSetsInfo": this.participantSetsInfo,
           "ccs": this.carbon_copy_group,
-          "securityOptions": this.pass_option,
+          "securityOption": this.pass_option,
           "mergeFieldInfo": this.merge_field_group,
           "reminderFrequency": this.reminders,
-          "message": this.msg
-        }
+          "message": this.msg,
+		  "name":this.name,
+		  "signatureType":this.signatureType,
+		  "state":this.state,
+		  "workflowId":this.workflowId
       };
     }
     else {
       return {
-        "documentCreationInfo": {
-          "fileInfos": this.file_infos,
+          "fileInfos": this.file_Infos,
           "name": this.agreement_name,
-          "recipientsListInfo": this.recipients_list,
+          "participantSetsInfo": this.participantSetsInfo,
           "ccs": this.carbon_copy_group,
           "securityOptions": this.pass_option,
           "mergeFieldInfo": this.merge_field_group,
-          "daysUntilSigningDeadline": this.deadline,
+          "expirationTime": this.deadline,
           "reminderFrequency": this.reminders,
-          "message": this.msg
-        }
+          "message": this.msg,
+		  "name":this.name,
+		  "signatureType":this.signatureType,
+		  "state":this.state,
+		  "workflowId":this.workflowId
       };
     }
   }
