@@ -33,7 +33,8 @@ class RecipientGroup {
 
     // Add attributes
     recipient_div.id = "recipient_group_" + this.group_id;
-    recipient_div.className = "add_border_bottom";
+    recipient_div.className = "add_border_bottom" ;
+	
 
     var parent_div = document.getElementById('recipient_section')
     parent_div.append(recipient_div);
@@ -117,16 +118,6 @@ class RecipientGroup {
     }
 
     this.target_div.append(input);
-
-    // This feature is currently blocked. There's a bug in Adobe API that
-    // has been reported. Once this bug is fixed, it will be enabled in
-    // the next version.
-
-    // If group is a recipient group
-    // if (this.recipient_group_data['maxListCount'] > 1) {
-    //     this.createAdditionalRecipientInput(input.id);
-    //     this.removeParticipentButton(this.target_div);
-    // }
   }
 
   createAdditionalRecipientInput(recipient_id) {

@@ -70,13 +70,13 @@ async function updateDropdownMenu(workflow_data) {
   // Iterate through workflow data and assign text/value to array for drop-down options
   for (let i = 0; i < workflow_list.length; i++) {
     workflow_list[i].text = workflow_list[i].displayName;
-    workflow_list[i].value = workflow_list[i].workflowId;
+    workflow_list[i].value = workflow_list[i].id;
 
     // if the allowedWorkflows config is set...
     if (allowedWorkflows.length > 0) {
       //...only show workflows on the allowed workflow list, otherwise...
-      if (allowedWorkflows.includes(workflow_list[i].workflowId)) {
-        console.log('this one is allowed', workflow_list[i].workflowId);
+      if (allowedWorkflows.includes(workflow_list[i].id)) {
+        console.log('this one is allowed', workflow_list[i].id);
         final_list.push(workflow_list[i]);
       }
     } else {
