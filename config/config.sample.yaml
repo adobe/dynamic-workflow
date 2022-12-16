@@ -13,7 +13,7 @@ server:
 
   # DO NOT CHANGE THE FOLLOW TWO CONFIGURATION.
   # This is the endpoint
-  endpoint: "/api/rest/v5"
+  endpoint: "/api/rest/v6"
 
 # This is the enterprise setting to get access to your Sign Console.
 enterprise:
