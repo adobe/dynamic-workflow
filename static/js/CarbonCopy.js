@@ -50,7 +50,7 @@ class CarbonCopy{
 
         // Add attributes
         label.className = "recipient_label";
-        label.innerHTML = "CC";
+        label.innerHTML = this.cc_group_data['label'];
 
         // Append to parent
         this.target_div.append(label);

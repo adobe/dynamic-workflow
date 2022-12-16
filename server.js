@@ -113,14 +113,13 @@ app.get('/api/getWorkflowById/:id', async function (req, res) {
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/', async function (req, res) {
+app.post('/api/postAgreement/:id', async function (req, res) {
 
   function postAgreement() {
     /***
      * This function post agreements
      */
     const endpoint = '/agreements/';
-	console.log(JSON.stringify(req.body))
     return fetch(url + endpoint, {
       method: 'POST',
       headers: headers,
@@ -148,7 +147,6 @@ app.post('/api/postAgreement/', async function (req, res) {
   } else {
     data = { code: 'MISC_ERROR', message: emailErrorMessage };
   }
-
   res.json(data);
 });
 
