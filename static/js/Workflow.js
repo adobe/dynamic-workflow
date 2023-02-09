@@ -123,12 +123,13 @@ class Workflow {
 
     const editable = cc_group_data['editable'];
        let cc_list = [];
+	   if(undefined !== cc_group_data['defaultValues'] ){
         if(cc_group_data['defaultValues'].length > 1){
          cc_list = cc_group_data['defaultValues'];
         } else {
             cc_list = cc_group_data['defaultValues'];
         }
-   
+       }
        
     var add_to_cc_list = [];
 

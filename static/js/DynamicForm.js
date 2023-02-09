@@ -114,13 +114,14 @@ class DynamicForm {
       }
        let cc_group_recipients = [];
         cc_group_recipients = cc_group_data['defaultValues'];
-      
-        for (let counter = 0; counter < cc_group_recipients.length; counter++){
-			this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1),cc_group_data))
-            this.cc_group[counter].createCcDiv();
-            this.cc_group[counter].createCcLabelField();
-            this.cc_group[counter].createCcInputField(hide_all_cc_trigger, hide_cc_predefined_trigger);
-          }
+		if(null != cc_group_recipients){
+			for (let counter = 0; counter < cc_group_recipients.length; counter++){
+				this.cc_group.push(new CarbonCopy(this.parent_div.children[0], cc_group_recipients[counter], (counter + 1),cc_group_data))
+				this.cc_group[counter].createCcDiv();
+				this.cc_group[counter].createCcLabelField();
+				this.cc_group[counter].createCcInputField(hide_all_cc_trigger, hide_cc_predefined_trigger);
+			  }
+		}
     }
 
     // Get FileInfo information
@@ -334,7 +335,7 @@ class DynamicForm {
     agreement_name_input.required = true;
 
     // Check to see if there's a default value
-    if (this.data['agreementNameInfo']['defaultValue'] !== null) {
+    if (undefined !== this.data['agreementNameInfo'] && this.data['agreementNameInfo']['defaultValue'] !== null) {
       agreement_name_input.value = this.data['agreementNameInfo']['defaultValue'];
     }
 
@@ -435,14 +436,15 @@ class DynamicForm {
       if ('ccsListInfo' in wf_data) {
         async_wf_obj.updateCcGroup(wf_data['ccsListInfo'][0], this.cc_group);
       }
-
-      document.getElementById('loader').hidden = false;
-
+      if(null !== document.getElementById('loader')){
+		document.getElementById('loader').hidden = false;
+	  }
       var response = await fetch('/api/postAgreement/' + async_wf_obj.workflow_id, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+		  "Workflow-Service-User":getWorkflowServiceUser(),
         },
         body: JSON.stringify(async_wf_obj.jsonData())
       }).then(function (resp) {
@@ -458,6 +460,7 @@ class DynamicForm {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
+			"Workflow-Service-User":getWorkflowServiceUser(),
           }
         }).then(function (resp) {
           return resp.json()
@@ -465,7 +468,7 @@ class DynamicForm {
           .then(function (data) {
             return data;
           });
-
+		
         if ('signingUrlSetInfos' in URlresponse) {
           window.location.href = URlresponse.signingUrlSetInfos[0].signingUrls[0].esignUrl;
         } else {
@@ -474,19 +477,22 @@ class DynamicForm {
           window.location.reload();
         }
       } else {
-        document.getElementById('loader').hidden = true;
-        if ('url' in response) {
+        if(null !== document.getElementById('loader')){
+			document.getElementById('loader').hidden = true;
+	    }
+        /*if ('url' in response) {
           alert('Agreement Sent');
           if (self.settings.disable_index) {
             window.location.href = window.location.href.split('?')[0];
           } else {
             window.location.reload();
           }
-        } else {
+        } else { */
+		  alert('Agreement Sent');
           async_wf_obj.clearData();
-          alert(response['message']);
+          //alert(response['message']);
           window.location.reload();
-        }
+        //}
       }
     }.bind(this);
 
@@ -508,8 +514,12 @@ class DynamicForm {
   }
 
   hideExtraOptions() {
-    document.getElementById("main-options").classList.replace("col-lg-7", "col-lg-12");
-    document.getElementById("extra-options").classList.replace("col-lg-5", "form_hidden");
-    document.getElementById("extra-options").hide;
+	 if(null !== document.getElementById("main-options")){
+      document.getElementById("main-options").classList.replace("col-lg-7", "col-lg-12");
+	 }
+	 if(null !== document.getElementById("extra-options")){
+		document.getElementById("extra-options").classList.replace("col-lg-5", "form_hidden");
+		document.getElementById("extra-options").hide;
+	 }
   }
 }
