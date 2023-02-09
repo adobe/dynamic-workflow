@@ -124,11 +124,13 @@ async function runWorkflow(id) {
     workflow_id = getWorkflowId();
     updateId(workflow_id)
   }
-
+	  // Fetch all workflow data
+	let custom_headers = {headers: {"Workflow-Service-User":getWorkflowServiceUser()}}
+	var workflow_data = fetch('/api/getWorkflows',custom_headers)
   document.getElementById('dynamic_form').hidden = true;
 
   // Fetch workflow data by ID
-  var workflow_data = await fetch('/api/getWorkflowById/' + workflow_id)
+  var workflow_data = await fetch('/api/getWorkflowById/' + workflow_id,custom_headers)
     .then(function (resp) {
       return resp.json();
     })
@@ -197,6 +199,17 @@ async function deeplinkCheck() {
   }
 
 }
+function getWorkflowServiceUser(){
+    /**
+     * This function will get the workflow service user name from the attribute 
+     * "workflow_service_user" on the form with id "workflow_form_service_user" 
+     */
+	var workflow_service_user = "/";
+	if(null !== document.getElementById("workflow_form_service_user")){
+		workflow_service_user = document.getElementById("workflow_form_service_user").getAttribute("workflow_service_user")
+	}
+    return  workflow_service_user;
+}
 
 async function createWorkflowSelector() {
   // check if dropdown index is disabled and verify deeplinks
@@ -204,8 +217,10 @@ async function createWorkflowSelector() {
   if (await getSetting('disable_index')) {
     document.getElementById('workflow_form_top').hidden = true;
   } else {
+	 // Fetch all workflow data
+	let custom_headers = {headers: {"Workflow-Service-User":getWorkflowServiceUser()}}
     // Fetch all workflow data
-    var workflow_data = fetch('/api/getWorkflows')
+    var workflow_data = fetch('/api/getWorkflows',custom_headers)
       .then(function (resp) {
         return resp.json();
       })

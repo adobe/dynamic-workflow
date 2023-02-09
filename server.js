@@ -12,16 +12,14 @@ governing permissions and limitations under the License.
 
 // Express, Async, Fetch, & Body Parser
 const express = require('express');
+const async = require('express-async-await');
 const fetch = require('node-fetch');
-const sleep = require('await-sleep');
-require('dotenv').config()
-
 const bodyParser = require('body-parser');
 
 // Form Data, Multer, & Uploads
 const FormData = require('form-data');
 const fs = require('fs');
-const multer = require('multer');
+const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 // HTTPS & Path
@@ -41,20 +39,40 @@ var url = host + endpoint;
 var port = process.env.PORT || config.port || 80;
 
 var integration_key = null;
+// Configuration
 if ('enterprise' in config && config.enterprise && 'integration' in config.enterprise && config.enterprise.integration) {
   integration_key = config.enterprise.integration;
 } else {
   integration_key = process.env.INTEGRATION_KEY;
 }
 
-var headers = {
-  'Authorization': 'Bearer '+ integration_key,
-  'Accept': 'application/json',
-  'Content-Type': 'application/json'
-};
-if (config['features']['x-api-user']) {
-  headers['x-api-user'] = config['features']['x-api-user'];
+function checkMultiKeys(obj) {
+   return Object.keys(obj).includes("esignadmin");
 }
+
+function getIntegrationKey(req) {
+	var integrationKey = null;
+	if(checkMultiKeys(integration_key)){
+		integrationKey = integration_key[req.header("workflow-service-user")];
+	} else{
+		integrationKey = integration_key;
+	}
+    return integrationKey;
+}
+
+function getHeader(req){
+  //'Authorization': 'Bearer '+ integration_key,
+  var headers = {
+	  'Authorization': 'Bearer '+ getIntegrationKey(req),
+	  'Accept': 'application/json',
+	  'Content-Type': 'application/json'
+  }
+   if (config['features']['x-api-user']) {
+	  headers['x-api-user'] = config['features']['x-api-user'];
+   }
+   return headers;
+}
+
 
 let emailRegex = config['features']['email_regex'];
 let emailErrorMessage = config['features']['email_error_message'];
@@ -70,29 +88,46 @@ app.get('/features', function (req, res) {
   res.json(config['features']);
 });
 
-// GET /workflows
-app.get('/api/getWorkflows', async function (req, res) {
+// Get index.html page from server
+app.get('/', function (req, res) {
+	if(checkMultiKeys(integration_key)){
+		res.sendFile(__dirname + '/static/router.html');
+	} else {
+		res.sendFile(__dirname + '/static/views/index.html');
+	}
+});
 
+
+// GET /workflows
+app.get('/api/getWorkflows', async function (req, res, next) {
+
+    console.log("Route matches '/api/getWorkflows'");
+    //console.log(req);
+    //console.log(req.header);
+    //console.log(JSON.stringify(req.headers));
+    console.log(req.header("workflow-service-user"));
+
+    var workflow_service_user = req.header("workflow-service-user");
+  
   function getWorkflows() {
     /***
      * This function makes a request to get workflows
      */
     const endpoint = '/workflows';
-
-    return fetch(url + endpoint, {
+	return fetch(url + endpoint, {
       method: 'GET',
-      headers: headers
+      headers: getHeader(req)
     });
   }
 
   const workflow_list = await getWorkflows();
   const data = await workflow_list.json();
-
+  
   res.json(data['userWorkflowList']);
 });
 
 // GET /workflows/{workflowId}
-app.get('/api/getWorkflowById/:id', async function (req, res) {
+app.get('/api/getWorkflowById/:id', async function (req, res,next) {
 
   function getWorkflowById() {
     /***
@@ -102,7 +137,7 @@ app.get('/api/getWorkflowById/:id', async function (req, res) {
 
     return fetch(url + endpoint, {
       method: 'GET',
-      headers: headers
+      headers: getHeader(req)
     });
   }
 
@@ -113,7 +148,7 @@ app.get('/api/getWorkflowById/:id', async function (req, res) {
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/:id', async function (req, res) {
+app.post('/api/postAgreement/:id', async function (req, res, next) {
 
   function postAgreement() {
     /***
@@ -122,7 +157,7 @@ app.post('/api/postAgreement/:id', async function (req, res) {
     const endpoint = '/agreements/';
     return fetch(url + endpoint, {
       method: 'POST',
-      headers: headers,
+      headers: getHeader(req),
       body: JSON.stringify(req.body)
     });
   }
@@ -153,7 +188,7 @@ app.post('/api/postAgreement/:id', async function (req, res) {
 
 // GET /agreements/{agreementId}/signingUrls
 
-app.get('/api/getSigningUrls/:id', async function (req, res) {
+app.get('/api/getSigningUrls/:id', async function (req, res, next) {
 
   async function getSigningUrls(count = 0) {
     /***
@@ -163,7 +198,7 @@ app.get('/api/getSigningUrls/:id', async function (req, res) {
 
     const sign_in_response = await fetch(url + endpoint, {
       method: 'GET',
-      headers: headers
+      headers: getHeader(req)
     });
 
     const sign_in_data = await sign_in_response.json();
@@ -176,7 +211,7 @@ app.get('/api/getSigningUrls/:id', async function (req, res) {
       if (count >= retries) {
         return sign_in_data;
       } else {
-        await sleep(1000);
+        await new Promise(done => setTimeout(() => done(), 1000));
         count++;
         return await getSigningUrls(count);
       }
@@ -190,14 +225,14 @@ app.get('/api/getSigningUrls/:id', async function (req, res) {
 });
 
 // POST /transientDocuments
-app.post('/api/postTransient', upload.single('myfile'), async function (req, res) {
+app.post('/api/postTransient', upload.single('myfile'), async function (req, res, next) {
 
   function postTransient() {
     /***
      * This functions post transient
      */
     const endpoint = '/transientDocuments';
-    let newHeader = { ...headers };
+    let newHeader = { ...getHeader(req) };
     delete newHeader['Accept'];
     delete newHeader['Content-Type'];
 
@@ -226,5 +261,20 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
   res.json(data);
 });
 
+  // Get index.html page from server
+app.get('/:area', function (req, res) {
+    console.log("Route matches '/:area' (" + req.params.area + ")");
+    res.render('index', {area: req.params.area});
+    //res.sendFile(__dirname + '/static/' + req.params.area + '.html');
+});
 
+app.get('/testing/:area', function (req, res) {
+    console.log("Route matches '/testing/:area' (" + req.params.area + ")");
+    res.render('index', {area: req.params.area});
+//    res.sendFile(__dirname + '/static/' + req.params.area + '.html');
+});
+
+
+app.disable('etag');
+app.set('view engine', 'ejs');
 app.listen(port, () => console.log(`Server started on port ${port}`));
